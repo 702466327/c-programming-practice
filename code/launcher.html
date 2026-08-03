@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 编程练习助手 - 启动管理</title>
+<link rel="icon" href="data:,">
+<style>
+:root { color-scheme: light; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f7fa; color: #333; min-height: 100vh;
+}
+.topbar {
+  background: #fff; border-bottom: 1px solid #e0e0e0; padding: 14px 28px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.topbar h1 { font-size: 1.3rem; color: #1a73e8; }
+.topbar .sub { font-size: 0.78rem; color: #999; margin-top: 2px; }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px;
+  border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+}
+.status-pill .dot { width: 10px; height: 10px; border-radius: 50%; background: #9e9e9e; }
+.status-pill.running { background: #e6f4ea; color: #137333; }
+.status-pill.running .dot { background: #34a853; }
+.status-pill.stopped { background: #f1f3f4; color: #5f6368; }
+.status-pill.error { background: #fce8e6; color: #c5221f; }
+.status-pill.error .dot { background: #ea4335; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 60px; }
+.grid { display: grid; grid-template-columns: 1fr 360px; gap: 18px; align-items: start; }
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff; border-radius: 12px; padding: 20px 22px; margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid #ececec;
+}
+.card h2 {
+  font-size: 1.02rem; color: #333; margin-bottom: 14px; display: flex;
+  align-items: center; justify-content: space-between; gap: 8px;
+}
+.card h2 .tag { font-size: 0.72rem; color: #999; font-weight: 400; }
+.card h2 .badge { font-size: 0.72rem; color: #1a73e8; background: #e8f0fe; padding: 3px 9px; border-radius: 999px; font-weight: 500; }
+label.field { display: block; margin-bottom: 13px; }
+label.field > span { display: block; font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 5px; }
+label.field .hint { font-size: 0.75rem; color: #aaa; font-weight: 400; margin-left: 6px; }
+.row { display: flex; gap: 12px; }
+.row > * { flex: 1; min-width: 0; }
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+  width: 100%; padding: 9px 12px; border: 1px solid #d0d0d0; border-radius: 6px;
+  font-size: 0.92rem; background: #fff; color: #333; font-family: inherit;
+}
+input:focus, select:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
+.key-wrap { position: relative; }
+.key-wrap input { padding-right: 74px; }
+.key-wrap .key-actions { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 6px; }
+.key-wrap .key-actions button {
+  border: none; background: #f1f3f4; color: #5f6368; font-size: 0.72rem;
+  padding: 3px 8px; border-radius: 4px; cursor: pointer;
+}
+.key-wrap .key-actions button:hover { background: #e8f0fe; color: #1a73e8; }
+.saved-note { font-size: 0.75rem; color: #137333; margin-top: 3px; display: none; }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed #eee; }
+.switch-row .txt { font-size: 0.88rem; font-weight: 600; color: #444; }
+.switch-row .txt small { display: block; font-weight: 400; color: #999; font-size: 0.75rem; }
+.switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider { position: absolute; inset: 0; background: #cfd4da; border-radius: 999px; transition: .2s; cursor: pointer; }
+.switch .slider:before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+.switch input:checked + .slider { background: #1a73e8; }
+.switch input:checked + .slider:before { transform: translateX(20px); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 18px; border: none; border-radius: 7px; font-size: 0.92rem;
+  font-weight: 600; cursor: pointer; transition: background .15s;
+}
+.btn-primary { background: #1a73e8; color: #fff; }
+.btn-primary:hover { background: #1557b0; }
+.btn-success { background: #34a853; color: #fff; }
+.btn-success:hover { background: #2d9249; }
+.btn-danger { background: #d93025; color: #fff; }
+.btn-danger:hover { background: #b3271d; }
+.btn-ghost { background: #f1f3f4; color: #444; border: 1px solid #dadce0; }
+.btn-ghost:hover { background: #e8eaed; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.gen-btn {
+  border: 1px solid #1a73e8; color: #1a73e8; background: #fff; padding: 5px 12px;
+  border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+}
+.gen-btn:hover { background: #e8f0fe; }
+
+.msg { padding: 9px 13px; border-radius: 6px; font-size: 0.85rem; margin-top: 12px; display: none; white-space: pre-wrap; }
+.msg.error { background: #fce8e6; color: #c5221f; }
+.msg.success { background: #e6f4ea; color: #137333; }
+.msg.warn { background: #fef7e0; color: #7f6000; }
+.msg.show { display: block; }
+
+.generated-key {
+  margin-top: 12px; background: #fef7e0; border: 1px solid #f9ab00; border-radius: 6px;
+  padding: 12px 14px; font-size: 0.88rem; display: none;
+}
+.generated-key.show { display: block; }
+.generated-key code { display: block; font-size: 1.02rem; color: #7f6000; margin: 6px 0; word-break: break-all; user-select: all; }
+
+.status-list { list-style: none; }
+.status-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 0.88rem; }
+.status-list li:last-child { border-bottom: none; }
+.status-list .k { color: #777; flex-shrink: 0; }
+.status-list .v { text-align: right; word-break: break-all; color: #333; font-weight: 500; }
+.status-list a { color: #1a73e8; text-decoration: none; }
+.status-list a:hover { text-decoration: underline; }
+.status-list .v.ok { color: #137333; }
+.status-list .v.off { color: #c5221f; }
+.status-list .v.dim { color: #9e9e9e; font-weight: 400; }
+
+.log-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.log-head .mini { font-size: 0.75rem; color: #999; }
+.log-box {
+  background: #1e1e1e; color: #d4d4d4; border-radius: 8px; padding: 12px 14px;
+  font-family: Consolas, "Courier New", monospace; font-size: 0.76rem;
+  max-height: 340px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; line-height: 1.5;
+}
+.log-box .empty { color: #7f8c8d; }
+.fetch-row { display: flex; align-items: center; gap: 10px; margin: 2px 0 12px; }
+.fetch-note { font-size: 0.75rem; color: #666; line-height: 1.5; }
+
+footer { margin-top: 26px; font-size: 0.75rem; color: #999; line-height: 1.8; }
+footer code { background: #eee; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>AI 编程练习助手 · 启动管理</h1>
+    <div class="sub">本地启动页（仅本机可访问）· 把启动命令行配置搬进网页</div>
+  </div>
+  <div>
+    <span id="statusPill" class="status-pill stopped"><span class="dot"></span><span id="statusText">正在检测...</span></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="errBanner" class="msg error"></div>
+  <div class="grid">
+    <div>
+      <!-- ============ AI 配置 ============ -->
+      <div class="card">
+        <h2>AI 点评配置 <span class="tag">支持多平台 OpenAI 兼容接口</span></h2>
+        <div class="switch-row">
+          <div class="txt">启用 AI 智能点评
+            <small>关闭后判题功能仍正常，仅 AI 点评不可用</small>
+          </div>
+          <label class="switch"><input type="checkbox" id="aiEnabled"><span class="slider"></span></label>
+        </div>
+        <label class="field">
+          <span>AI 平台</span>
+          <select id="aiPlatform"></select>
+        </label>
+        <div id="platformNote" class="saved-note" style="display:block; color:#888; margin:-8px 0 12px;"></div>
+        <label class="field">
+          <span>API 密钥</span>
+          <div class="key-wrap">
+            <input type="password" id="aiKey" placeholder="输入新密钥" autocomplete="off">
+            <div class="key-actions">
+              <button type="button" onclick="toggleVis('aiKey', this)">显示</button>
+              <button type="button" onclick="clearField('aiKey')">清空</button>
+            </div>
+          </div>
+          <div class="saved-note" id="aiKeyNote"></div>
+        </label>
+        <div class="row">
+          <label class="field">
+            <span>模型名称</span>
+            <div class="key-wrap">
+              <input type="text" id="aiModel" placeholder="" list="modelList" autocomplete="off">
+              <div class="key-actions"><button type="button" onclick="clearField('aiModel')">默认</button></div>
+            </div>
+            <div class="saved-note" id="aiModelNote"></div>
+          </label>
+          <label class="field">
+            <span>接口地址 <span class="hint">留空=平台默认</span></span>
+            <div class="key-wrap">
+              <input type="text" id="aiBaseUrl" placeholder="" autocomplete="off">
+              <div class="key-actions"><button type="button" onclick="clearField('aiBaseUrl')">默认</button></div>
+            </div>
+            <div class="saved-note" id="aiBaseUrlNote"></div>
+          </label>
+        </div>
+        <datalist id="modelList"></datalist>
+        <div class="fetch-row">
+          <button class="btn btn-ghost" onclick="fetchModels()">拉取可用模型</button>
+          <span class="fetch-note" id="modelFetchNote">填写平台和密钥后，可一键拉取该平台当前可用模型</span>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="testAI()">测试 AI 连接</button>
+        </div>
+        <div class="msg" id="aiTestMsg"></div>
+      </div>
+
+      <!-- ============ 管理员密钥 ============ -->
+      <div class="card">
+        <h2>管理员密钥 <span class="badge">后台管理入口</span></h2>
+        <label class="field">
+          <span>管理密钥 <span class="hint">留空则启动时自动生成</span></span>
+          <div class="key-wrap">
+            <input type="password" id="adminKey" placeholder="输入新密钥或留空" autocomplete="off">
+            <div class="key-actions">
+              <button type="button" onclick="toggleVis('adminKey', this)">显示</button>
+              <button type="button" onclick="genAdminKey()">生成随机</button>
+              <button type="button" onclick="clearField('adminKey')">清空</button>
+            </div>
+          </div>
+          <div class="saved-note" id="adminKeyNote"></div>
+        </label>
+      </div>
+
+      <!-- ============ 服务器设置 ============ -->
+      <div class="card">
+        <h2>服务器设置 <span class="tag">修改后重启服务生效</span></h2>
+        <div class="row">
+          <label class="field">
+            <span>监听端口</span>
+            <input type="number" id="port" min="1" max="65535">
+          </label>
+          <label class="field">
+            <span>监听地址</span>
+            <select id="bindHost">
+              <option value="0.0.0.0">0.0.0.0（公网可访问）</option>
+              <option value="127.0.0.1">127.0.0.1（仅本机）</option>
+            </select>
+          </label>
+        </div>
+        <div class="switch-row">
+          <div class="txt">启动成功后自动打开浏览器</div>
+          <label class="switch"><input type="checkbox" id="openBrowser"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- ============ 公网访问 ============ -->
+      <div class="card">
+        <h2>公网访问（ngrok 隧道） <span class="tag">免费域名有限流</span></h2>
+        <div class="switch-row">
+          <div class="txt">启用 ngrok 公网隧道
+            <small>从校外通过公网地址访问；关掉则仅本机/内网可访问</small>
+          </div>
+          <label class="switch"><input type="checkbox" id="ngrokEnabled"><span class="slider"></span></label>
+        </div>
+        <label class="field">
+          <span>固定域名 <span class="hint">留空=随机公网地址</span></span>
+          <input type="text" id="ngrokDomain" placeholder="例如 xxx.ngrok-free.dev" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>ngrok authtoken</span>
+          <div class="key-wrap">
+            <input type="password" id="ngrokToken" placeholder="输入新 authtoken" autocomplete="off">
+            <div class="key-actions">
+              <button type="button" onclick="toggleVis('ngrokToken', this)">显示</button>
+              <button type="button" onclick="clearField('ngrokToken')">清空</button>
+            </div>
+          </div>
+          <div class="saved-note" id="ngrokTokenNote"></div>
+        </label>
+      </div>
+
+      <!-- ============ 操作 ============ -->
+      <div class="card">
+        <h2>操作</h2>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="saveConfig()">保存配置</button>
+          <button class="btn btn-success" id="startBtn" onclick="startServer()">启动服务</button>
+          <button class="btn btn-danger" id="stopBtn" onclick="stopServer()">停止服务</button>
+          <button class="btn btn-ghost" onclick="killPort()">结束占用端口</button>
+        </div>
+        <div class="msg" id="actionMsg"></div>
+        <div class="generated-key" id="generatedKeyBox">
+          本次未填写管理员密钥，已自动生成（请立即保存，之后不再显示）：
+          <code id="generatedKey"></code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 右侧状态 ============ -->
+    <div>
+      <div class="card">
+        <h2>运行状态</h2>
+        <ul class="status-list" id="statusList">
+          <li><span class="k">服务状态</span><span class="v dim" id="stServer">-</span></li>
+          <li><span class="k">健康检查</span><span class="v dim" id="stHealth">-</span></li>
+          <li><span class="k">本地地址</span><span class="v dim" id="stLocal">-</span></li>
+          <li><span class="k">公网地址</span><span class="v dim" id="stPublic">-</span></li>
+          <li><span class="k">AI 状态</span><span class="v dim" id="stAI">-</span></li>
+          <li><span class="k">进程 PID</span><span class="v dim" id="stPid">-</span></li>
+          <li><span class="k">Python</span><span class="v dim" id="stPython">-</span></li>
+          <li><span class="k">C++ 编译器</span><span class="v dim" id="stCompiler">-</span></li>
+          <li><span class="k">ngrok</span><span class="v dim" id="stNgrok">-</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="log-head">
+          <h2 style="margin:0;">运行日志</h2>
+          <span class="mini"><label><input type="checkbox" id="autoScroll" checked> 自动滚动</label></span>
+        </div>
+        <div class="log-box" id="logBox"><span class="empty">暂无日志</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <b>安全提示：</b>本启动页仅监听 <code>127.0.0.1:8299</code>，请勿将其暴露到公网。密钥以明文保存在项目根目录
+    <code>launcher_config.json</code> 中，仅本机可读；同时会同步生成旧版 <code>deploy_config.txt</code> 供命令行脚本兼容。
+    向公网开放判题服务时，请另行考虑沙箱隔离（详见 README）。
+  </footer>
+</div>
+
+<script>
+const API = {
+  state: '/api/state',
+  platforms: '/api/platforms',
+  config: '/api/config',
+  start: '/api/start',
+  stop: '/api/stop',
+  logs: '/api/logs',
+  testAI: '/api/test-ai',
+  killPort: '/api/kill-port',
+  listModels: '/api/list-models',
+};
+
+let platformList = [];
+let savedConfig = {};   // 服务器端已保存的配置（密钥已脱敏）
+let clearFlags = {};    // 用户点击“清空”的字段，保存时发送空串
+let stateTimer = null;
+let logTimer = null;
+let lastRunning = false;
+let formDirty = false;   // 用户正在编辑表单时，轮询不覆盖输入
+
+function $(id) { return document.getElementById(id); }
+
+async function api(path, payload) {
+  const opt = { method: 'GET', headers: { 'Accept': 'application/json' } };
+  if (payload !== undefined) {
+    opt.method = 'POST';
+    opt.headers['Content-Type'] = 'application/json';
+    opt.body = JSON.stringify(payload);
+  }
+  const resp = await fetch(path, opt);
+  let data = null;
+  try { data = await resp.json(); } catch (e) { data = { ok: false, error: '响应解析失败' }; }
+  if (!resp.ok && !data.ok) {
+    data = Object.assign({ ok: false }, data);
+  }
+  return data;
+}
+
+function showMsg(id, type, text) {
+  const el = $(id);
+  el.className = 'msg ' + type + ' show';
+  el.textContent = text;
+}
+
+function hideMsg(id) {
+  $(id).className = 'msg';
+  $(id).textContent = '';
+}
+
+function toggleVis(id, btn) {
+  const el = $(id);
+  const show = el.type === 'password';
+  el.type = show ? 'text' : 'password';
+  btn.textContent = show ? '隐藏' : '显示';
+}
+
+function clearField(id) {
+  $(id).value = '';
+  clearFlags[id] = true;
+  $('#' + id + 'Note').style.display = 'none';
+}
+
+function genAdminKey() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  const key = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  $('adminKey').value = key;
+  $('adminKey').type = 'text';
+  clearFlags['adminKey'] = false;
+  showMsg('actionMsg', 'success', '已生成随机管理员密钥，点击「保存配置」写入配置。');
+}
+
+function maskPreview(value) {
+  if (!value) return '';
+  if (value.length <= 6) return '*'.repeat(value.length);
+  return value.slice(0, 3) + '****' + value.slice(-3);
+}
+
+function initPlatforms(platforms) {
+  platformList = platforms || [];
+  const sel = $('aiPlatform');
+  sel.innerHTML = '';
+  for (const p of platformList) {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    sel.appendChild(opt);
+  }
+  sel.addEventListener('change', onPlatformChanged);
+}
+
+function onPlatformChanged() {
+  updatePlatformUI();
+  $('modelList').innerHTML = '';
+  $('modelFetchNote').textContent = '填写平台和密钥后，可一键拉取该平台当前可用模型';
+  $('modelFetchNote').style.color = '#666';
+}
+
+function updatePlatformUI() {
+  const id = $('aiPlatform').value;
+  const p = platformList.find(x => x.id === id);
+  if (!p) return;
+  $('aiModel').placeholder = p.default_model || '必填';
+  $('aiBaseUrl').placeholder = p.base_url || '必填（OpenAI 兼容接口地址）';
+  $('platformNote').textContent = p.note ? '提示：' + p.note : '';
+  if (id === 'custom') {
+    $('aiModel').required = true;
+    $('aiBaseUrl').required = true;
+  } else {
+    $('aiModel').required = false;
+    $('aiBaseUrl').required = false;
+  }
+}
+
+function applyConfig(cfg) {
+  savedConfig = cfg || {};
+  $('aiEnabled').checked = !!cfg.ai_enabled;
+  $('aiPlatform').value = cfg.ai_platform || 'siliconflow';
+  $('port').value = cfg.port || 8081;
+  $('bindHost').value = cfg.bind_host || '0.0.0.0';
+  $('openBrowser').checked = cfg.open_browser !== false;
+  $('ngrokEnabled').checked = !!cfg.ngrok_enabled;
+  $('ngrokDomain').value = cfg.ngrok_domain || '';
+
+  // 密钥字段：只显示脱敏提示，真实值不回传浏览器
+  setMasked($('aiKey'), $('aiKeyNote'), cfg.ai_api_key);
+  setMasked($('adminKey'), $('adminKeyNote'), cfg.admin_key);
+  setMasked($('ngrokToken'), $('ngrokTokenNote'), cfg.ngrok_authtoken);
+  setMasked($('aiModel'), $('aiModelNote'), cfg.ai_model, '当前模型');
+  setMasked($('aiBaseUrl'), $('aiBaseUrlNote'), cfg.ai_base_url, '当前地址');
+
+  updatePlatformUI();
+  clearFlags = {};
+}
+
+function markDirty() {
+  formDirty = true;
+}
+
+document.addEventListener('input', markDirty);
+document.addEventListener('change', markDirty);
+
+function setMasked(input, noteEl, value, prefix) {
+  if (value) {
+    noteEl.style.display = 'block';
+    noteEl.textContent = (prefix ? prefix + '：' : '已保存：') + maskPreview(value);
+  } else {
+    noteEl.style.display = 'none';
+  }
+}
+
+function buildPayload() {
+  const p = {};
+  p.ai_enabled = $('aiEnabled').checked;
+  p.ai_platform = $('aiPlatform').value;
+  p.port = parseInt($('port').value, 10);
+  p.bind_host = $('bindHost').value;
+  p.open_browser = $('openBrowser').checked;
+  p.ngrok_enabled = $('ngrokEnabled').checked;
+  p.ngrok_domain = $('ngrokDomain').value.trim();
+
+  // 留空且未点“清空” = 保持已保存的值
+  const textFields = [
+    ['ai_api_key', 'aiKey'],
+    ['admin_key', 'adminKey'],
+    ['ngrok_authtoken', 'ngrokToken'],
+    ['ai_model', 'aiModel'],
+    ['ai_base_url', 'aiBaseUrl'],
+  ];
+  for (const [key, id] of textFields) {
+    const v = $(id).value;
+    if (v) p[key] = v;
+    else if (clearFlags[id]) p[key] = '';
+  }
+  return p;
+}
+
+async function refreshState() {
+  const s = await api(API.state);
+  if (!s || !s.ok) return;
+  if (!formDirty) applyConfig(s.config);
+
+  const pill = $('statusPill');
+  const running = !!s.server_running;
+  if (running && s.health) {
+    pill.className = 'status-pill running';
+    $('statusText').textContent = '服务运行中';
+  } else if (running) {
+    pill.className = 'status-pill error';
+    $('statusText').textContent = '运行异常';
+  } else {
+    pill.className = 'status-pill stopped';
+    $('statusText').textContent = '服务已停止';
+  }
+
+  setLi('stServer', running ? '运行中' : '已停止', running ? 'ok' : 'off');
+  setLi('stHealth', running ? (s.health ? '正常' : '异常') : '-', running ? (s.health ? 'ok' : 'off') : 'dim');
+  const local = s.local_url || '-';
+  $('stLocal').innerHTML = running ? `<a href="${local}" target="_blank" rel="noopener">${local}</a>` : '-';
+  $('stLocal').className = 'v' + (running ? ' ok' : ' dim');
+  if (s.public_url) {
+    $('stPublic').innerHTML = `<a href="${s.public_url}" target="_blank" rel="noopener">${s.public_url}</a>`;
+    $('stPublic').className = 'v ok';
+  } else {
+    $('stPublic').textContent = s.ngrok_running ? '获取中...' : '未启用';
+    $('stPublic').className = 'v dim';
+  }
+  if (s.ai_info && s.ai_info.available) {
+    setLi('stAI', `${s.ai_info.platform_name} · ${s.ai_info.model}`, 'ok');
+  } else {
+    setLi('stAI', '已禁用', 'off');
+  }
+  setLi('stPid', s.server_pid ? 'PID ' + s.server_pid : '-', s.server_pid ? '' : 'dim');
+  setLi('stPython', s.tools.python || '-', '');
+  setLi('stCompiler', s.tools.compiler || '-', '');
+  setLi('stNgrok', s.tools.ngrok || '-', '');
+
+  $('startBtn').disabled = running;
+  $('stopBtn').disabled = !running;
+
+  if (s.last_error && !running) {
+    showMsg('actionMsg', 'error', s.last_error);
+  }
+
+  if (running && !lastRunning) { refreshLogs(); }
+  lastRunning = running;
+}
+
+function setLi(id, text, cls) {
+  const el = $(id);
+  el.textContent = text;
+  el.className = 'v' + (cls ? ' ' + cls : '');
+}
+
+async function refreshLogs() {
+  const data = await api(API.logs + '?lines=120');
+  if (!data || !data.ok) return;
+  const lines = [];
+  if (data.stdout && data.stdout.length) {
+    lines.push('── server_stdout.log ──', ...data.stdout);
+  }
+  if (data.stderr && data.stderr.length) {
+    lines.push('', '── server_stderr.log ──', ...data.stderr);
+  }
+  const box = $('logBox');
+  const auto = $('autoScroll').checked;
+  const stick = auto && (box.scrollTop + box.clientHeight >= box.scrollHeight - 40);
+  box.innerHTML = lines.length
+    ? lines.map(l => escapeHtml(l)).join('\n')
+    : '<span class="empty">暂无日志</span>';
+  if (auto && (stick || !lastRunning)) box.scrollTop = box.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+async function saveConfig() {
+  hideMsg('actionMsg');
+  const r = await api(API.config, buildPayload());
+  if (r.ok) {
+    showMsg('actionMsg', 'success', '配置已保存。');
+    formDirty = false;
+    await refreshState();
+  } else {
+    showMsg('actionMsg', 'error', (r.errors || [r.error]).join('\n'));
+  }
+}
+
+async function startServer() {
+  hideMsg('actionMsg');
+  $('generatedKeyBox').className = 'generated-key';
+  const r = await api(API.start, buildPayload());
+  if (r.ok) {
+    formDirty = false;
+    if (r.generated_admin_key) {
+      $('generatedKey').textContent = r.generated_admin_key;
+      $('generatedKeyBox').className = 'generated-key show';
+    }
+    let msg = '服务启动成功';
+    if (r.public_url) msg += `\n公网地址：${r.public_url}`;
+    showMsg('actionMsg', 'success', msg);
+    if (r.warnings && r.warnings.length) {
+      showMsg('actionMsg', 'warn', '服务已启动，但有警告：\n' + r.warnings.join('\n'));
+    }
+    startPolling();
+    refreshLogs();
+  } else {
+    const errs = r.errors || [r.error || '启动失败'];
+    showMsg('actionMsg', 'error', errs.join('\n'));
+    if (r.log_tail) {
+      const lines = [...(r.log_tail.stdout || []), ...(r.log_tail.stderr || [])];
+      $('logBox').innerHTML = lines.map(escapeHtml).join('\n') || '（无日志）';
+    }
+  }
+  await refreshState();
+}
+
+async function stopServer() {
+  if (!confirm('确定停止服务吗？已启动的 ngrok 隧道会一并关闭。')) return;
+  hideMsg('actionMsg');
+  const r = await api(API.stop);
+  if (r.ok) {
+    showMsg('actionMsg', 'success', '服务已停止：' + (r.stopped.join('、') || '无'));
+    stopPolling();
+    await refreshState();
+  } else {
+    showMsg('actionMsg', 'error', r.error || '停止失败');
+  }
+}
+
+async function testAI() {
+  hideMsg('aiTestMsg');
+  const payload = {
+    platform: $('aiPlatform').value,
+    api_key: $('aiKey').value || (clearFlags.ai_api_key ? '' : (savedConfig.ai_api_key || '')),
+    base_url: $('aiBaseUrl').value || (clearFlags.ai_base_url ? '' : (savedConfig.ai_base_url || '')),
+    model: $('aiModel').value || (clearFlags.ai_model ? '' : (savedConfig.ai_model || '')),
+  };
+  showMsg('aiTestMsg', 'warn', '正在测试连接，请稍候...');
+  const r = await api(API.testAI, payload);
+  if (r.ok) showMsg('aiTestMsg', 'success', r.message);
+  else showMsg('aiTestMsg', 'error', r.message || '测试失败');
+}
+
+async function fetchModels() {
+  const note = $('modelFetchNote');
+  note.textContent = '正在拉取，请稍候...';
+  note.style.color = '#666';
+  const payload = {
+    platform: $('aiPlatform').value,
+    api_key: $('aiKey').value || (clearFlags.ai_api_key ? '' : (savedConfig.ai_api_key || '')),
+    base_url: $('aiBaseUrl').value || (clearFlags.ai_base_url ? '' : (savedConfig.ai_base_url || '')),
+  };
+  const r = await api(API.listModels, payload);
+  const dl = $('modelList');
+  dl.innerHTML = '';
+  if (r.models && r.models.length) {
+    for (const m of r.models) {
+      const opt = document.createElement('option');
+      opt.value = m;
+      dl.appendChild(opt);
+    }
+    note.textContent = r.ok
+      ? r.message + '（点击模型输入框可下拉选择）'
+      : r.message + '（以下为内置备选，仅供参考）';
+    note.style.color = r.ok ? '#137333' : '#7f6000';
+  } else {
+    note.textContent = (r.message || '拉取失败') + '，可直接手动输入模型名';
+    note.style.color = '#c5221f';
+  }
+}
+
+async function killPort() {
+  const port = prompt('请输入要结束占用的端口号：', $('port').value || '8081');
+  if (!port) return;
+  const r = await api(API.killPort, { port: parseInt(port, 10) });
+  if (r.ok) showMsg('actionMsg', 'success', `已结束占用端口 ${r.port} 的进程（PID ${r.killed}）。`);
+  else showMsg('actionMsg', 'error', r.error || '结束失败');
+}
+
+function startPolling() {
+  if (!stateTimer) {
+    stateTimer = setInterval(refreshState, 3000);
+    logTimer = setInterval(refreshLogs, 5000);
+  }
+}
+
+function stopPolling() {
+  if (stateTimer) { clearInterval(stateTimer); stateTimer = null; }
+  if (logTimer) { clearInterval(logTimer); logTimer = null; }
+}
+
+(async function init() {
+  const [state, plats] = await Promise.all([api(API.state), api(API.platforms)]);
+  if (!state || !state.ok) {
+    showMsg('actionMsg', 'error', '无法连接启动器，请确认 launcher.py 正在运行。');
+    return;
+  }
+  initPlatforms(plats.platforms);
+  applyConfig(state.config);
+  refreshState();
+  startPolling();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# 密钥与配置文件（含明文密钥，切勿提交）
+launcher_config.json
+deploy_config.txt
+
+# 运行时数据
+data/users.json
+data/sessions.json
+data/submissions.json
+
+# 日志与进程记录
+server_*.log
+*.pid
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 便携运行环境（体积大，按需传输）
+runtime/
+ngrok.exe
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# IDE / 编辑器
+.idea/
+.vscode/

@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 编程练习助手</title>
+<link rel="icon" href="data:,">
+<style>
+:root { color-scheme: light; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #333; min-height: 100vh; }
+
+/* ====== 登录页面 ====== */
+#loginContainer { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.login-card { background: #fff; border-radius: 12px; padding: 40px; width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+.login-card h1 { font-size: 1.6rem; color: #1a73e8; margin-bottom: 4px; }
+.login-card .login-sub { font-size: 0.85rem; color: #999; margin-bottom: 24px; }
+.login-card label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; color: #555; }
+.login-card input[type="text"], .login-card input[type="password"] { width: 100%; padding: 10px 14px; border: 1px solid #d0d0d0; border-radius: 6px; font-size: 0.95rem; margin-bottom: 14px; }
+.login-card input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
+.login-card .btn-login { width: 100%; padding: 11px; background: #1a73e8; color: #fff; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 6px; }
+.login-card .btn-login:hover { background: #1557b0; }
+.login-card .switch-link { text-align: center; margin-top: 16px; font-size: 0.88rem; color: #666; }
+.login-card .switch-link a { color: #1a73e8; cursor: pointer; text-decoration: none; }
+.login-card .switch-link a:hover { text-decoration: underline; }
+.login-card .msg { padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 12px; display: none; }
+.login-card .msg.error { background: #fce8e6; color: #c5221f; display: block; }
+.login-card .msg.success { background: #e6f4ea; color: #137333; display: block; }
+.login-card .hint { display: block; font-size: 0.75rem; color: #aaa; margin-top: -10px; margin-bottom: 12px; transition: color 0.2s; }
+.login-card .hint.warn { color: #ea4335; }
+.login-card .hint.ok { color: #34a853; }
+
+/* ====== 主应用 ====== */
+#appContainer { display: none; }
+#appContainer.show { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar h2 { font-size: 1.3rem; color: #1a73e8; margin-bottom: 4px; }
+.sidebar .subtitle { font-size: 0.8rem; color: #999; margin-bottom: 16px; }
+.sidebar select { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; margin-bottom: 12px; background: #fff; cursor: pointer; }
+.question-count { font-size: 0.85rem; color: #666; margin-bottom: 12px; }
+.question-list { list-style: none; flex: 1; overflow-y: auto; }
+.question-list li { margin-bottom: 4px; }
+.question-list button { width: 100%; text-align: left; padding: 10px 12px; border: none; border-radius: 6px; background: transparent; cursor: pointer; font-size: 0.88rem; color: #444; transition: background 0.15s; }
+.question-list button:hover { background: #e8f0fe; }
+.question-list button.active { background: #1a73e8; color: #fff; font-weight: 600; }
+.question-list button .diff { font-size: 0.75rem; opacity: 0.85; }
+.sidebar-footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid #eee; font-size: 0.78rem; color: #888; }
+.sidebar-footer .ai-ok { color: #34a853; }
+.sidebar-footer .ai-off { color: #ea4335; }
+
+/* 汉堡菜单 - 仅移动端显示 */
+.menu-toggle { display: none; }
+@media (max-width: 768px) {
+  .menu-toggle { display: flex; }
+}
+
+/* User bar */
+.user-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #e8f0fe; border-radius: 6px; margin-bottom: 16px; font-size: 0.85rem; }
+.user-bar .user-name { font-weight: 600; color: #1a73e8; }
+.user-bar .btn-logout { background: none; border: 1px solid #1a73e8; color: #1a73e8; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 0.78rem; }
+.user-bar .btn-logout:hover { background: #1a73e8; color: #fff; }
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 30px 40px; }
+.header { margin-bottom: 20px; }
+.header .q-title { font-size: 1.6rem; font-weight: 700; color: #1a73e8; }
+.header .q-meta { font-size: 0.85rem; color: #888; margin-top: 4px; }
+.q-description { background: #fff; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; border: 1px solid #e8e8e8; line-height: 1.7; }
+.q-description h2 { font-size: 1.15rem; margin-bottom: 12px; color: #333; }
+.q-description h3 { font-size: 1rem; margin: 14px 0 6px; }
+.q-description p { margin: 6px 0; }
+.q-description ul, .q-description ol { padding-left: 20px; margin: 6px 0; }
+.q-description li { margin: 3px 0; }
+.q-description strong { color: #d93025; }
+.q-description code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+.q-description pre { background: #f5f5f5; color: #333; padding: 12px 16px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; margin: 8px 0; border: 1px solid #e0e0e0; }
+.q-description pre code { display: block; }
+
+.hints-box { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; }
+.hints-box summary { cursor: pointer; font-weight: 600; color: #b8860b; }
+.hints-box ol { margin-top: 8px; padding-left: 20px; }
+.hints-box li { margin: 4px 0; font-size: 0.9rem; }
+
+.editor-section { margin-bottom: 20px; }
+.editor-section h3 { font-size: 1rem; margin-bottom: 8px; }
+.editor-section textarea { width: 100%; min-height: 280px; padding: 14px 16px; border: 1px solid #d0d0d0; border-radius: 8px; font-family: "JetBrains Mono", "Fira Code", "Consolas", "Courier New", monospace; font-size: 0.9rem; line-height: 1.6; resize: vertical; background: #fafafa; tab-size: 4; }
+.editor-section textarea:focus { outline: none; border-color: #1a73e8; background: #fff; box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
+
+.btn-row { display: flex; gap: 12px; margin-bottom: 24px; }
+.btn { padding: 10px 24px; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; font-weight: 600; transition: background 0.15s, transform 0.1s; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: #1a73e8; color: #fff; }
+.btn-primary:hover { background: #1557b0; }
+.btn-secondary { background: #f1f3f4; color: #444; }
+.btn-secondary:hover { background: #e0e0e0; }
+
+.result-section { margin-bottom: 24px; }
+.result-card { border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; }
+.result-card.success { background: #e6f4ea; border-left: 4px solid #34a853; }
+.result-card.fail { background: #fce8e6; border-left: 4px solid #ea4335; }
+.result-card h3 { margin-bottom: 8px; }
+
+.test-cases { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+.test-case { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 0.88rem; }
+.test-case:last-child { border-bottom: none; }
+.test-case.pass { background: #f8fdf9; }
+.test-case.fail { background: #fefaf9; }
+.test-case .tc-status { font-weight: 700; }
+.test-case .tc-detail { margin-top: 4px; font-family: monospace; font-size: 0.82rem; white-space: pre-wrap; background: #f8f9fa; padding: 8px 12px; border-radius: 4px; }
+
+.ai-feedback { background: #e8f0fe; border-left: 4px solid #1a73e8; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; line-height: 1.7; }
+.ai-feedback h3 { margin-bottom: 10px; color: #1a73e8; }
+
+.empty-state { text-align: center; padding: 40px; color: #999; }
+.empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+
+/* ====== 移动端适配 ====== */
+@media (max-width: 768px) {
+  /* 登录卡片 */
+  #loginContainer { padding: 16px; align-items: flex-start; padding-top: 6vh; }
+  .login-card { width: 100%; padding: 24px 20px; border-radius: 10px; }
+  .login-card h1 { font-size: 1.35rem; }
+  .login-card input[type="text"], .login-card input[type="password"] { padding: 12px 14px; font-size: 16px; } /* 16px 防止 iOS 缩放 */
+  .login-card .btn-login { padding: 14px; font-size: 1.05rem; }
+
+  /* 主布局：垂直排列 */
+  #appContainer.show { flex-direction: column; }
+
+  /* 侧边栏 → 顶部横条 */
+  .sidebar { width: 100%; flex-shrink: 0; padding: 12px 16px; border-right: none; border-bottom: 1px solid #e0e0e0; max-height: 56px; overflow: hidden; transition: max-height 0.3s; }
+  .sidebar.open { max-height: 600px; overflow-y: auto; }
+  .sidebar h2 { font-size: 1.1rem; display: inline; }
+  .sidebar .subtitle { display: none; }
+  .sidebar .user-bar { margin-bottom: 8px; }
+  .sidebar select { margin-top: 8px; }
+  .sidebar-footer { display: none; }
+
+  /* 汉堡菜单按钮 */
+  .menu-toggle { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .menu-toggle .hamburger { font-size: 1.4rem; color: #1a73e8; line-height: 1; }
+  .menu-toggle .menu-label { font-size: 0.85rem; color: #888; }
+
+  /* 主内容区 */
+  .main { padding: 16px 14px; overflow-y: auto; }
+  .header .q-title { font-size: 1.25rem; }
+  .q-description { padding: 14px 16px; }
+  .q-description pre { font-size: 0.78rem; padding: 10px 12px; }
+
+  /* 编辑器 */
+  .editor-section textarea { min-height: 220px; font-size: 0.85rem; padding: 12px 14px; }
+  .btn-row { flex-wrap: wrap; gap: 8px; }
+  .btn { flex: 1; min-width: 120px; padding: 12px 14px; font-size: 0.9rem; text-align: center; }
+
+  /* 结果区 */
+  .result-card { padding: 12px 14px; }
+  .test-case { padding: 10px 12px; font-size: 0.82rem; }
+  .test-case .tc-detail { font-size: 0.76rem; padding: 6px 10px; }
+  .ai-feedback { padding: 12px 14px; }
+
+  /* 空状态 */
+  .empty-state { padding: 24px 16px; }
+  .empty-state .icon { font-size: 2.2rem; }
+}
+
+/* 极小屏 (320-400px) */
+@media (max-width: 400px) {
+  .login-card { padding: 20px 14px; }
+  .sidebar { padding: 10px 12px; }
+  .main { padding: 12px 10px; }
+  .btn { font-size: 0.85rem; padding: 10px 12px; }
+  .header .q-title { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== 登录/注册页面 ====== -->
+<div id="loginContainer">
+  <div class="login-card">
+    <h1>AI 编程练习助手</h1>
+    <p class="login-sub" id="loginSub">登录以继续练习</p>
+    <div class="msg" id="loginMsg"></div>
+    <label for="loginUser">用户名</label>
+    <input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off" oninput="validateForm()">
+    <span class="hint" id="hintUser">2-10 个字符</span>
+    <label for="loginPass">密码</label>
+    <input type="password" id="loginPass" placeholder="请输入密码" oninput="validateForm()">
+    <span class="hint" id="hintPass">8-15 个字符</span>
+    <!-- 注册时显示：找回密钥 -->
+    <div id="recoveryField" style="display:none;">
+      <label for="loginRecovery">找回密钥</label>
+      <input type="text" id="loginRecovery" placeholder="用于忘记密码时找回账号" autocomplete="off" oninput="validateForm()">
+      <span class="hint" id="hintRecovery">可选，建议填写学号或手机号</span>
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="handleAuth()">登 录</button>
+    <p class="switch-link">
+      <span id="switchText">没有账号？</span>
+      <a id="switchLink" onclick="toggleAuthMode()">立即注册</a>
+    </p>
+    <p class="switch-link" style="margin-top:4px;font-size:0.8rem;">
+      <a onclick="toggleRecover()" id="recoverLink">找回密码</a>
+      <span style="color:#ccc;margin:0 6px;">|</span>
+      <a id="adminLink" onclick="toggleAdminLogin()">管理员入口</a>
+    </p>
+  </div>
+</div>
+
+<!-- ====== 找回密码面板 ====== -->
+<div id="recoverContainer" style="display:none;align-items:center;justify-content:center;min-height:100vh;">
+  <div class="login-card">
+    <h1>🔒 找回密码</h1>
+    <p class="login-sub">输入用户名、找回密钥和新密码</p>
+    <div class="msg" id="recoverMsg"></div>
+    <label for="recoverUser">用户名</label>
+    <input type="text" id="recoverUser" placeholder="请输入用户名" autocomplete="off">
+    <label for="recoverKey">找回密钥</label>
+    <input type="password" id="recoverKey" placeholder="注册时设置的找回密钥">
+    <label for="recoverNewPass">新密码 (8-15 字符)</label>
+    <input type="password" id="recoverNewPass" placeholder="请输入新密码">
+    <button class="btn-login" onclick="handleRecover()">重置密码</button>
+    <p class="switch-link">
+      <a onclick="toggleRecover()">返回登录</a>
+    </p>
+  </div>
+</div>
+
+<!-- ====== 管理员登录面板 ====== -->
+<div id="adminLoginContainer" style="display:none;align-items:center;justify-content:center;min-height:100vh;">
+  <div class="login-card">
+    <h1>🔑 管理员登录</h1>
+    <p class="login-sub">请输入管理密钥</p>
+    <div class="msg" id="adminMsg"></div>
+    <label for="adminKey">管理密钥</label>
+    <input type="password" id="adminKey" placeholder="请输入管理密钥">
+    <button class="btn-login" onclick="handleAdminLogin()">进入管理</button>
+    <p class="switch-link">
+      <a onclick="toggleAdminLogin()">返回用户登录</a>
+    </p>
+  </div>
+</div>
+
+<!-- ====== 管理员面板 ====== -->
+<div id="adminPanel" style="display:none;min-height:100vh;align-items:flex-start;justify-content:center;padding-top:40px;">
+<div style="background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.1);max-width:900px;width:100%;padding:24px;margin:0 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <h2 style="color:#1a73e8;margin:0;">管理员面板</h2>
+    <button class="btn-logout" onclick="logoutAdmin()" style="background:none;border:1px solid #1a73e8;color:#1a73e8;padding:6px 14px;border-radius:4px;cursor:pointer;">退出管理</button>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin-bottom:20px;">
+    <h3 style="margin-bottom:6px;color:#333;">🔑 重置用户密码</h3>
+    <p style="font-size:0.82rem;color:#888;margin-bottom:12px;">输入用户名和新密码，直接覆盖旧密码</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+      <div>
+        <label style="font-size:0.82rem;color:#555;">用户名</label>
+        <input type="text" id="resetUser" placeholder="用户名" style="display:block;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;width:180px;">
+      </div>
+      <div>
+        <label style="font-size:0.82rem;color:#555;">新密码 (8-15字符)</label>
+        <input type="text" id="resetPass" placeholder="新密码" style="display:block;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;width:180px;">
+      </div>
+      <button class="btn btn-primary" onclick="doResetPassword()" style="margin:0;">重置密码</button>
+    </div>
+    <div class="msg" id="resetMsg" style="margin-top:10px;"></div>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+    <h3 style="margin-bottom:12px;color:#333;">👥 用户列表</h3>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;" id="userTable">
+        <thead>
+          <tr style="border-bottom:2px solid #e0e0e0;">
+            <th style="text-align:left;padding:10px 8px;">用户名</th>
+            <th style="text-align:left;padding:10px 8px;">注册时间</th>
+            <th style="text-align:left;padding:10px 8px;">提交数</th>
+            <th style="text-align:right;padding:10px 8px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div></div>
+</div>
+
+<!-- ====== 主应用 ====== -->
+<div id="appContainer">
+<aside class="sidebar" id="sidebar">
+  <div class="menu-toggle" onclick="toggleSidebar()">
+    <div>
+      <h2 style="display:inline;">AI 编程练习助手</h2>
+      <span class="menu-label" id="menuLabel"></span>
+    </div>
+    <span class="hamburger">☰</span>
+  </div>
+  <p class="subtitle">C++ 入门练习平台</p>
+
+  <div class="user-bar">
+    <span class="user-name" id="displayName">---</span>
+    <button class="btn-logout" onclick="logout()">退出</button>
+  </div>
+
+  <select id="difficultyFilter" onchange="renderQuestionList()">
+    <option value="all">全部难度</option>
+    <option value="easy">⭐ 简单</option>
+    <option value="medium">⭐⭐ 中等</option>
+    <option value="hard">⭐⭐⭐ 困难</option>
+  </select>
+  <p class="question-count" id="questionCount">共 0 道题目</p>
+
+  <ul class="question-list" id="questionList"></ul>
+
+  <div class="sidebar-footer">
+    <p>AI 状态：<span id="aiStatus">检测中...</span></p>
+    <p style="margin-top:4px;">AI 不可用时仍可判题</p>
+  </div>
+</aside>
+
+<main class="main" id="mainContent">
+  <div class="empty-state">
+    <div class="icon">👈</div>
+    <p>从左侧选择一道题目开始练习</p>
+  </div>
+</main>
+</div>
+
+<script>
+// ===== 全局状态 =====
+let questions = [];
+let currentQuestion = null;
+let currentJudgeResult = null;
+let authToken = sessionStorage.getItem("auth_token") || "";
+let authUser = "";
+let authMode = "login"; // "login" or "register"
+let adminMode = false;   // true when logged in as admin
+let sessionCheckTimer = null;
+
+// ===== 初始化 =====
+async function init() {
+  if (authToken) {
+    try {
+      const resp = await fetch("/api/user", { headers: authHeader() });
+      const data = await resp.json();
+      if (data.username) {
+        authUser = data.username;
+        // 检查是否为管理员
+        if (authUser === "__admin__") {
+          adminMode = true;
+          showAdminPanel();
+          return;
+        }
+        showApp();
+        await loadApp();
+        return;
+      }
+    } catch(e) {}
+    clearAuthState();
+  }
+  showLogin();
+}
+
+function authHeader() {
+  return authToken ? { "Authorization": "Bearer " + authToken } : {};
+}
+
+function getDraftKey(questionId) {
+  const userKey = authUser ? authUser : "__guest__";
+  return `code_${userKey}_${questionId}`;
+}
+
+function clearAuthState() {
+  authToken = "";
+  authUser = "";
+  adminMode = false;
+  currentQuestion = null;
+  currentJudgeResult = null;
+  sessionStorage.removeItem("auth_token");
+}
+
+function stopSessionCheck() {
+  if (sessionCheckTimer) {
+    clearInterval(sessionCheckTimer);
+    sessionCheckTimer = null;
+  }
+}
+
+function isAuthExpired(data) {
+  return !!(data && data.error && (data.code === 401 || data.code === 403));
+}
+
+async function forceLogout(message) {
+  stopSessionCheck();
+  clearAuthState();
+  showLogin();
+  if (message) {
+    alert(message);
+  }
+}
+
+function startSessionCheck() {
+  stopSessionCheck();
+  if (!authToken) return;
+  sessionCheckTimer = setInterval(validateSession, 15000);
+}
+
+async function validateSession() {
+  if (!authToken) return;
+  try {
+    const resp = await fetch("/api/user", { headers: authHeader() });
+    const data = await resp.json();
+    if (isAuthExpired(data)) {
+      await forceLogout("当前账号已被下线，请重新登录");
+    }
+  } catch(e) {}
+}
+
+// ===== 登录/注册 UI =====
+function showLogin() {
+  stopSessionCheck();
+  document.getElementById("loginContainer").style.display = "flex";
+  document.getElementById("recoverContainer").style.display = "none";
+  document.getElementById("adminLoginContainer").style.display = "none";
+  document.getElementById("adminPanel").style.display = "none";
+  document.getElementById("appContainer").classList.remove("show");
+  document.getElementById("loginMsg").className = "msg";
+  document.getElementById("loginMsg").textContent = "";
+  document.getElementById("loginUser").value = "";
+  document.getElementById("loginPass").value = "";
+}
+
+function showApp() {
+  document.getElementById("loginContainer").style.display = "none";
+  document.getElementById("recoverContainer").style.display = "none";
+  document.getElementById("adminLoginContainer").style.display = "none";
+  document.getElementById("adminPanel").style.display = "none";
+  document.getElementById("appContainer").classList.add("show");
+  document.getElementById("displayName").textContent = authUser;
+  startSessionCheck();
+}
+
+function toggleAuthMode() {
+  authMode = authMode === "login" ? "register" : "login";
+  if (authMode === "register") {
+    document.getElementById("loginBtn").textContent = "注 册";
+    document.getElementById("loginSub").textContent = "创建新账号";
+    document.getElementById("switchText").textContent = "已有账号？";
+    document.getElementById("switchLink").textContent = "返回登录";
+    document.getElementById("hintUser").textContent = "2-10 个字符";
+    document.getElementById("hintPass").textContent = "8-15 个字符";
+    document.getElementById("recoveryField").style.display = "block";
+    document.getElementById("recoverLink").style.display = "none";
+  } else {
+    document.getElementById("loginBtn").textContent = "登 录";
+    document.getElementById("loginSub").textContent = "登录以继续练习";
+    document.getElementById("switchText").textContent = "没有账号？";
+    document.getElementById("switchLink").textContent = "立即注册";
+    document.getElementById("hintUser").textContent = "";
+    document.getElementById("hintPass").textContent = "";
+    document.getElementById("recoveryField").style.display = "none";
+    document.getElementById("recoverLink").style.display = "inline";
+  }
+  document.getElementById("loginMsg").className = "msg";
+  document.getElementById("loginMsg").textContent = "";
+  document.getElementById("hintUser").className = "hint";
+  document.getElementById("hintPass").className = "hint";
+  document.getElementById("loginRecovery").value = "";
+  validateForm();
+}
+
+function validateForm() {
+  const username = document.getElementById("loginUser").value.trim();
+  const password = document.getElementById("loginPass").value;
+  const hintUser = document.getElementById("hintUser");
+  const hintPass = document.getElementById("hintPass");
+
+  if (authMode !== "register") {
+    hintUser.className = "hint"; hintUser.textContent = "";
+    hintPass.className = "hint"; hintPass.textContent = "";
+    return;
+  }
+
+  if (!username) { hintUser.className = "hint"; hintUser.textContent = "2-10 个字符"; }
+  else if (username.length < 2 || username.length > 10) {
+    hintUser.className = "hint warn"; hintUser.textContent = "需 2-10 个字符";
+  } else { hintUser.className = "hint ok"; hintUser.textContent = "✓"; }
+
+  if (!password) { hintPass.className = "hint"; hintPass.textContent = "8-15 个字符"; }
+  else if (password.length < 8 || password.length > 15) {
+    hintPass.className = "hint warn"; hintPass.textContent = "需 8-15 个字符";
+  } else { hintPass.className = "hint ok"; hintPass.textContent = "✓"; }
+}
+
+async function handleAuth() {
+  const username = document.getElementById("loginUser").value.trim();
+  const password = document.getElementById("loginPass").value;
+  const msgEl = document.getElementById("loginMsg");
+
+  if (!username || !password) {
+    msgEl.className = "msg error";
+    msgEl.textContent = "请填写用户名和密码";
+    return;
+  }
+  // 前端校验
+  if (authMode === "register") {
+    if (username.length < 2 || username.length > 10) {
+      msgEl.className = "msg error";
+      msgEl.textContent = "用户名需 2-10 个字符";
+      return;
+    }
+    if (password.length < 8 || password.length > 15) {
+      msgEl.className = "msg error";
+      msgEl.textContent = "密码需 8-15 个字符";
+      return;
+    }
+  }
+
+  const url = authMode === "login" ? "/api/login" : "/api/register";
+  const body = authMode === "register"
+    ? { username, password, recovery_key: document.getElementById("loginRecovery").value.trim() }
+    : { username, password };
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const data = await resp.json();
+
+  if (data.success) {
+    if (authMode === "register") {
+      msgEl.className = "msg success";
+      msgEl.textContent = "注册成功！请登录";
+      toggleAuthMode();
+      document.getElementById("loginUser").value = username;
+      document.getElementById("loginPass").value = "";
+    } else {
+      authToken = data.token;
+      authUser = data.username;
+      sessionStorage.setItem("auth_token", authToken);
+      showApp();
+      await loadApp();
+    }
+  } else {
+    msgEl.className = "msg error";
+    msgEl.textContent = data.message;
+  }
+}
+
+async function logout() {
+  await fetch("/api/logout", { method: "POST", headers: authHeader() });
+  stopSessionCheck();
+  clearAuthState();
+  showLogin();
+}
+
+// Enter 键登录
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && document.getElementById("loginContainer").style.display !== "none") {
+    handleAuth();
+  }
+});
+
+// ===== 加载应用 =====
+async function loadApp() {
+  await loadQuestions();
+  checkAIStatus();
+  renderQuestionList();
+  if (questions.length > 0) {
+    selectQuestion(questions[0].id);
+  }
+}
+
+// ===== 加载题目 =====
+async function loadQuestions() {
+  const resp = await fetch("/api/questions");
+  questions = await resp.json();
+}
+
+// ===== 检查 AI 状态 =====
+async function checkAIStatus() {
+  try {
+    const resp = await fetch("/api/ai-status");
+    const data = await resp.json();
+    const el = document.getElementById("aiStatus");
+    if (data.available) {
+      el.innerHTML = '<span class="ai-ok">已连接</span>';
+    } else {
+      el.innerHTML = '<span class="ai-off">未配置</span>';
+    }
+  } catch(e) {
+    document.getElementById("aiStatus").innerHTML = '<span class="ai-off">检测失败</span>';
+  }
+}
+
+// ===== 渲染题目列表 =====
+function renderQuestionList() {
+  const difficulty = document.getElementById("difficultyFilter").value;
+  const filtered = difficulty === "all" ? questions : questions.filter(q => q.difficulty === difficulty);
+  document.getElementById("questionCount").textContent = `共 ${filtered.length} 道题目`;
+  document.getElementById("menuLabel").textContent = currentQuestion ? ` - ${currentQuestion.title}` : "";
+
+  const list = document.getElementById("questionList");
+  list.innerHTML = filtered.map(q => {
+    const diffIcons = {easy:"⭐", medium:"⭐⭐", hard:"⭐⭐⭐"};
+    const activeClass = currentQuestion && currentQuestion.id === q.id ? "active" : "";
+    return `<li><button class="${activeClass}" onclick="selectQuestion(${q.id})">
+      <span class="diff">${diffIcons[q.difficulty]}</span> ${q.id}. ${q.title}
+    </button></li>`;
+  }).join("");
+}
+
+// ===== 选择题目 =====
+async function selectQuestion(id) {
+  const resp = await fetch("/api/question/" + id);
+  currentQuestion = await resp.json();
+  currentJudgeResult = null;
+  renderQuestionList();
+  renderMain();
+}
+
+// ===== 简易 Markdown 渲染 =====
+function renderMarkdown(md) {
+  if (!md) return "";
+  var codeBlocks = [];
+  md = md.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
+    code = code.replace(/^\n+|\n+$/g, '');
+    codeBlocks.push("<pre><code>" + escapeHtml(code) + "</code></pre>");
+    return "%%CODEBLOCK_" + (codeBlocks.length - 1) + "%%";
+  });
+  md = escapeHtml(md);
+  md = md.replace(/`([^`]+)`/g, "<code>$1</code>");
+  md = md.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  md = md.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+  md = md.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+
+  var lines = md.split("\n");
+  var result = [];
+  var inList = null;
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    if (line.trim() === "") {
+      if (inList) { result.push("</" + inList + ">"); inList = null; }
+      continue;
+    }
+    var ulMatch = line.match(/^- (.+)$/);
+    if (ulMatch) {
+      if (inList !== "ul") { if (inList) result.push("</" + inList + ">"); result.push("<ul>"); inList = "ul"; }
+      result.push("<li>" + ulMatch[1] + "</li>");
+      continue;
+    }
+    var olMatch = line.match(/^\d+\. (.+)$/);
+    if (olMatch) {
+      if (inList !== "ol") { if (inList) result.push("</" + inList + ">"); result.push("<ol>"); inList = "ol"; }
+      result.push("<li>" + olMatch[1] + "</li>");
+      continue;
+    }
+    if (inList) { result.push("</" + inList + ">"); inList = null; }
+    if (line.match(/^<(h[23]|pre|ul|ol)/)) {
+      result.push(line);
+    } else {
+      result.push(line + "<br>");
+    }
+  }
+  if (inList) { result.push("</" + inList + ">"); }
+  md = result.join("\n");
+  md = md.replace(/%%CODEBLOCK_(\d+)%%/g, function(m, idx) { return codeBlocks[parseInt(idx)]; });
+  return md;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ===== 渲染主区域 =====
+function renderMain() {
+  const q = currentQuestion;
+  const diffLabels = {easy:"简单", medium:"中等", hard:"困难"};
+  const diffIcons = {easy:"⭐", medium:"⭐⭐", hard:"⭐⭐⭐"};
+
+  let html = `
+    <div class="header">
+      <div class="q-title">${q.id}. ${q.title}</div>
+      <div class="q-meta">${diffIcons[q.difficulty]} ${diffLabels[q.difficulty]} | ${q.category}</div>
+    </div>
+    <div class="q-description">${renderMarkdown(q.description)}</div>
+  `;
+
+  if (q.hints && q.hints.length > 0) {
+    html += `<details class="hints-box">
+      <summary>💡 提示（点击展开）</summary>
+      <ol>${q.hints.map(h => `<li>${h}</li>`).join("")}</ol>
+    </details>`;
+  }
+
+  // 从服务器获取已保存的代码（或使用模板）
+  const savedCode = q.starter_code || "# 在这里编写你的代码\n";
+  html += `
+    <div class="editor-section">
+      <h3>✏️ 编写代码</h3>
+      <textarea id="codeEditor" placeholder="在这里编写你的 C++ 代码...">${escapeHtml(savedCode)}</textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="submitCode()">🚀 提交运行</button>
+      <button class="btn btn-secondary" onclick="resetCode()">🔄 重置代码</button>
+    </div>
+    <div id="resultArea"></div>
+  `;
+
+  document.getElementById("mainContent").innerHTML = html;
+
+  restoreCode(q);
+
+  // 自动保存代码
+  document.getElementById("codeEditor").addEventListener("input", function() {
+    localStorage.setItem(getDraftKey(q.id), this.value);
+  });
+}
+
+async function restoreCode(question) {
+  const draftKey = getDraftKey(question.id);
+  const draft = localStorage.getItem(draftKey);
+  if (draft !== null) {
+    document.getElementById("codeEditor").value = draft;
+    return;
+  }
+  try {
+    const resp = await fetch("/api/submissions", { headers: authHeader() });
+    const data = await resp.json();
+    if (isAuthExpired(data)) {
+      await forceLogout("当前账号已被下线，请重新登录");
+      return;
+    }
+    const subs = data.submissions || {};
+    const key = String(question.id);
+    if (subs[key] && subs[key].code) {
+      document.getElementById("codeEditor").value = subs[key].code;
+    }
+  } catch(e) {}
+}
+
+// ===== 重置代码 =====
+function resetCode() {
+  localStorage.removeItem(getDraftKey(currentQuestion.id));
+  document.getElementById("codeEditor").value = currentQuestion.starter_code || "";
+  currentJudgeResult = null;
+  document.getElementById("resultArea").innerHTML = "";
+}
+
+// ===== 提交代码 =====
+async function submitCode() {
+  const code = document.getElementById("codeEditor").value;
+  if (!code.trim()) {
+    alert("请先编写代码再提交！");
+    return;
+  }
+
+  document.getElementById("resultArea").innerHTML = '<p style="color:#888;">⏳ 正在编译和判题...</p>';
+
+  const resp = await fetch("/api/submit", {
+    method: "POST",
+    headers: Object.assign({"Content-Type": "application/json"}, authHeader()),
+    body: JSON.stringify({code: code, question_id: currentQuestion.id})
+  });
+  const data = await resp.json();
+  if (isAuthExpired(data)) {
+    await forceLogout("当前账号已被下线，请重新登录");
+    return;
+  }
+
+  if (data.error) {
+    document.getElementById("resultArea").innerHTML = `<p style="color:#ea4335;">${data.message}</p>`;
+    return;
+  }
+
+  currentJudgeResult = data;
+  localStorage.setItem(getDraftKey(currentQuestion.id), code);
+  renderResult(data);
+  fetchAI(code, data.execution_summary);
+}
+
+// ===== 获取 AI 反馈 =====
+async function fetchAI(code, executionResult) {
+  var area = document.getElementById("aiFeedbackArea");
+  try {
+    const resp = await fetch("/api/feedback", {
+      method: "POST",
+      headers: Object.assign({"Content-Type": "application/json"}, authHeader()),
+      body: JSON.stringify({ code: code, question_id: currentQuestion.id, execution_result: executionResult })
+    });
+    const data = await resp.json();
+    if (isAuthExpired(data)) {
+      await forceLogout("当前账号已被下线，请重新登录");
+      return;
+    }
+    if (data.feedback && area) {
+      area.innerHTML = `<div class="ai-feedback"><h3>🤖 AI 点评</h3><div>${renderMarkdown(data.feedback)}</div></div>`;
+    } else if (area) {
+      area.innerHTML = '<p style="color:#999;font-size:0.85rem;">🤖 AI 暂未响应，请根据执行结果自行检查。</p>';
+    }
+  } catch(e) {
+    if (area) area.innerHTML = '<p style="color:#999;font-size:0.85rem;">🤖 AI 服务不可用，请根据执行结果自行检查。</p>';
+  }
+}
+
+// ===== 渲染结果 =====
+function renderResult(data) {
+  const result = data.judge_result;
+  let html = '<div class="result-section">';
+
+  if (!result.safety_check) {
+    html += `<div class="result-card fail"><h3>⚠️ 安全检查未通过</h3><p>${result.warning}</p></div>`;
+  } else if (result.compile_error) {
+    html += `<div class="result-card fail"><h3>🔧 编译失败</h3><pre style="background:#fff3f3;color:#c00;padding:10px;border-radius:4px;white-space:pre-wrap;font-size:0.85rem;">${escapeHtml(result.compile_stderr || '未知编译错误')}</pre></div>`;
+  } else {
+    const allPassed = result.passed === result.total;
+    html += allPassed
+      ? `<div class="result-card success"><h3>🎉 全部通过！</h3><p>${result.passed}/${result.total} 个测试用例通过</p></div>`
+      : `<div class="result-card fail"><h3>📝 需要改进</h3><p>通过了 ${result.passed}/${result.total} 个测试用例</p></div>`;
+
+    html += '<div class="test-cases">';
+    result.results.forEach((r) => {
+      const cls = r.passed ? "pass" : "fail";
+      const icon = r.passed ? "✅" : "❌";
+      html += `<div class="test-case ${cls}"><span class="tc-status">${icon} 用例 ${r.case_index}</span>`;
+      if (r.input) html += ` &nbsp; 输入: <code>${escapeHtml(r.input)}</code>`;
+      if (!r.passed) {
+        html += `<div class="tc-detail">期望输出:\n${r.expected}\n\n实际输出:\n${r.actual || "(无输出)"}</div>`;
+        if (r.stderr) html += `<div style="color:#ea4335;font-size:0.82rem;">错误: ${escapeHtml(r.stderr.substring(0,200))}</div>`;
+      } else {
+        html += `<div style="color:#34a853;">输出: <code>${escapeHtml(r.actual)}</code></div>`;
+      }
+      html += `</div>`;
+    });
+    html += '</div>';
+  }
+
+  html += '<div id="aiFeedbackArea"><p style="color:#888;font-size:0.9rem;">🤖 AI 正在分析你的代码，请稍候（最长约60秒）...</p></div>';
+  html += '</div>';
+  document.getElementById("resultArea").innerHTML = html;
+}
+
+// ===== 找回密码功能 =====
+function toggleRecover() {
+  const isRecover = document.getElementById("recoverContainer").style.display !== "none";
+  document.getElementById("recoverContainer").style.display = isRecover ? "none" : "flex";
+  document.getElementById("loginContainer").style.display = isRecover ? "flex" : "none";
+  document.getElementById("adminLoginContainer").style.display = "none";
+  document.getElementById("recoverMsg").className = "msg";
+  document.getElementById("recoverMsg").textContent = "";
+  document.getElementById("recoverUser").value = "";
+  document.getElementById("recoverKey").value = "";
+  document.getElementById("recoverNewPass").value = "";
+}
+
+async function handleRecover() {
+  const username = document.getElementById("recoverUser").value.trim();
+  const recoveryKey = document.getElementById("recoverKey").value.trim();
+  const newPassword = document.getElementById("recoverNewPass").value;
+  const msgEl = document.getElementById("recoverMsg");
+
+  if (!username || !recoveryKey || !newPassword) {
+    msgEl.className = "msg error";
+    msgEl.textContent = "请填写所有字段";
+    return;
+  }
+  if (newPassword.length < 8 || newPassword.length > 15) {
+    msgEl.className = "msg error";
+    msgEl.textContent = "新密码需 8-15 个字符";
+    return;
+  }
+  const resp = await fetch("/api/recover", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, recovery_key: recoveryKey, new_password: newPassword })
+  });
+  const data = await resp.json();
+  msgEl.className = data.success ? "msg success" : "msg error";
+  msgEl.textContent = data.message;
+  if (data.success) {
+    document.getElementById("recoverUser").value = "";
+    document.getElementById("recoverKey").value = "";
+    document.getElementById("recoverNewPass").value = "";
+  }
+}
+
+// ===== 管理员功能 =====
+function toggleAdminLogin() {
+  const isAdmin = document.getElementById("adminLoginContainer").style.display !== "none";
+  if (isAdmin) {
+    document.getElementById("adminLoginContainer").style.display = "none";
+    document.getElementById("loginContainer").style.display = "flex";
+  } else {
+    document.getElementById("adminLoginContainer").style.display = "flex";
+    document.getElementById("loginContainer").style.display = "none";
+    document.getElementById("recoverContainer").style.display = "none";
+  }
+  document.getElementById("adminMsg").className = "msg";
+  document.getElementById("adminMsg").textContent = "";
+  document.getElementById("adminKey").value = "";
+}
+
+async function handleAdminLogin() {
+  const adminKey = document.getElementById("adminKey").value;
+  const msgEl = document.getElementById("adminMsg");
+  if (!adminKey) {
+    msgEl.className = "msg error";
+    msgEl.textContent = "请输入管理密钥";
+    return;
+  }
+  const resp = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ admin_key: adminKey })
+  });
+  const data = await resp.json();
+  if (data.success) {
+    authToken = data.token;
+    authUser = "__admin__";
+    adminMode = true;
+    sessionStorage.setItem("auth_token", authToken);
+    showAdminPanel();
+  } else {
+    msgEl.className = "msg error";
+    msgEl.textContent = data.message;
+  }
+}
+
+function showAdminPanel() {
+  document.getElementById("loginContainer").style.display = "none";
+  document.getElementById("recoverContainer").style.display = "none";
+  document.getElementById("adminLoginContainer").style.display = "none";
+  document.getElementById("adminPanel").style.display = "flex";
+  document.getElementById("appContainer").classList.remove("show");
+  startSessionCheck();
+  refreshUserList();
+}
+
+async function refreshUserList() {
+  try {
+    const resp = await fetch("/api/admin/users", {
+      method: "POST",
+      headers: Object.assign({"Content-Type": "application/json"}, authHeader())
+    });
+    const data = await resp.json();
+    if (isAuthExpired(data)) {
+      await forceLogout("管理员会话已失效，请重新登录");
+      return;
+    }
+    const users = data.users || {};
+    const tbody = document.getElementById("userTableBody");
+    const entries = Object.entries(users);
+    if (entries.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;color:#999;">暂无用户</td></tr>';
+      return;
+    }
+    tbody.innerHTML = entries.map(([name, info]) => {
+      return `<tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:10px 8px;font-weight:600;">${escapeHtml(name)}</td>
+        <td style="padding:10px 8px;color:#888;">${info.created_at || "-"}</td>
+        <td style="padding:10px 8px;">${info.submission_count}</td>
+        <td style="padding:10px 8px;text-align:right;">
+          <button onclick="deleteUserPrompt('${escapeHtml(name)}')" style="background:none;border:1px solid #ea4335;color:#ea4335;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.8rem;">删除</button>
+        </td>
+      </tr>`;
+    }).join("");
+  } catch(e) {
+    document.getElementById("userTableBody").innerHTML = '<tr><td colspan="4" style="padding:20px;text-align:center;color:#ea4335;">加载失败</td></tr>';
+  }
+}
+
+async function doResetPassword() {
+  const username = document.getElementById("resetUser").value.trim();
+  const newPassword = document.getElementById("resetPass").value;
+  const msgEl = document.getElementById("resetMsg");
+  if (!username || !newPassword) {
+    msgEl.className = "msg error";
+    msgEl.textContent = "请填写用户名和新密码";
+    return;
+  }
+  const resp = await fetch("/api/admin/reset-password", {
+    method: "POST",
+    headers: Object.assign({"Content-Type": "application/json"}, authHeader()),
+    body: JSON.stringify({ username, new_password: newPassword })
+  });
+  const data = await resp.json();
+  if (isAuthExpired(data)) {
+    await forceLogout("管理员会话已失效，请重新登录");
+    return;
+  }
+  msgEl.className = data.success ? "msg success" : "msg error";
+  msgEl.textContent = data.message;
+  if (data.success) {
+    document.getElementById("resetUser").value = "";
+    document.getElementById("resetPass").value = "";
+    refreshUserList();
+  }
+}
+
+async function deleteUserPrompt(username) {
+  if (!confirm("确定要删除用户 " + username + " 吗？此操作不可恢复。")) return;
+  const resp = await fetch("/api/admin/delete-user", {
+    method: "POST",
+    headers: Object.assign({"Content-Type": "application/json"}, authHeader()),
+    body: JSON.stringify({ username })
+  });
+  const data = await resp.json();
+  if (isAuthExpired(data)) {
+    await forceLogout("管理员会话已失效，请重新登录");
+    return;
+  }
+  if (data.success) {
+    refreshUserList();
+  }
+  alert(data.message);
+}
+
+async function logoutAdmin() {
+  await fetch("/api/logout", { method: "POST", headers: authHeader() });
+  stopSessionCheck();
+  clearAuthState();
+  showLogin();
+}
+
+// ===== 启动 =====
+init();
+
+// ===== 移动端侧边栏切换 =====
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+}
+// 选择题目后自动收起侧边栏
+const origSelectQuestion = selectQuestion;
+selectQuestion = async function(id) {
+  await origSelectQuestion(id);
+  if (window.innerWidth <= 768) {
+    document.getElementById("sidebar").classList.remove("open");
+  }
+};
+</script>
+</body>
+</html>

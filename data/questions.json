@@ -1,0 +1,428 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "title": "A + B 问题",
+      "difficulty": "easy",
+      "category": "基础输入输出",
+      "description": "## A + B 问题\n\n编写一个程序，读取两个整数 A 和 B，输出它们的和。\n\n**要求：**\n- 从标准输入读取两个整数（空格分隔）\n- 输出一个整数，即两数之和\n\n**示例：**\n- 输入 `10 20` → 输出 `30`\n- 输入 `-5 8` → 输出 `3`",
+      "starter_code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    \n    // 在这里编写计算和输出的逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "10 20",
+          "expected": "30"
+        },
+        {
+          "input": "-5 8",
+          "expected": "3"
+        },
+        {
+          "input": "0 0",
+          "expected": "0"
+        }
+      ],
+      "hints": [
+        "使用 cin 读取输入，cout 输出结果",
+        "注意输出后加 endl 换行"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "判断闰年",
+      "difficulty": "easy",
+      "category": "条件判断",
+      "description": "## 判断闰年\n\n编写一个程序，判断给定的年份是否为闰年。\n\n**闰年规则：**\n- 能被 4 整除但不能被 100 整除，或者\n- 能被 400 整除\n\n**要求：** 从输入读取一个年份（整数），输出 `是闰年` 或 `不是闰年`。\n\n**示例：**\n- 输入 `2000` → 输出 `是闰年`\n- 输入 `1900` → 输出 `不是闰年`\n- 输入 `2024` → 输出 `是闰年`",
+      "starter_code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int year;\n    cin >> year;\n    \n    // 在这里编写闰年判断逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "2000",
+          "expected": "是闰年"
+        },
+        {
+          "input": "1900",
+          "expected": "不是闰年"
+        },
+        {
+          "input": "2024",
+          "expected": "是闰年"
+        },
+        {
+          "input": "2023",
+          "expected": "不是闰年"
+        }
+      ],
+      "hints": [
+        "使用 if-else 结构",
+        "条件：year % 4 == 0 && year % 100 != 0 || year % 400 == 0",
+        "注意逻辑运算符的优先级"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "递归求阶乘",
+      "difficulty": "easy",
+      "category": "递归",
+      "description": "## 递归求阶乘\n\n编写一个递归函数 `factorial(n)` 计算 n 的阶乘。\n\n**阶乘定义：**\n- 0! = 1\n- n! = n × (n-1)!  （n > 0）\n\n**要求：** 从输入读取一个非负整数 N，输出 N! 的值。\n\n**示例：**\n- 输入 `5` → 输出 `120`\n- 输入 `0` → 输出 `1`\n- 输入 `10` → 输出 `3628800`",
+      "starter_code": "#include <iostream>\nusing namespace std;\n\nlong long factorial(int n) {\n    // 在这里编写递归逻辑\n    \n}\n\nint main() {\n    int n;\n    cin >> n;\n    cout << factorial(n) << endl;\n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "5",
+          "expected": "120"
+        },
+        {
+          "input": "0",
+          "expected": "1"
+        },
+        {
+          "input": "10",
+          "expected": "3628800"
+        }
+      ],
+      "hints": [
+        "递归终止条件：n == 0 时返回 1",
+        "递归公式：n * factorial(n - 1)",
+        "注意使用 long long 防止溢出"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "最大公约数",
+      "difficulty": "easy",
+      "category": "数论",
+      "description": "## 最大公约数（GCD）\n\n编写一个程序，计算两个正整数的最大公约数。\n\n**要求：** 从输入读取两个正整数 A 和 B，输出它们的最大公约数。\n\n**提示：** 使用辗转相除法（欧几里得算法）：\n- gcd(a, b) = gcd(b, a % b)\n- 当 b = 0 时，gcd(a, 0) = a\n\n**示例：**\n- 输入 `12 18` → 输出 `6`\n- 输入 `17 13` → 输出 `1`\n- 输入 `100 25` → 输出 `25`",
+      "starter_code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    \n    // 在这里编写辗转相除法\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "12 18",
+          "expected": "6"
+        },
+        {
+          "input": "17 13",
+          "expected": "1"
+        },
+        {
+          "input": "100 25",
+          "expected": "25"
+        }
+      ],
+      "hints": [
+        "while (b != 0) { int t = b; b = a % b; a = t; }",
+        "或者使用递归：return b == 0 ? a : gcd(b, a % b);"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "回文判断",
+      "difficulty": "easy",
+      "category": "字符串",
+      "description": "## 回文判断\n\n编写一个程序，判断输入的字符串是否为回文。\n\n**回文定义：** 正着读和反着读完全相同的字符串。\n\n**要求：**\n- 从输入读取一行字符串（不含空格，只包含字母和数字）\n- 忽略大小写（'A' 和 'a' 视为相同）\n- 输出 `是回文` 或 `不是回文`\n\n**示例：**\n- 输入 `racecar` → 输出 `是回文`\n- 输入 `Hello` → 输出 `不是回文`\n- 输入 `AbA` → 输出 `是回文`",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    \n    // 在这里编写回文判断逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "racecar",
+          "expected": "是回文"
+        },
+        {
+          "input": "Hello",
+          "expected": "不是回文"
+        },
+        {
+          "input": "AbA",
+          "expected": "是回文"
+        }
+      ],
+      "hints": [
+        "使用双指针法：i 从头开始，j 从尾开始，向中间移动",
+        "比较时用 tolower() 统一大小写",
+        "循环条件：while (i < j)"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "斐波那契数列",
+      "difficulty": "medium",
+      "category": "循环",
+      "description": "## 斐波那契数列\n\n编写一个程序，输出斐波那契数列的前 N 项。\n\n**要求：** 从输入读取正整数 N（N >= 1），输出前 N 项，每项之间用空格分隔。\n\n**示例：**\n- 输入 `5` → 输出 `1 1 2 3 5`\n- 输入 `8` → 输出 `1 1 2 3 5 8 13 21`",
+      "starter_code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    // 在这里编写斐波那契数列生成逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "5",
+          "expected": "1 1 2 3 5"
+        },
+        {
+          "input": "8",
+          "expected": "1 1 2 3 5 8 13 21"
+        },
+        {
+          "input": "1",
+          "expected": "1"
+        },
+        {
+          "input": "2",
+          "expected": "1 1"
+        }
+      ],
+      "hints": [
+        "使用 for 循环",
+        "用两个变量 a 和 b 记录前两项，每次迭代更新"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "数组去重排序",
+      "difficulty": "medium",
+      "category": "数组与算法",
+      "description": "## 数组去重并排序\n\n编写一个程序，对输入的整数数组进行去重，然后按从小到大的顺序输出。\n\n**要求：**\n- 第一行输入一个整数 N，表示数组长度\n- 第二行输入 N 个用空格分隔的整数\n- 输出去重并升序排序后的结果，数字之间用空格分隔\n\n**示例：**\n- 输入 `10` 和 `3 1 4 1 5 9 2 6 5 3` → 输出 `1 2 3 4 5 6 9`",
+      "starter_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    // 在这里编写去重和排序逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "10\n3 1 4 1 5 9 2 6 5 3",
+          "expected": "1 2 3 4 5 6 9"
+        },
+        {
+          "input": "3\n10 10 10",
+          "expected": "10"
+        },
+        {
+          "input": "5\n5 4 3 2 1",
+          "expected": "1 2 3 4 5"
+        },
+        {
+          "input": "1\n1",
+          "expected": "1"
+        }
+      ],
+      "hints": [
+        "先 sort(arr.begin(), arr.end()) 排序",
+        "再用 unique 去重，配合 erase 删除多余元素",
+        "auto last = unique(arr.begin(), arr.end()); arr.erase(last, arr.end());"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "字符统计",
+      "difficulty": "medium",
+      "category": "字符串",
+      "description": "## 字符串字符统计\n\n编写一个程序，统计给定字符串中字母、数字、空格和其他字符的个数。\n\n**要求：** 从输入读取一行字符串（可能包含空格），分别统计并输出字母、数字、空格、其他字符的个数。\n\n输出格式（每行一个）：\n```\n字母: X\n数字: X\n空格: X\n其他: X\n```\n\n**示例：**\n- 输入 `Hello World! 123` → 输出字母: 10 / 数字: 3 / 空格: 2 / 其他: 1",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    string s;\n    getline(cin, s);\n    \n    // 在这里编写字符统计逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "Hello World! 123",
+          "expected": "字母: 10\n数字: 3\n空格: 2\n其他: 1"
+        },
+        {
+          "input": "ABC123",
+          "expected": "字母: 3\n数字: 3\n空格: 0\n其他: 0"
+        },
+        {
+          "input": "   ",
+          "expected": "字母: 0\n数字: 0\n空格: 3\n其他: 0"
+        }
+      ],
+      "hints": [
+        "使用 getline(cin, s) 读取含空格的整行",
+        "用 isalpha(c) 判断字母，isdigit(c) 判断数字",
+        "需要 #include <cctype>"
+      ]
+    },
+    {
+      "id": 9,
+      "title": "函数：判断素数",
+      "difficulty": "medium",
+      "category": "函数",
+      "description": "## 判断素数\n\n编写一个函数 `bool isPrime(int n)` 判断一个整数是否为素数，然后在 main 中调用它处理多个输入。\n\n**素数定义：** 大于 1 的自然数中，只能被 1 和自身整除的数。\n\n**要求：**\n- 先输入一个整数 N，表示要判断的数字个数\n- 接下来 N 行，每行一个整数\n- 对每个数，输出 `素数` 或 `不是素数`\n\n**示例：**\n```\n输入:\n3\n7\n10\n2\n\n输出:\n素数\n不是素数\n素数\n```",
+      "starter_code": "#include <iostream>\n#include <cmath>\nusing namespace std;\n\nbool isPrime(int n) {\n    // 在这里编写素数判断逻辑\n    \n}\n\nint main() {\n    int n, num;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        cin >> num;\n        // 调用 isPrime 并输出结果\n    }\n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "3\n7\n10\n2",
+          "expected": "素数\n不是素数\n素数"
+        },
+        {
+          "input": "2\n1\n4",
+          "expected": "不是素数\n不是素数"
+        },
+        {
+          "input": "1\n97",
+          "expected": "素数"
+        }
+      ],
+      "hints": [
+        "1 不是素数，需要特殊处理",
+        "判断范围只需要到 sqrt(n)",
+        "用 for (int i = 2; i * i <= n; i++)"
+      ]
+    },
+    {
+      "id": 10,
+      "title": "冒泡排序",
+      "difficulty": "medium",
+      "category": "排序",
+      "description": "## 冒泡排序\n\n编写一个程序，使用冒泡排序算法对数组进行升序排序。\n\n**冒泡排序原理：** 重复遍历数组，依次比较相邻元素，如果顺序错误就交换。每轮遍历会把当前未排序部分的最大值\"冒泡\"到末尾。\n\n**要求：**\n- 第一行输入整数 N，表示数组长度\n- 第二行输入 N 个整数\n- 输出排序后的数组，用空格分隔\n\n**示例：**\n- 输入 `5` 和 `3 1 4 1 5` → 输出 `1 1 3 4 5`",
+      "starter_code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) cin >> arr[i];\n    \n    // 在这里编写冒泡排序\n    \n    for (int i = 0; i < n; i++) {\n        if (i > 0) cout << \" \";\n        cout << arr[i];\n    }\n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "5\n3 1 4 1 5",
+          "expected": "1 1 3 4 5"
+        },
+        {
+          "input": "3\n9 2 7",
+          "expected": "2 7 9"
+        },
+        {
+          "input": "1\n42",
+          "expected": "42"
+        }
+      ],
+      "hints": [
+        "外层循环 i 从 0 到 n-1",
+        "内层循环 j 从 0 到 n-1-i",
+        "如果 arr[j] > arr[j+1] 则交换"
+      ]
+    },
+    {
+      "id": 11,
+      "title": "二分查找",
+      "difficulty": "medium",
+      "category": "查找",
+      "description": "## 二分查找\n\n编写一个程序，在已排序的数组中用二分查找法找到目标值。\n\n**二分查找原理：** 每次将查找区间一分为二，判断目标在左半还是右半，快速缩小范围。时间复杂度 O(log N)。\n\n**要求：**\n- 第一行输入 N 和 T（数组长度和目标值）\n- 第二行输入 N 个已按升序排列的整数\n- 输出 T 在数组中的位置（从 0 开始），如果不存在则输出 -1\n\n**示例：**\n- 输入 `5 7` 和 `1 3 5 7 9` → 输出 `3`\n- 输入 `4 6` 和 `1 3 5 7` → 输出 `-1`",
+      "starter_code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, target;\n    cin >> n >> target;\n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) cin >> arr[i];\n    \n    // 在这里编写二分查找\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "5 7\n1 3 5 7 9",
+          "expected": "3"
+        },
+        {
+          "input": "4 6\n1 3 5 7",
+          "expected": "-1"
+        },
+        {
+          "input": "1 5\n5",
+          "expected": "0"
+        }
+      ],
+      "hints": [
+        "初始化 left = 0, right = n - 1",
+        "while (left <= right) { mid = (left + right) / 2; }",
+        "arr[mid] < target → left = mid + 1；大于 → right = mid - 1"
+      ]
+    },
+    {
+      "id": 12,
+      "title": "矩阵转置",
+      "difficulty": "medium",
+      "category": "二维数组",
+      "description": "## 矩阵转置\n\n编写一个程序，计算一个 N×M 矩阵的转置。\n\n**转置定义：** 将矩阵的行和列互换。原矩阵第 i 行第 j 列的元素，变为转置矩阵第 j 行第 i 列。\n\n**要求：**\n- 第一行输入 N 和 M（行数和列数）\n- 接下来 N 行，每行 M 个整数\n- 输出 M×N 的转置矩阵，每行数字用空格分隔\n\n**示例：**\n- 输入：\n```\n2 3\n1 2 3\n4 5 6\n```\n- 输出：\n```\n1 4\n2 5\n3 6\n```",
+      "starter_code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> mat(n, vector<int>(m));\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++)\n            cin >> mat[i][j];\n    \n    // 在这里输出转置矩阵\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "2 3\n1 2 3\n4 5 6",
+          "expected": "1 4\n2 5\n3 6"
+        },
+        {
+          "input": "1 3\n7 8 9",
+          "expected": "7\n8\n9"
+        },
+        {
+          "input": "2 2\n1 2\n3 4",
+          "expected": "1 3\n2 4"
+        }
+      ],
+      "hints": [
+        "输出 M 行 N 列，第 j 行第 i 列输出 mat[i][j]",
+        "外层循环 j 从 0 到 m-1，内层循环 i 从 0 到 n-1",
+        "注意输出格式：每行末尾无多余空格"
+      ]
+    },
+    {
+      "id": 13,
+      "title": "十进制转二进制",
+      "difficulty": "medium",
+      "category": "进制转换",
+      "description": "## 十进制转二进制\n\n编写一个程序，将十进制正整数转换为二进制表示。\n\n**转换方法：** 反复除以 2，记录余数（0 或 1），直到商为 0。然后将余数逆序排列即为二进制。\n\n**要求：**\n- 从输入读取一个正整数 N\n- 输出其二进制表示（不含前导零，但 N=0 时输出 0）\n\n**示例：**\n- 输入 `10` → 输出 `1010`\n- 输入 `255` → 输出 `11111111`\n- 输入 `0` → 输出 `0`",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    // 在这里编写十进制转二进制的逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "10",
+          "expected": "1010"
+        },
+        {
+          "input": "255",
+          "expected": "11111111"
+        },
+        {
+          "input": "0",
+          "expected": "0"
+        }
+      ],
+      "hints": [
+        "N=0 单独处理，直接输出 0",
+        "用 string 存储二进制位：每次 n % 2 得到当前位",
+        "注意拼接顺序：先得到的余数是低位",
+        "可以用 reverse() 反转字符串得到正确顺序"
+      ]
+    },
+    {
+      "id": 14,
+      "title": "词频统计",
+      "difficulty": "hard",
+      "category": "STL map",
+      "description": "## 词频统计\n\n编写一个程序，统计一段英文文本中每个单词出现的次数，并按词频从高到低输出。\n\n**要求：**\n- 从输入读取一行英文句子\n- 忽略大小写（全部转为小写）\n- 忽略标点符号（只保留字母和空格）\n- 统计每个单词出现的次数\n- 按出现次数从高到低输出，格式为 `单词: 次数`，每行一个\n- 若次数相同，按字母顺序排列\n\n**示例：**\n- 输入 `Hello world, hello Python! Python is great.`\n- 输出：\n```\nhello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1\n```",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <algorithm>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    string text;\n    getline(cin, text);\n    \n    // 转小写、去标点、统计词频\n    \n    // 按词频排序并输出\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "Hello world, hello Python! Python is great.",
+          "expected": "hello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1"
+        },
+        {
+          "input": "a a b b b c",
+          "expected": "b: 3\na: 2\nc: 1"
+        },
+        {
+          "input": "one",
+          "expected": "one: 1"
+        }
+      ],
+      "hints": [
+        "用 map<string, int> 统计词频",
+        "转小写：tolower(c)，判断字母：isalpha(c)",
+        "排序：将 map 转 vector<pair<string,int>> 然后用自定义比较函数 sort"
+      ]
+    },
+    {
+      "id": 15,
+      "title": "综合：学生成绩管理",
+      "difficulty": "hard",
+      "category": "综合应用",
+      "description": "## 学生成绩管理系统\n\n编写一个学生成绩管理程序，支持添加学生、查询成绩和统计功能。\n\n**要求：**\n- 首先读取一个整数 N，表示有 N 个学生\n- 接下来 N 行，每行格式为 `姓名 成绩`（姓名为不含空格的字符串，成绩为0-100的整数）\n- 然后读取一个操作指令（`avg` / `max` / `min` / `pass` / `all`）\n  - `avg`：输出平均成绩，保留一位小数\n  - `max`：输出最高分学生的姓名和成绩\n  - `min`：输出最低分学生的姓名和成绩\n  - `pass`：输出及格人数和不及格人数（>=60为及格），用空格分隔\n  - `all`：按成绩从高到低输出所有学生，格式为 `姓名: 成绩`\n\n**示例输入：**\n```\n5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\navg\n```\n**输出：** `80.2`",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\nusing namespace std;\n\nstruct Student {\n    string name;\n    int score;\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Student> students(n);\n    for (int i = 0; i < n; i++) {\n        cin >> students[i].name >> students[i].score;\n    }\n    string op;\n    cin >> op;\n    \n    // 根据操作指令执行相应逻辑\n    \n    return 0;\n}",
+      "test_cases": [
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\navg",
+          "expected": "80.2"
+        },
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\nmax",
+          "expected": "李四 92"
+        },
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\nmin",
+          "expected": "王五 58"
+        },
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\npass",
+          "expected": "4 1"
+        },
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\nall",
+          "expected": "李四: 92\n钱七: 90\n张三: 85\n赵六: 76\n王五: 58"
+        }
+      ],
+      "hints": [
+        "用 struct Student { string name; int score; }; 存储数据",
+        "avg: 用 fixed << setprecision(1) 保留一位小数，需要 #include <iomanip>",
+        "max/min: 用 max_element 配合 lambda 比较函数",
+        "sort 配合自定义 lambda 按成绩降序排列"
+      ]
+    }
+  ]
+}
