@@ -105,6 +105,7 @@ python server.py
 project/
 ├── start.bat            一键启动（打开启动管理页）
 ├── start.ps1            旧版命令行部署脚本（保留兼容）
+├── runtime.zip          便携运行环境压缩包（Git LFS，首次启动自动解压）
 ├── deploy_config.txt    部署配置（自动生成）
 ├── launcher_config.json 启动页配置（自动生成）
 ├── code/                源码
@@ -137,7 +138,18 @@ project/
 | 浏览器 | Chrome / Edge / Firefox，支持移动端 |
 | AI（可选） | 任意 OpenAI 兼容接口密钥 |
 
-若项目内存在 `runtime/` 目录，则 Python / g++ / ngrok 无需预装到系统，启动脚本会优先使用自带版本，其次回退系统环境。
+若项目内存在 `runtime/` 目录（或首次运行 `start.bat` 时自动从 `runtime.zip` 解压），则 Python / g++ / ngrok 无需预装到系统，启动脚本会优先使用自带版本，其次回退系统环境。
+
+## 便携运行环境（runtime.zip）
+
+仓库通过 **Git LFS** 托管 `runtime.zip`（约 220MB，包含便携版 Python / MinGW g++ / ngrok）：
+
+- **Clone 时**：需安装 Git LFS（`git lfs install`），否则只会拉到一个 LFS 指针文件
+- **首次启动**：`start.bat` 检测到 `runtime/` 缺失时会自动解压 `runtime.zip`
+- **手动解压**：`tar -xf runtime.zip`（Windows 10+ / Server 2019+ 自带）或任意解压工具
+- **自行打包**：把便携版文件按 `runtime/python`、`runtime/mingw`、`runtime/ngrok` 结构放好后压成 `runtime.zip` 即可
+
+> GitHub 免费版 LFS 有 1GB 存储 / 每月 1GB 下载流量限制；如需给大量用户分发，可改用 GitHub Releases 附件（单文件上限 2GB、下载不限流量）。
 
 ## 系统架构
 
@@ -239,7 +251,7 @@ project/
 
 ## 部署到云服务器
 
-1. **最小打包**：仅上传 `code/`、`data/`、`start.bat`、`start.ps1` 与 README（`runtime/` 体积大，按需选择是否传输）
+1. **最小打包**：仅上传 `code/`、`data/`、`start.bat`、`start.ps1` 与 README；无编译环境的服务器再带上 `runtime.zip`（首次启动自动解压）
 2. **安装依赖**：Windows 服务器安装 Python 3.13 与 MinGW-w64（推荐 [winlibs](https://winlibs.com/) 便携版，解压后把 `bin` 加入 PATH）；或把完整 `runtime/` 一并上传，免安装
 3. **配置**：运行 `start.bat`，在启动页填写管理员密钥与 AI 密钥
 4. **安全组/防火墙**：仅开放必要端口（网页 80/443 或 8081），RDP(3389) 限制为管理员本机 IP，删除不用的 20/21/22 等端口

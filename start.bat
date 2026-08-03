@@ -3,6 +3,18 @@ setlocal
 cd /d "%~dp0"
 chcp 65001 >nul
 rem ===== AI Programming Practice Assistant - Launcher =====
+rem Auto-extract portable runtime if missing.
+if not exist "runtime\python\python.exe" (
+    if exist "runtime.zip" (
+        echo [i] Extracting runtime.zip ...
+        tar -xf runtime.zip
+        if errorlevel 1 (
+            echo [!] Extract failed, will fall back to system tools.
+        ) else (
+            echo [OK] runtime extracted.
+        )
+    )
+)
 rem Prefer bundled portable Python, then system Python.
 set "PYEXE="
 if exist "runtime\python\python.exe" set "PYEXE=runtime\python\python.exe"
