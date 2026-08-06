@@ -15,6 +15,7 @@ import re
 import secrets
 import shutil
 import socket
+import ssl
 import subprocess
 import sys
 import threading
@@ -346,10 +347,11 @@ def _adopted_pid(name):
     return None
 
 
-def http_get_json(url, timeout=2):
+def http_get_json(url, timeout=2, tls=False):
     try:
         req = urllib.request.Request(url, headers={"Connection": "close"})
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        context = ssl._create_unverified_context() if tls else None
+        with urllib.request.urlopen(req, timeout=timeout, context=context) as resp:
             body = resp.read().decode("utf-8", errors="replace")
             try:
                 return resp.status, json.loads(body)
@@ -404,12 +406,13 @@ def _build_env(cfg, port, compiler):
     return env
 
 
-def _wait_server_health(proc, port, timeout=30):
+def _wait_server_health(proc, port, timeout=30, tls=False):
     deadline = time.time() + timeout
+    scheme = "https" if tls else "http"
     while time.time() < deadline:
         if proc.poll() is not None:
             return False, f"服务器进程已退出（退出码 {proc.returncode}），请查看日志"
-        status, _ = http_get_json(f"http://127.0.0.1:{port}/api/ai-status")
+        status, _ = http_get_json(f"{scheme}://127.0.0.1:{port}/api/ai-status", tls=tls)
         if status == 200:
             return True, ""
         time.sleep(0.5)
@@ -509,7 +512,7 @@ def start_services(cfg):
             warnings.append("无法写入 PID 文件，关闭窗口后重新启动时将无法接管该服务进程")
 
     # ---- 以下为耗时操作，不占用 state_lock，避免界面卡顿 ----
-    ok, message = _wait_server_health(proc, port)
+    ok, message = _wait_server_health(proc, port, tls=bool(cfg.get("tls_enabled")))
     if not ok:
         with state_lock:
             last_error = message

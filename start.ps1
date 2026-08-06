@@ -152,13 +152,37 @@ function Stop-ProcessByPort([int]$Port, [string]$Label) {
 }
 
 function Test-HttpReady([string[]]$Urls) {
-    foreach ($url in $Urls) {
-        try {
-            $null = Invoke-WebRequest $url -UseBasicParsing -TimeoutSec 2
-            return $true
-        } catch {}
+    # TLS/自签名证书模式下临时放行证书校验（PS 5.1）
+    $oldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
+    [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+    try {
+        foreach ($url in $Urls) {
+            try {
+                $null = Invoke-WebRequest $url -UseBasicParsing -TimeoutSec 2
+                return $true
+            } catch {}
+        }
+        return $false
+    } finally {
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $oldCallback
     }
-    return $false
+}
+
+function Test-PortReady([int]$Port) {
+    # 用 TCP 连接判断端口是否已监听（TLS 模式下 PS 7 的补充探测）
+    try {
+        $client = New-Object System.Net.Sockets.TcpClient
+        $result = $client.BeginConnect("127.0.0.1", $Port, $null, $null)
+        $connected = $result.AsyncWaitHandle.WaitOne(2000)
+        if ($connected -and $client.Connected) {
+            $client.Close()
+            return $true
+        }
+        $client.Close()
+        return $false
+    } catch {
+        return $false
+    }
 }
 
 function Write-SessionLog([string]$Path, [string]$Message) {
@@ -506,17 +530,24 @@ $p = Start-Process $pythonExe -ArgumentList $pythonArgs `
 # 等服务器就绪
 $ready = $false
 $portListening = $false
+$healthScheme = if ($cfgTLSEnabled -match '^(1|true|yes|y)$') { "https" } else { "http" }
+$healthUrls = @(
+    "${healthScheme}://127.0.0.1:8081/api/ai-status",
+    "${healthScheme}://127.0.0.1:8081/",
+    "${healthScheme}://127.0.0.1:8081/api/questions"
+)
 for ($i = 0; $i -lt 45; $i++) {
     Start-Sleep -Seconds 1
     if ($p.HasExited) {
         break
     }
     $portListening = [bool](Get-ListeningProcessId 8081)
-    if (Test-HttpReady @(
-        "http://127.0.0.1:8081/api/ai-status",
-        "http://127.0.0.1:8081/",
-        "http://127.0.0.1:8081/api/questions"
-    )) {
+    if (Test-HttpReady $healthUrls) {
+        $ready = $true
+        break
+    }
+    # TLS 模式下 PS 7 的 Invoke-WebRequest 不认证书回调，退回 TCP 探测
+    if ($healthScheme -eq "https" -and (Test-PortReady 8081)) {
         $ready = $true
         break
     }
