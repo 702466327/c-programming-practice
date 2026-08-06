@@ -171,7 +171,24 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             path = ""
         if path in ("/api/ai-status", "/favicon.ico"):
             return
-        print(f"[{timestamp()}] [{self.command}] {args[0]}")
+        # 请求行解析失败（如扫描器的 TLS 握手包 / HTTP2 前言）：只记录来源 IP，不打印原始字节
+        if not self.command:
+            try:
+                ip = self.client_address[0]
+            except Exception:
+                ip = "?"
+            print(f"[{timestamp()}] [None] 400 非法请求 (ip={ip})")
+            return
+        # 只保留可打印 ASCII 并截断，防止二进制 / 超长内容刷日志
+        if args:
+            s = args[0]
+            s = s.decode("iso-8859-1", errors="replace") if isinstance(s, bytes) else str(s)
+            s = "".join(ch if 32 <= ord(ch) < 127 else " " for ch in s).strip()
+            if len(s) > 200:
+                s = s[:200] + "..."
+            print(f"[{timestamp()}] [{self.command}] {s}")
+        else:
+            print(f"[{timestamp()}] [{self.command}]")
 
     def _apply_security_headers(self):
         for key, value in SECURITY_HEADERS.items():
