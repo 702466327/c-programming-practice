@@ -46,6 +46,9 @@ DEFAULT_CONFIG = {
     "ngrok_enabled": False,
     "ngrok_domain": "",
     "ngrok_authtoken": "",
+    "tls_enabled": False,
+    "tls_cert": "",
+    "tls_key": "",
 }
 
 import ai_client  # noqa: E402  (同目录模块，用于平台注册表与连接测试)
@@ -141,6 +144,9 @@ def _write_deploy_config_mirror(cfg):
         f"AI_API_KEY={cfg.get('ai_api_key', '')}",
         f"NGROK_AUTHTOKEN={cfg.get('ngrok_authtoken', '')}",
         f"NGROK_DOMAIN={cfg.get('ngrok_domain', '')}",
+        f"TLS_ENABLED={'1' if cfg.get('tls_enabled') else '0'}",
+        f"TLS_CERT={cfg.get('tls_cert', '')}",
+        f"TLS_KEY={cfg.get('tls_key', '')}",
     ]
     try:
         DEPLOY_CONFIG_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -381,6 +387,9 @@ def _build_env(cfg, port, compiler):
         "PORT": str(port),
         "BIND_HOST": cfg.get("bind_host", "0.0.0.0"),
         "OPEN_BROWSER": "0",
+        "TLS_ENABLED": "1" if cfg.get("tls_enabled") else "",
+        "TLS_CERT": cfg.get("tls_cert", ""),
+        "TLS_KEY": cfg.get("tls_key", ""),
         "TEE_SERVER_LOGS": "1",
         "SERVER_STDOUT_LOG": str(PROJECT_ROOT / "server_stdout.log"),
         "SERVER_STDERR_LOG": str(PROJECT_ROOT / "server_stderr.log"),

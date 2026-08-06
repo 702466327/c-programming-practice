@@ -3,6 +3,7 @@
 import http.server
 import json
 import os
+import ssl
 import sys
 from datetime import datetime
 import urllib.parse
@@ -82,6 +83,11 @@ PORT = int(os.environ.get("PORT", "8081"))
 HOST = os.environ.get("BIND_HOST", "0.0.0.0").strip()
 MAX_BODY_SIZE = 100 * 1024
 AUTO_OPEN_BROWSER = os.environ.get("OPEN_BROWSER", "").strip().lower() in {"1", "true", "yes", "y"}
+
+# 可选 HTTPS 支持：TLS_ENABLED=1 时启用；证书默认放在项目 certs/ 目录
+TLS_ENABLED = os.environ.get("TLS_ENABLED", "").strip().lower() in {"1", "true", "yes", "y"}
+TLS_CERT = os.environ.get("TLS_CERT", str(PROJECT_ROOT / "certs" / "server.crt")).strip()
+TLS_KEY = os.environ.get("TLS_KEY", str(PROJECT_ROOT / "certs" / "server.key")).strip()
 
 # 统一安全响应头
 SECURITY_HEADERS = {
@@ -367,7 +373,19 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
 def main():
     server = http.server.ThreadingHTTPServer((HOST, PORT), APIHandler)
     server.daemon_threads = True
-    url = f"http://localhost:{PORT}"
+    scheme = "http"
+    if TLS_ENABLED:
+        try:
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.load_cert_chain(TLS_CERT, TLS_KEY)
+        except Exception as exc:
+            print(f"[{timestamp()}] [X] HTTPS 证书加载失败: {exc}")
+            print(f"[{timestamp()}]     证书: {TLS_CERT}")
+            print(f"[{timestamp()}]     密钥: {TLS_KEY}")
+            return
+        server.socket = context.wrap_socket(server.socket, server_side=True)
+        scheme = "https"
+    url = f"{scheme}://localhost:{PORT}"
     print(f"[{timestamp()}] AI 编程练习助手已启动")
     print(f"[{timestamp()}]    {url}")
     ai_info = ai_client.get_info()
@@ -375,6 +393,10 @@ def main():
         print(f"[{timestamp()}]    AI: ok ({ai_info['platform_name']} · {ai_info['model']})")
     else:
         print(f"[{timestamp()}]    AI: off")
+    if TLS_ENABLED:
+        print(f"[{timestamp()}]    HTTPS: 已启用（证书 {TLS_CERT}）")
+    else:
+        print(f"[{timestamp()}]    HTTPS: 未启用（如需 https 访问请配置 TLS）")
     if HOST and HOST != "0.0.0.0":
         print(f"[{timestamp()}]    监听地址: {HOST}（仅本机）")
     else:

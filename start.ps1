@@ -20,6 +20,9 @@ $cfgAdminKey = ""
 $cfgAIKey    = ""
 $cfgNgrokAuthtoken = ""
 $cfgNgrokDomain = ""
+$cfgTLSEnabled = ""
+$cfgTLSCert = ""
+$cfgTLSKey = ""
 $defaultAdminKey = ""
 $defaultAIKey = ""
 $defaultNgrokAuthtoken = ""
@@ -42,6 +45,9 @@ if (Test-Path $configFile) {
                 "DEFAULT_AI_API_KEY"   { $defaultAIKey = $val }
                 "DEFAULT_NGROK_AUTHTOKEN" { $defaultNgrokAuthtoken = $val }
                 "DEFAULT_NGROK_DOMAIN" { $defaultNgrokDomain = $val }
+                "TLS_ENABLED"            { $cfgTLSEnabled = $val }
+                "TLS_CERT"               { $cfgTLSCert = $val }
+                "TLS_KEY"                { $cfgTLSKey = $val }
             }
         }
     }
@@ -52,6 +58,8 @@ if (-not $defaultAdminKey -and $cfgAdminKey) { $defaultAdminKey = $cfgAdminKey }
 if (-not $defaultAIKey -and $cfgAIKey) { $defaultAIKey = $cfgAIKey }
 if (-not $defaultNgrokAuthtoken -and $cfgNgrokAuthtoken) { $defaultNgrokAuthtoken = $cfgNgrokAuthtoken }
 if (-not $defaultNgrokDomain -and $cfgNgrokDomain) { $defaultNgrokDomain = $cfgNgrokDomain }
+if (-not $cfgTLSCert) { $cfgTLSCert = Join-Path $scriptDir "certs\server.crt" }
+if (-not $cfgTLSKey) { $cfgTLSKey = Join-Path $scriptDir "certs\server.key" }
 
 function Get-MaskedState([string]$value, [string]$emptyText = "未设置") {
     if ($value) { return "已保存" }
@@ -315,6 +323,11 @@ if ($cfgNgrokEnabled) {
 } else {
     Write-Host "  公网映射:     已禁用 (仅本机)" -ForegroundColor Yellow
 }
+if ($cfgTLSEnabled -match '^(1|true|yes|y)$') {
+    Write-Host "  HTTPS:         已启用 (证书: $cfgTLSCert)" -ForegroundColor Green
+} else {
+    Write-Host "  HTTPS:         未启用 (http:// 访问)" -ForegroundColor DarkGray
+}
 Write-Host ""
 
 # ---- 检查 Python ----
@@ -411,6 +424,9 @@ ADMIN_KEY=$cfgAdminKey
 AI_API_KEY=$cfgAIKey
 NGROK_AUTHTOKEN=$cfgNgrokAuthtoken
 NGROK_DOMAIN=$cfgNgrokDomain
+TLS_ENABLED=$cfgTLSEnabled
+TLS_CERT=$cfgTLSCert
+TLS_KEY=$cfgTLSKey
 "@
 $saveContent | Out-File -FilePath $configFile -Encoding utf8 -Force
 
@@ -444,6 +460,9 @@ if ($compilerTool -and $compilerTool.Source -eq "bundled") {
 
 $env:AI_API_KEY = $aiKey
 $env:ADMIN_KEY = $adminKey
+$env:TLS_ENABLED = $cfgTLSEnabled
+$env:TLS_CERT = $cfgTLSCert
+$env:TLS_KEY = $cfgTLSKey
 $env:OPEN_BROWSER = ""
 if (-not $cfgAIEnabled) {
     Write-Host "[i] AI 功能已禁用，判题功能正常" -ForegroundColor DarkGray

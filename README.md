@@ -88,6 +88,37 @@ python server.py
 3. 中国大陆服务器对外提供服务需先完成 **ICP 备案**
 4. 启动时在「服务器设置」中选择「仅本机」监听，仅把 80/443 暴露给反代
 
+### 直接使用公网 IP + HTTPS（无需 ngrok）
+
+服务器有公网 IP 时不需要 ngrok：启动时「公网访问」**不启用 ngrok**，「服务器设置」中监听地址选 `0.0.0.0`（公网可访问）、端口 `8081`，然后在云控制台安全组 / Windows 防火墙放行 TCP `8081` 入站，即可用 `http://公网IP:8081` 访问。
+
+要使用 `https://公网IP:8081`，需开启内置 HTTPS 支持（自签名证书）：
+
+1. 生成证书（服务器上执行，需要 openssl）：
+
+   ```powershell
+   mkdir certs
+   openssl req -x509 -newkey rsa:2048 -sha256 -nodes `
+     -keyout certs\server.key -out certs\server.crt -days 825 `
+     -subj "/CN=<公网IP>" `
+     -addext "subjectAltName=IP:<公网IP>" `
+     -addext "basicConstraints=critical,CA:FALSE" `
+     -addext "keyUsage=digitalSignature,keyEncipherment" `
+     -addext "extendedKeyUsage=serverAuth"
+   ```
+
+2. 在 `deploy_config.txt`（或 `launcher_config.json` 的 `tls_enabled` / `tls_cert` / `tls_key` 字段）中配置：
+
+   ```text
+   TLS_ENABLED=1
+   TLS_CERT=C:\project\certs\server.crt
+   TLS_KEY=C:\project\certs\server.key
+   ```
+
+3. 启动后访问 `https://公网IP:8081`。自签名证书浏览器会提示"不安全"，首次需点「高级 → 继续前往」，或把 `server.crt` 安装到访问设备的「受信任的根证书颁发机构」消除提示。
+
+> 说明：公网 IP 无法申请免费可信 CA 证书（Let's Encrypt 等要求域名）；若以后有域名，改用「使用自有域名」方案即可获得无警告的正式证书。
+
 ## 配置文件
 
 | 文件 | 说明 |

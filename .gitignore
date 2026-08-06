@@ -19,6 +19,9 @@ __pycache__/
 runtime/
 ngrok.exe
 
+# 本地 HTTPS 证书（自签名，按部署生成）
+certs/
+
 # 系统文件
 Thumbs.db
 .DS_Store
