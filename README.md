@@ -144,7 +144,7 @@ project/
 │   ├── launcher_gui.py  桌面窗口版启动管理（tkinter，推荐）
 │   ├── launcher.py      网页版启动管理后端（127.0.0.1:8299，备用）
 │   ├── launcher.html    网页版启动管理前端
-│   ├── server.py        主 HTTP 服务器（端口 8081）
+│   ├── server.py        主 HTTP 服务器（端口由 PORT 环境变量配置，默认 8081）
 │   ├── judge_docker.py  Docker 沙箱判题后端（默认）
 │   ├── ai_client.py     AI 多平台客户端（OpenAI 兼容）
 │   ├── judge.py         本机判题（仅 JUDGE_BACKEND=local 时使用）
@@ -315,7 +315,7 @@ project/
    ```
    然后把 `deploy_config.env` 中 `TLS_CERT` / `TLS_KEY` 指向
    `/etc/letsencrypt/live/your.domain/fullchain.pem` 与 `privkey.pem`，重启服务
-5. 安全组 / 防火墙：仅放行 8081（与 80，若用 HTTP-01 续期），访问 `https://your.domain:8081`
+5. 安全组 / 防火墙：仅放行 443（Web）与 80（证书 HTTP-01 续期），访问 `https://your.domain`
 
 > 上线验证清单：正常判题 3/3；读宿主文件 / 执行宿主命令的 PoC 全部失效；
 > 死循环超时、超限内存被 OOM 强杀、容器无网络；停 Docker 后判题返回 fail-closed。
