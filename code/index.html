@@ -392,6 +392,19 @@ details.hints-box { border-radius: 8px; }
   .btn-row { gap: 8px; }
   .btn-row .btn { width: 100%; flex-basis: 100%; }
 }
+
+/* ========== 目录 / 详情独立滚动 ========== */
+#appContainer.show { height: 100vh; min-height: 0; overflow: hidden; }
+.sidebar { min-height: 0; }
+.main {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (max-width: 768px) {
+  #appContainer.show { height: 100vh; overflow: hidden; }
+  .main { height: calc(100vh - 58px); }
+}
 </style>
 </head>
 <body>
