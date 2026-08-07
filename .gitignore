@@ -19,6 +19,9 @@ __pycache__/
 runtime/
 ngrok.exe
 
+# 判题沙箱测试替身（编译产物，源码见 docker-judge/tests/docker.c）
+docker-judge/tests/docker.exe
+
 # 本地 HTTPS 证书（自签名，按部署生成）
 certs/
 

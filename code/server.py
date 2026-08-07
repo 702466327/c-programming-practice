@@ -69,6 +69,7 @@ def timestamp():
 
 import question_bank
 import judge
+import judge_docker
 import ai_client
 import auth
 import ratelimit
@@ -322,7 +323,12 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
                 self._send_error(400, "题目未找到")
                 return
             auth.save_submission(username, question_id, code)
-            judge_result = judge.run_test_cases(code, q.get("test_cases", []))
+            # 判题后端: docker=容器沙箱(默认, fail-closed); local=本机执行(仅限可信内网/开发)
+            backend = os.environ.get("JUDGE_BACKEND", "docker").strip().lower()
+            if backend == "local":
+                judge_result = judge.run_test_cases(code, q.get("test_cases", []))
+            else:
+                judge_result = judge_docker.run_test_cases(code, q.get("test_cases", []))
             exec_summary = judge.format_execution_summary(judge_result)
             self._send_json({"judge_result": judge_result, "execution_summary": exec_summary})
             return

@@ -134,6 +134,7 @@ python server.py
 
 ```text
 project/
+├── deploy_linux.sh      Linux 一键部署脚本（Docker 判题沙箱）
 ├── start.bat            一键启动（打开启动管理页）
 ├── start.ps1            旧版命令行部署脚本（保留兼容）
 ├── runtime.zip          便携运行环境压缩包（Git LFS，首次启动自动解压）
@@ -144,12 +145,18 @@ project/
 │   ├── launcher.py      网页版启动管理后端（127.0.0.1:8299，备用）
 │   ├── launcher.html    网页版启动管理前端
 │   ├── server.py        主 HTTP 服务器（端口 8081）
+│   ├── judge_docker.py  Docker 沙箱判题后端（默认）
 │   ├── ai_client.py     AI 多平台客户端（OpenAI 兼容）
-│   ├── judge.py         C++ 编译判题 + 安全防护
+│   ├── judge.py         本机判题（仅 JUDGE_BACKEND=local 时使用）
 │   ├── auth.py          认证 / 会话 / 管理员 / 密码重置
 │   ├── ratelimit.py     滑动窗口限流
 │   ├── question_bank.py 题库加载
 │   └── index.html       前端页面（响应式）
+├── docker-judge/        Docker 判题沙箱
+│   ├── Dockerfile       Debian + g++ 镜像（官方源）
+│   ├── Dockerfile.cn    腾讯云镜像源版本（国内构建加速）
+│   ├── entrypoint.sh    容器内编译 + 运行入口
+│   └── 迁移指南.md       沙箱迁移与上线验证文档
 ├── data/                数据文件
 │   ├── questions.json   15 道 C++ 练习题
 │   └── ans.txt          参考答案
@@ -164,7 +171,8 @@ project/
 | 项目 | 说明 |
 |------|------|
 | Python | 3.8+，仅标准库（http.server / json / subprocess / hashlib），无需 pip |
-| C++ 编译器 | g++（MinGW-w64），用于判题 |
+| C++ 编译器 | 容器内自带 g++（Docker 模式无需宿主机安装）；仅 `JUDGE_BACKEND=local` 时需要宿主机 g++（MinGW-w64 / Linux g++） |
+| Docker（推荐） | 20.10+，用于判题沙箱（推荐 Ubuntu 22.04/24.04 或 Debian 12 服务器） |
 | ngrok（可选） | 内网穿透客户端 |
 | 浏览器 | Chrome / Edge / Firefox，支持移动端 |
 | AI（可选） | 任意 OpenAI 兼容接口密钥 |
@@ -272,22 +280,53 @@ project/
 - **接口限流**：登录 / 注册 / 找回密码 / 管理员登录均为滑动窗口限流
 - **安全响应头**：CSP、`X-Frame-Options: DENY`、`X-Content-Type-Options`、`Referrer-Policy`、`Cache-Control: no-store`
 - **密钥注入**：管理员密钥与 AI 密钥通过环境变量传入主服务器，不写入代码
-- **判题三层防护**：
-  1. 源码文本扫描（危险 API / 宏拼接 / 本地 include / 命令字符串）
-  2. 编译后二进制扫描（链接器导入表 + 危险字符串 + 基线对比，对抗宏混淆绕过）
-  3. 受限执行（临时目录隔离、5s 超时、输出 128KB 截断、进程树强杀、Windows Job Object 内存限制）
+- **判题沙箱（Docker，推荐）**：判题默认放入一次性 Linux 容器（code/judge_docker.py + docker-judge/），
+  隔离维度包括：非 root、只读根文件系统、无网络（--network none）、剥离全部 capabilities、
+  no-new-privileges、默认 seccomp、内存 512MB / CPU 1 核 / 进程数 64 上限、tmpfs 工作区；
+  每测试用例一个容器，运行完即销毁；Docker 不可用时**拒绝判题（fail-closed）**，绝不回退本机执行
+- **判题静态防护（纵深防御）**：容器方案下仍保留源码文本扫描与编译后二进制扫描
+  （危险 API / 宏拼接 / 命令字符串），作为第一层拦截
+- **判题超时与输出限制**：容器内 5s 超时、输出 128KB 截断、Python 侧兜底强杀
+- **Windows 单机模式（不推荐公网）**：JUDGE_BACKEND=local 时沿用旧三层防护
+  （源码扫描 + 二进制扫描 + Job Object 内存限制），仅限可信内网 / 开发环境
 - **启动页防护**：仅监听回环地址，跨源请求一律拒绝，密钥不回传浏览器（仅显示脱敏预览）
 
-> **注意**：Windows 单机判题仍无法达到 Docker 级沙箱。若面向不可信用户公开提供判题服务，建议将判题放到独立容器 / 虚拟机中运行。
+> **注意**：正则黑名单**不是**安全边界（可被预处理技巧绕过），只作为纵深防御；
+> 面向不可信用户的公网判题**必须**启用 Docker 沙箱（JUDGE_BACKEND=docker，默认值）。
 
 ## 部署到云服务器
 
-1. **最小打包**：仅上传 `code/`、`data/`、`start.bat`、`start.ps1` 与 README；无编译环境的服务器再带上 `runtime.zip`（首次启动自动解压）
+### 方案 A：Linux + Docker（推荐，判题沙箱）
+
+1. 准备 Ubuntu 22.04/24.04 服务器（2C2G 起，2C4G 更从容），安装 Docker：
+   ```bash
+   curl -fsSL https://get.docker.com | sh
+   systemctl enable --now docker
+   ```
+2. 上传 `code/`、`data/`、`docker-judge/`、`deploy_linux.sh` 到服务器（如 `/opt/project`）
+3. 一键部署（构建镜像 → 生成配置 → 自签名证书 → systemd 服务 → 健康检查）：
+   ```bash
+   bash deploy_linux.sh /opt/project <服务器公网IP>
+   ```
+4. 有域名时签发 Let's Encrypt 正式证书（HTTP-01，需放行 80 端口）：
+   ```bash
+   apt install -y certbot
+   certbot certonly --standalone -d your.domain -d www.your.domain
+   ```
+   然后把 `deploy_config.env` 中 `TLS_CERT` / `TLS_KEY` 指向
+   `/etc/letsencrypt/live/your.domain/fullchain.pem` 与 `privkey.pem`，重启服务
+5. 安全组 / 防火墙：仅放行 8081（与 80，若用 HTTP-01 续期），访问 `https://your.domain:8081`
+
+> 上线验证清单：正常判题 3/3；读宿主文件 / 执行宿主命令的 PoC 全部失效；
+> 死循环超时、超限内存被 OOM 强杀、容器无网络；停 Docker 后判题返回 fail-closed。
+
+### 方案 B：Windows（开发 / 内网）
+
+1. **最小打包**：上传 `code/`、`data/`、`start.bat`、`start.ps1` 与 README；无编译环境的服务器再带上 `runtime.zip`（首次启动自动解压）
 2. **安装依赖**：Windows 服务器安装 Python 3.13 与 MinGW-w64（推荐 [winlibs](https://winlibs.com/) 便携版，解压后把 `bin` 加入 PATH）；或把完整 `runtime/` 一并上传，免安装
-3. **配置**：运行 `start.bat`，在启动页填写管理员密钥与 AI 密钥
+3. **配置**：运行 `start.bat`，在启动页填写管理员密钥与 AI 密钥；判题后端设为 `JUDGE_BACKEND=local`（仅限可信环境）
 4. **安全组/防火墙**：仅开放必要端口（网页 80/443 或 8081），RDP(3389) 限制为管理员本机 IP，删除不用的 20/21/22 等端口
 5. **域名 + HTTPS**：见上文「使用自有域名」；中国大陆服务器需先完成 ICP 备案
-
 ## 移动端适配
 
 - 登录卡片适配手机宽度

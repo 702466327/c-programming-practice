@@ -1,0 +1,23 @@
+# AIJudge judge sandbox image - Tencent Cloud Debian mirrors (faster in CN)
+#
+# Build: docker build -t aijudge-judge:latest .
+
+FROM debian:bookworm-slim
+
+RUN sed -i \
+        's|deb.debian.org|mirrors.cloud.tencent.com|g; s|security.debian.org|mirrors.cloud.tencent.com|g' \
+        /etc/apt/sources.list.d/debian.sources \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+        g++ \
+        coreutils \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd -m -u 10001 -s /usr/sbin/nologin judge
+
+COPY entrypoint.sh /usr/local/bin/judge-entrypoint
+RUN chmod 0755 /usr/local/bin/judge-entrypoint
+
+USER judge
+WORKDIR /work
+
+ENTRYPOINT ["/usr/local/bin/judge-entrypoint"]
