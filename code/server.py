@@ -227,6 +227,14 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
                 subs = auth.get_all_submissions(username)
                 self._send_json({"submissions": subs, "username": username})
             return
+        if path == "/api/leaderboard":
+            username = _require_auth(self)
+            if username:
+                weights = {}
+                for q in question_bank.load_questions():
+                    weights[str(q["id"])] = {"easy": 1, "medium": 2, "hard": 3}.get(q.get("difficulty"), 1)
+                self._send_json({"leaderboard": auth.get_leaderboard(weights)})
+            return
         if path == "/favicon.ico":
             self._send_error(404, "Not Found")
             return
@@ -330,6 +338,9 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             else:
                 judge_result = judge_docker.run_test_cases(code, q.get("test_cases", []))
             exec_summary = judge.format_execution_summary(judge_result)
+            auth.record_judge_result(username, question_id,
+                                     judge_result.get("passed", 0),
+                                     judge_result.get("total", 0))
             self._send_json({"judge_result": judge_result, "execution_summary": exec_summary})
             return
         if path == "/api/feedback":

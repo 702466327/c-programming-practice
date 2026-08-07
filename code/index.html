@@ -290,6 +290,27 @@ details.hints-box ol { padding: 0 0 12px 20px; color: #78350f; font-size: .88rem
 #userTable tbody td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; }
 #userTable tbody tr:hover { background: #f8fafc; }
 
+/* ========== 排行榜 ========== */
+.btn-leaderboard {
+  width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 12px;
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(250,204,21,.12));
+  color: #fde68a; border: 1px solid rgba(251,191,36,.35); border-radius: 9px;
+  font-size: .9rem; font-weight: 600; cursor: pointer;
+  transition: background .12s, transform .12s;
+}
+.btn-leaderboard:hover { background: linear-gradient(135deg, rgba(251,191,36,.35), rgba(250,204,21,.2)); transform: translateY(-1px); }
+.lb-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.lb-sub { font-size: .82rem; color: var(--muted); }
+.lb-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.lb-table thead th { text-align: left; padding: 10px 8px; border-bottom: 2px solid var(--border); color: var(--muted); font-size: .8rem; }
+.lb-table tbody td { padding: 11px 8px; border-bottom: 1px solid #f1f5f9; }
+.lb-table tbody tr:hover { background: #f8fafc; }
+.lb-rank { font-weight: 700; width: 70px; }
+.lb-user { font-weight: 600; }
+.lb-score { color: var(--primary); font-weight: 700; }
+.lb-me { background: var(--primary-soft); }
+.lb-me td { border-bottom-color: #c7d2fe; }
+
 /* ========== 响应式 ========== */
 @media (max-width: 768px) {
   .menu-toggle { display: flex; }
@@ -513,6 +534,7 @@ details.hints-box { border-radius: 8px; }
       <option value="medium">⭐⭐ 中等</option>
       <option value="hard">⭐⭐⭐ 困难</option>
     </select>
+    <button class="btn-leaderboard" onclick="showLeaderboard()">🏆 排行榜</button>
     <p class="question-count" id="questionCount">共 0 道题目</p>
     <ul class="question-list" id="questionList"></ul>
     <div class="sidebar-footer">
@@ -809,6 +831,51 @@ function renderQuestionList() {
       <span class="diff">${diffIcons[q.difficulty]}</span> ${q.id}. ${q.title}
     </button></li>`;
   }).join("");
+}
+
+// ===== 排行榜 =====
+async function showLeaderboard() {
+  const main = document.getElementById("mainContent");
+  main.innerHTML = '<div class="content-card" style="text-align:center;color:#64748b;padding:40px;">⏳ 排行榜加载中...</div>';
+  try {
+    const resp = await fetch("/api/leaderboard", { headers: authHeader() });
+    const data = await resp.json();
+    if (isAuthExpired(data)) {
+      await forceLogout("当前账号已被下线，请重新登录");
+      return;
+    }
+    renderLeaderboard(data.leaderboard || []);
+  } catch(e) {
+    main.innerHTML = '<div class="content-card" style="text-align:center;color:#dc2626;padding:40px;">排行榜加载失败，请稍后重试</div>';
+  }
+}
+
+function renderLeaderboard(list) {
+  const medals = {1:"🥇", 2:"🥈", 3:"🥉"};
+  const rows = list.length ? list.map(u => {
+    const isMe = u.username === authUser;
+    return `<tr class="${isMe ? "lb-me" : ""}">
+      <td class="lb-rank">${medals[u.rank] || u.rank}</td>
+      <td class="lb-user">${escapeHtml(u.username)}${isMe ? "（我）" : ""}</td>
+      <td class="lb-score">${u.score}</td>
+      <td>${u.solved}</td>
+      <td>${u.attempts}</td>
+    </tr>`;
+  }).join("") : '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:24px;">还没有人上榜，快去解题吧！🏁</td></tr>';
+  document.getElementById("mainContent").innerHTML = `
+    <div class="content-card">
+      <div class="lb-head">
+        <div class="q-title">🏆 排行榜</div>
+        <span class="lb-sub">按已解题目积分排名（简单 1 分 · 中等 2 分 · 困难 3 分）</span>
+      </div>
+    </div>
+    <div class="content-card" style="padding:12px 18px;">
+      <table class="lb-table">
+        <thead><tr><th>排名</th><th>用户</th><th>积分</th><th>已解</th><th>尝试</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:#94a3b8;text-align:center;">从左侧选择题目继续练习</p>`;
 }
 
 // ===== 选择题目 =====

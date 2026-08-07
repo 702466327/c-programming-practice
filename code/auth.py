@@ -214,10 +214,10 @@ def save_submission(username, question_id, code):
         if username not in submissions:
             submissions[username] = {}
 
-        submissions[username][key] = {
-            "code": code,
-            "updated_at": time.strftime("%Y-%m-%d %H:%M:%S")
-        }
+        entry = submissions[username].get(key, {})
+        entry["code"] = code
+        entry["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        submissions[username][key] = entry
         _save_json(SUBMISSIONS_FILE, submissions)
 
 
@@ -235,6 +235,51 @@ def get_all_submissions(username):
     with DATA_LOCK:
         submissions = _load_json(SUBMISSIONS_FILE, {})
         return submissions.get(username, {})
+
+
+# ===== 判题统计与排行榜 =====
+
+def record_judge_result(username, question_id, passed, total):
+    """记录判题结果: 尝试次数 / 是否已解出（全部用例通过即视为解出）"""
+    with DATA_LOCK:
+        submissions = _load_json(SUBMISSIONS_FILE, {})
+        user_subs = submissions.setdefault(username, {})
+        entry = user_subs.setdefault(str(question_id), {})
+        entry["attempts"] = int(entry.get("attempts", 0)) + 1
+        if passed > 0 and total > 0 and passed == total:
+            if not entry.get("solved"):
+                entry["solved_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+            entry["solved"] = True
+        _save_json(SUBMISSIONS_FILE, submissions)
+
+
+def get_leaderboard(weights, limit=50):
+    """排行榜: 积分 = 已解出题目的难度权重之和（weights: {题目ID字符串: 权重}）
+
+    排序: 积分降序 -> 已解数降序 -> 尝试次数升序 -> 用户名升序
+    """
+    submissions = _load_json(SUBMISSIONS_FILE, {})
+    rows = []
+    for username, subs in submissions.items():
+        score = 0
+        solved = 0
+        attempts = 0
+        for qid, s in subs.items():
+            if s.get("solved"):
+                solved += 1
+                score += int(weights.get(str(qid), 1))
+            attempts += int(s.get("attempts", 0))
+        if solved > 0 or attempts > 0:
+            rows.append({
+                "username": username,
+                "score": score,
+                "solved": solved,
+                "attempts": attempts,
+            })
+    rows.sort(key=lambda r: (-r["score"], -r["solved"], r["attempts"], r["username"]))
+    for i, r in enumerate(rows[:limit], 1):
+        r["rank"] = i
+    return rows[:limit]
 
 
 # ===== 管理员功能 =====
