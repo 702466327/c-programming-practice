@@ -372,747 +372,6 @@
     },
     {
       "id": 6,
-      "title": "斐波那契数列",
-      "difficulty": "medium",
-      "category": "循环",
-      "description": "## 斐波那契数列\n\n输出斐波那契数列的前 n 项（1 1 2 3 5 ...），空格分隔。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 30）\n**输出格式：** 前 n 项，空格分隔\n\n**示例：** 输入 `5` → 输出 `1 1 2 3 5`",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里编写输出前 n 项的逻辑\n    return 0;\n}",
-      "hints": [
-        "f1 = f2 = 1，之后每项为前两项之和",
-        "注意项间用空格分隔"
-      ],
-      "test_cases": [
-        {
-          "input": "5",
-          "expected": "1 1 2 3 5",
-          "visible": true
-        },
-        {
-          "input": "1",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "1 1",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "1 1 2",
-          "visible": true
-        },
-        {
-          "input": "7",
-          "expected": "1 1 2 3 5 8 13",
-          "visible": true
-        },
-        {
-          "input": "10",
-          "expected": "1 1 2 3 5 8 13 21 34 55",
-          "visible": false
-        },
-        {
-          "input": "12",
-          "expected": "1 1 2 3 5 8 13 21 34 55 89 144",
-          "visible": false
-        },
-        {
-          "input": "15",
-          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610",
-          "visible": false
-        },
-        {
-          "input": "20",
-          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765",
-          "visible": false
-        },
-        {
-          "input": "8",
-          "expected": "1 1 2 3 5 8 13 21",
-          "visible": false
-        },
-        {
-          "input": "25",
-          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025",
-          "visible": false
-        },
-        {
-          "input": "4",
-          "expected": "1 1 2 3",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "title": "数组去重排序",
-      "difficulty": "medium",
-      "category": "数组与算法",
-      "description": "## 数组去重排序\n\n给定 n 个整数，去除重复元素后升序输出。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 去重并排序后的整数，空格分隔\n\n**示例：** 输入 `10` / `3 1 4 1 5 9 2 6 5 3` → 输出 `1 2 3 4 5 6 9`",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写去重排序\n    return 0;\n}",
-      "hints": [
-        "先排序，相邻相同元素只输出一次",
-        "或使用 set 容器"
-      ],
-      "test_cases": [
-        {
-          "input": "10\n3 1 4 1 5 9 2 6 5 3",
-          "expected": "1 2 3 4 5 6 9",
-          "visible": true
-        },
-        {
-          "input": "5\n5 5 5 5 5",
-          "expected": "5",
-          "visible": true
-        },
-        {
-          "input": "1\n7",
-          "expected": "7",
-          "visible": true
-        },
-        {
-          "input": "8\n3 3 3 1 1 2 2 2",
-          "expected": "1 2 3",
-          "visible": true
-        },
-        {
-          "input": "6\n9 8 7 6 5 4",
-          "expected": "4 5 6 7 8 9",
-          "visible": true
-        },
-        {
-          "input": "7\n1 2 3 4 5 6 7",
-          "expected": "1 2 3 4 5 6 7",
-          "visible": false
-        },
-        {
-          "input": "9\n10 10 9 9 8 8 7 7 6",
-          "expected": "6 7 8 9 10",
-          "visible": false
-        },
-        {
-          "input": "4\n2 2 2 2",
-          "expected": "2",
-          "visible": false
-        },
-        {
-          "input": "10\n1 3 5 7 9 2 4 6 8 10",
-          "expected": "1 2 3 4 5 6 7 8 9 10",
-          "visible": false
-        },
-        {
-          "input": "3\n-1 -1 0",
-          "expected": "-1 0",
-          "visible": false
-        },
-        {
-          "input": "5\n100 1 100 1 50",
-          "expected": "1 50 100",
-          "visible": false
-        },
-        {
-          "input": "2\n8 8",
-          "expected": "8",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "title": "字符统计",
-      "difficulty": "medium",
-      "category": "字符串",
-      "description": "## 字符统计\n\n统计一行字符串中字母、数字、空格、其他字符的个数（含空格的一行）。\n\n**输入格式：** 一行字符串（含空格，长度 ≤ 1000）\n**输出格式：** 四行，依次为字母/数字/空格/其他字符的个数\n\n**示例：** 输入 `Hello World! 123` →\n```\n字母: 10\n数字: 3\n空格: 2\n其他: 1\n```",
-      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    getline(cin, s);\n    // 在这里编写统计逻辑\n    return 0;\n}",
-      "hints": [
-        "用 getline 读取整行",
-        "用 isalpha/isdigit 或字符范围判断"
-      ],
-      "test_cases": [
-        {
-          "input": "Hello World! 123",
-          "expected": "字母: 10\n数字: 3\n空格: 2\n其他: 1",
-          "visible": true
-        },
-        {
-          "input": "abc",
-          "expected": "字母: 3\n数字: 0\n空格: 0\n其他: 0",
-          "visible": true
-        },
-        {
-          "input": "123 456",
-          "expected": "字母: 0\n数字: 6\n空格: 1\n其他: 0",
-          "visible": true
-        },
-        {
-          "input": "!!! @@#",
-          "expected": "字母: 0\n数字: 0\n空格: 1\n其他: 6",
-          "visible": true
-        },
-        {
-          "input": "AaBb Cc",
-          "expected": "字母: 6\n数字: 0\n空格: 1\n其他: 0",
-          "visible": true
-        },
-        {
-          "input": "a1 b2 c3",
-          "expected": "字母: 3\n数字: 3\n空格: 2\n其他: 0",
-          "visible": false
-        },
-        {
-          "input": "Hello,World!",
-          "expected": "字母: 10\n数字: 0\n空格: 0\n其他: 2",
-          "visible": false
-        },
-        {
-          "input": "  ",
-          "expected": "字母: 0\n数字: 0\n空格: 2\n其他: 0",
-          "visible": false
-        },
-        {
-          "input": "C++ 2026",
-          "expected": "字母: 1\n数字: 4\n空格: 1\n其他: 2",
-          "visible": false
-        },
-        {
-          "input": "1234567890",
-          "expected": "字母: 0\n数字: 10\n空格: 0\n其他: 0",
-          "visible": false
-        },
-        {
-          "input": "!@#$%^&*()",
-          "expected": "字母: 0\n数字: 0\n空格: 0\n其他: 10",
-          "visible": false
-        },
-        {
-          "input": "A",
-          "expected": "字母: 1\n数字: 0\n空格: 0\n其他: 0",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "title": "函数：判断素数",
-      "difficulty": "medium",
-      "category": "函数",
-      "description": "## 函数：判断素数\n\n编写一个函数判断素数，对每个输入的数输出结果。1 不是素数。\n\n**输入格式：** 第一行 m；接下来 m 行每行一个整数（≤ 10^6）\n**输出格式：** 每行输出 `素数` 或 `不是素数`\n\n**示例：** 输入 `3` / `7` / `10` / `2` → 素数 / 不是素数 / 素数",
-      "starter_code": "#include <iostream>\nusing namespace std;\n// 在这里编写 isPrime 函数\nint main() {\n    int m;\n    cin >> m;\n    while (m--) {\n        int x;\n        cin >> x;\n        cout << (isPrime(x) ? \"素数\" : \"不是素数\") << endl;\n    }\n    return 0;\n}",
-      "hints": [
-        "判断到 sqrt(x) 即可",
-        "x < 2 不是素数"
-      ],
-      "test_cases": [
-        {
-          "input": "3\n7\n10\n2",
-          "expected": "素数\n不是素数\n素数",
-          "visible": true
-        },
-        {
-          "input": "3\n1\n4\n9",
-          "expected": "不是素数\n不是素数\n不是素数",
-          "visible": true
-        },
-        {
-          "input": "3\n11\n13\n17",
-          "expected": "素数\n素数\n素数",
-          "visible": true
-        },
-        {
-          "input": "1\n97",
-          "expected": "素数",
-          "visible": true
-        },
-        {
-          "input": "2\n0\n100",
-          "expected": "不是素数\n不是素数",
-          "visible": true
-        },
-        {
-          "input": "3\n2\n3\n5",
-          "expected": "素数\n素数\n素数",
-          "visible": false
-        },
-        {
-          "input": "1\n19",
-          "expected": "素数",
-          "visible": false
-        },
-        {
-          "input": "2\n21\n33",
-          "expected": "不是素数\n不是素数",
-          "visible": false
-        },
-        {
-          "input": "2\n37\n41",
-          "expected": "素数\n素数",
-          "visible": false
-        },
-        {
-          "input": "1\n1",
-          "expected": "不是素数",
-          "visible": false
-        },
-        {
-          "input": "3\n49\n53\n99",
-          "expected": "不是素数\n素数\n不是素数",
-          "visible": false
-        },
-        {
-          "input": "2\n1000000\n999983",
-          "expected": "不是素数\n素数",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "title": "冒泡排序",
-      "difficulty": "medium",
-      "category": "排序",
-      "description": "## 冒泡排序\n\n用冒泡排序对 n 个整数升序排序并输出。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 排序后的整数，空格分隔\n\n**示例：** 输入 `5` / `3 1 4 1 5` → 输出 `1 1 3 4 5`",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写冒泡排序\n    return 0;\n}",
-      "hints": [
-        "两两比较相邻元素，较大者后移",
-        "外层循环 n-1 轮"
-      ],
-      "test_cases": [
-        {
-          "input": "5\n3 1 4 1 5",
-          "expected": "1 1 3 4 5",
-          "visible": true
-        },
-        {
-          "input": "1\n9",
-          "expected": "9",
-          "visible": true
-        },
-        {
-          "input": "6\n6 5 4 3 2 1",
-          "expected": "1 2 3 4 5 6",
-          "visible": true
-        },
-        {
-          "input": "4\n4 4 4 4",
-          "expected": "4 4 4 4",
-          "visible": true
-        },
-        {
-          "input": "7\n1 2 3 4 5 6 7",
-          "expected": "1 2 3 4 5 6 7",
-          "visible": true
-        },
-        {
-          "input": "8\n8 7 6 5 4 3 2 1",
-          "expected": "1 2 3 4 5 6 7 8",
-          "visible": false
-        },
-        {
-          "input": "5\n10 9 8 7 6",
-          "expected": "6 7 8 9 10",
-          "visible": false
-        },
-        {
-          "input": "3\n2 1 3",
-          "expected": "1 2 3",
-          "visible": false
-        },
-        {
-          "input": "9\n5 5 5 1 1 1 9 9 9",
-          "expected": "1 1 1 5 5 5 9 9 9",
-          "visible": false
-        },
-        {
-          "input": "2\n0 -1",
-          "expected": "-1 0",
-          "visible": false
-        },
-        {
-          "input": "10\n10 9 8 7 6 5 4 3 2 1",
-          "expected": "1 2 3 4 5 6 7 8 9 10",
-          "visible": false
-        },
-        {
-          "input": "6\n-3 5 0 -3 2 2",
-          "expected": "-3 -3 0 2 2 5",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "title": "二分查找",
-      "difficulty": "medium",
-      "category": "查找",
-      "description": "## 二分查找\n\n在升序数组中查找目标值，输出其下标（从 0 开始），未找到输出 -1。\n\n**输入格式：** 第一行 n 和 target；第二行 n 个升序整数\n**输出格式：** 目标值的下标或 -1\n\n**示例：** 输入 `5 7` / `1 3 5 7 9` → 输出 `3`",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, t, a[1000];\n    cin >> n >> t;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写二分查找\n    return 0;\n}",
-      "hints": [
-        "维护左右边界 lo/hi，取中点比较",
-        "相等即返回，未找到返回 -1"
-      ],
-      "test_cases": [
-        {
-          "input": "5 7\n1 3 5 7 9",
-          "expected": "3",
-          "visible": true
-        },
-        {
-          "input": "5 6\n1 3 5 7 9",
-          "expected": "-1",
-          "visible": true
-        },
-        {
-          "input": "5 1\n1 3 5 7 9",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "5 9\n1 3 5 7 9",
-          "expected": "4",
-          "visible": true
-        },
-        {
-          "input": "1 8\n8",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "5 5\n1 3 5 7 9",
-          "expected": "2",
-          "visible": false
-        },
-        {
-          "input": "1 3\n8",
-          "expected": "-1",
-          "visible": false
-        },
-        {
-          "input": "6 4\n1 2 3 4 5 6",
-          "expected": "3",
-          "visible": false
-        },
-        {
-          "input": "6 1\n1 2 3 4 5 6",
-          "expected": "0",
-          "visible": false
-        },
-        {
-          "input": "6 6\n1 2 3 4 5 6",
-          "expected": "5",
-          "visible": false
-        },
-        {
-          "input": "7 10\n1 3 5 7 9 11 13",
-          "expected": "-1",
-          "visible": false
-        },
-        {
-          "input": "8 15\n1 4 9 12 15 18 21 30",
-          "expected": "4",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "title": "矩阵转置",
-      "difficulty": "medium",
-      "category": "二维数组",
-      "description": "## 矩阵转置\n\n将 n 行 m 列矩阵转置为 m 行 n 列输出。\n\n**输入格式：** 第一行 n m；接下来 n 行每行 m 个整数\n**输出格式：** 转置后的 m 行，每行 n 个整数，空格分隔\n\n**示例：** 输入 `2 3` / `1 2 3` / `4 5 6` →\n```\n1 4\n2 5\n3 6\n```",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[50][50];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++) cin >> a[i][j];\n    // 在这里编写转置输出\n    return 0;\n}",
-      "hints": [
-        "输出第 j 行第 i 列即 a[i][j]",
-        "外层循环列、内层循环行"
-      ],
-      "test_cases": [
-        {
-          "input": "2 3\n1 2 3\n4 5 6",
-          "expected": "1 4\n2 5\n3 6",
-          "visible": true
-        },
-        {
-          "input": "1 1\n7",
-          "expected": "7",
-          "visible": true
-        },
-        {
-          "input": "3 2\n1 2\n3 4\n5 6",
-          "expected": "1 3 5\n2 4 6",
-          "visible": true
-        },
-        {
-          "input": "2 2\n1 2\n3 4",
-          "expected": "1 3\n2 4",
-          "visible": true
-        },
-        {
-          "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
-          "expected": "1 4 7\n2 5 8\n3 6 9",
-          "visible": true
-        },
-        {
-          "input": "1 3\n9 8 7",
-          "expected": "9\n8\n7",
-          "visible": false
-        },
-        {
-          "input": "3 1\n9\n8\n7",
-          "expected": "9 8 7",
-          "visible": false
-        },
-        {
-          "input": "2 4\n1 2 3 4\n5 6 7 8",
-          "expected": "1 5\n2 6\n3 7\n4 8",
-          "visible": false
-        },
-        {
-          "input": "4 2\n1 2\n3 4\n5 6\n7 8",
-          "expected": "1 3 5 7\n2 4 6 8",
-          "visible": false
-        },
-        {
-          "input": "2 3\n-1 -2 -3\n-4 -5 -6",
-          "expected": "-1 -4\n-2 -5\n-3 -6",
-          "visible": false
-        },
-        {
-          "input": "3 3\n0 0 0\n0 0 0\n0 0 0",
-          "expected": "0 0 0\n0 0 0\n0 0 0",
-          "visible": false
-        },
-        {
-          "input": "1 2\n10 20",
-          "expected": "10\n20",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 13,
-      "title": "十进制转二进制",
-      "difficulty": "medium",
-      "category": "进制转换",
-      "description": "## 十进制转二进制\n\n将一个非负十进制整数转换为二进制字符串输出。\n\n**输入格式：** 一个整数 n（0 ≤ n ≤ 10^9）\n**输出格式：** n 的二进制表示\n\n**示例：** 输入 `10` → 输出 `1010`",
-      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里编写转换逻辑\n    return 0;\n}",
-      "hints": [
-        "不断除 2 取余，逆序拼接",
-        "注意 n=0 时输出 0"
-      ],
-      "test_cases": [
-        {
-          "input": "10",
-          "expected": "1010",
-          "visible": true
-        },
-        {
-          "input": "0",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "255",
-          "expected": "11111111",
-          "visible": true
-        },
-        {
-          "input": "1",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "10",
-          "visible": true
-        },
-        {
-          "input": "100",
-          "expected": "1100100",
-          "visible": false
-        },
-        {
-          "input": "1024",
-          "expected": "10000000000",
-          "visible": false
-        },
-        {
-          "input": "7",
-          "expected": "111",
-          "visible": false
-        },
-        {
-          "input": "128",
-          "expected": "10000000",
-          "visible": false
-        },
-        {
-          "input": "99",
-          "expected": "1100011",
-          "visible": false
-        },
-        {
-          "input": "256",
-          "expected": "100000000",
-          "visible": false
-        },
-        {
-          "input": "1023",
-          "expected": "1111111111",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 14,
-      "title": "词频统计",
-      "difficulty": "hard",
-      "category": "STL map",
-      "description": "## 词频统计\n\n统计一段英文文本中每个单词出现的次数：全部转为小写，忽略标点；按出现次数降序、同频按字典序升序输出。\n\n**输入格式：** 一行英文文本（单词间以空格分隔，可含标点，长度 ≤ 1000）\n**输出格式：** 每行 `单词: 次数`\n\n**示例：** 输入 `Hello world, hello Python! Python is great.` →\n```\nhello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1\n```",
-      "starter_code": "#include <iostream>\n#include <sstream>\n#include <map>\n#include <vector>\n#include <algorithm>\n#include <cctype>\nusing namespace std;\nint main() {\n    string line;\n    getline(cin, line);\n    // 在这里编写词频统计\n    return 0;\n}",
-      "hints": [
-        "逐词清洗：小写化并去掉非字母字符",
-        "用 map 计数，再排序输出"
-      ],
-      "test_cases": [
-        {
-          "input": "Hello world, hello Python! Python is great.",
-          "expected": "hello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1",
-          "visible": true
-        },
-        {
-          "input": "a a a",
-          "expected": "a: 3",
-          "visible": true
-        },
-        {
-          "input": "b a",
-          "expected": "a: 1\nb: 1",
-          "visible": true
-        },
-        {
-          "input": "one two three",
-          "expected": "one: 1\nthree: 1\ntwo: 1",
-          "visible": true
-        },
-        {
-          "input": "test test TEST Test",
-          "expected": "test: 4",
-          "visible": true
-        },
-        {
-          "input": "a b c d",
-          "expected": "a: 1\nb: 1\nc: 1\nd: 1",
-          "visible": false
-        },
-        {
-          "input": "x x y y z",
-          "expected": "x: 2\ny: 2\nz: 1",
-          "visible": false
-        },
-        {
-          "input": "foo bar foo bar baz",
-          "expected": "bar: 2\nfoo: 2\nbaz: 1",
-          "visible": false
-        },
-        {
-          "input": "one one one two two",
-          "expected": "one: 3\ntwo: 2",
-          "visible": false
-        },
-        {
-          "input": "a bb ccc",
-          "expected": "a: 1\nbb: 1\nccc: 1",
-          "visible": false
-        },
-        {
-          "input": "Apple apple APPLE",
-          "expected": "apple: 3",
-          "visible": false
-        },
-        {
-          "input": "big,big. small!",
-          "expected": "big: 2\nsmall: 1",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 15,
-      "title": "综合：学生成绩管理",
-      "difficulty": "hard",
-      "category": "综合应用",
-      "description": "## 综合：学生成绩管理\n\n维护学生成绩并支持命令：`avg` 平均分（保留 1 位小数）、`max` 最高分学生（`姓名 分数`，并列取最先出现）、`min` 最低分学生、`pass` 及格人数（≥60）、`fail` 不及格人数、`sorted` 按分数降序输出（同分按输入顺序）。\n\n**输入格式：** 第一行 n；接下来 n 行 `姓名 分数`；最后一行命令\n**输出格式：** 按命令输出对应结果\n\n**示例：** 输入 `5` / `张三 85` / `李四 92` / `王五 58` / `赵六 76` / `钱七 90` / `avg` → 输出 `80.2`",
-      "starter_code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nstruct Student { string name; int score; };\nint main() {\n    int n;\n    cin >> n;\n    vector<Student> v(n);\n    for (int i = 0; i < n; i++) cin >> v[i].name >> v[i].score;\n    string cmd;\n    cin >> cmd;\n    // 在这里编写命令处理\n    return 0;\n}",
-      "hints": [
-        "avg 用 double 求和后 /n 再 printf 保留 1 位",
-        "max/min 记录分数与首次出现顺序",
-        "sorted 用稳定排序（分数降序）"
-      ],
-      "test_cases": [
-        {
-          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\navg",
-          "expected": "80.2",
-          "visible": true
-        },
-        {
-          "input": "3\nA 60\nB 80\nC 90\nmax",
-          "expected": "C 90",
-          "visible": true
-        },
-        {
-          "input": "3\nA 60\nB 80\nC 90\nmin",
-          "expected": "A 60",
-          "visible": true
-        },
-        {
-          "input": "4\nA 59\nB 60\nC 61\nD 100\npass",
-          "expected": "3",
-          "visible": true
-        },
-        {
-          "input": "4\nA 59\nB 60\nC 61\nD 100\nfail",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "3\nA 80\nB 90\nC 70\nsorted",
-          "expected": "B 90\nA 80\nC 70",
-          "visible": false
-        },
-        {
-          "input": "2\nA 50\nB 50\navg",
-          "expected": "50.0",
-          "visible": false
-        },
-        {
-          "input": "3\nA 100\nB 100\nC 90\nmax",
-          "expected": "A 100",
-          "visible": false
-        },
-        {
-          "input": "3\nA 10\nB 10\nC 10\nmin",
-          "expected": "A 10",
-          "visible": false
-        },
-        {
-          "input": "5\nA 90\nB 90\nC 90\nD 90\nE 90\nsorted",
-          "expected": "A 90\nB 90\nC 90\nD 90\nE 90",
-          "visible": false
-        },
-        {
-          "input": "2\nA 33\nB 66\npass",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "2\nA 33\nB 66\nfail",
-          "expected": "1",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 16,
       "title": "多行求和",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1186,7 +445,7 @@
       ]
     },
     {
-      "id": 17,
+      "id": 7,
       "title": "差与商",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1259,7 +518,7 @@
       ]
     },
     {
-      "id": 18,
+      "id": 8,
       "title": "温度转换",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1333,7 +592,7 @@
       ]
     },
     {
-      "id": 19,
+      "id": 9,
       "title": "时间差",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1407,7 +666,7 @@
       ]
     },
     {
-      "id": 20,
+      "id": 10,
       "title": "圆的面积",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1481,7 +740,7 @@
       ]
     },
     {
-      "id": 21,
+      "id": 11,
       "title": "数字各位和",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1554,7 +813,7 @@
       ]
     },
     {
-      "id": 22,
+      "id": 12,
       "title": "四舍五入",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1627,7 +886,7 @@
       ]
     },
     {
-      "id": 23,
+      "id": 13,
       "title": "交换两个变量",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1701,7 +960,7 @@
       ]
     },
     {
-      "id": 24,
+      "id": 14,
       "title": "平均成绩",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1774,7 +1033,7 @@
       ]
     },
     {
-      "id": 25,
+      "id": 15,
       "title": "逆序三位数",
       "difficulty": "easy",
       "category": "基础输入输出",
@@ -1848,7 +1107,7 @@
       ]
     },
     {
-      "id": 26,
+      "id": 16,
       "title": "成绩等级",
       "difficulty": "easy",
       "category": "条件判断",
@@ -1921,7 +1180,7 @@
       ]
     },
     {
-      "id": 27,
+      "id": 17,
       "title": "三数最大值",
       "difficulty": "easy",
       "category": "条件判断",
@@ -1994,7 +1253,7 @@
       ]
     },
     {
-      "id": 28,
+      "id": 18,
       "title": "奇偶判断",
       "difficulty": "easy",
       "category": "条件判断",
@@ -2067,7 +1326,7 @@
       ]
     },
     {
-      "id": 29,
+      "id": 19,
       "title": "绝对值",
       "difficulty": "easy",
       "category": "条件判断",
@@ -2140,7 +1399,7 @@
       ]
     },
     {
-      "id": 30,
+      "id": 20,
       "title": "三角形判定",
       "difficulty": "easy",
       "category": "条件判断",
@@ -2214,81 +1473,7 @@
       ]
     },
     {
-      "id": 31,
-      "title": "分段函数",
-      "difficulty": "medium",
-      "category": "条件判断",
-      "description": "## 分段函数\n\n计算分段函数 f(x)：\n- x < 0：f(x) = -x\n- 0 ≤ x < 10：f(x) = 2x + 1\n- x ≥ 10：f(x) = x² - 10\n\n**输入格式：** 一个实数 x\n**输出格式：** f(x)，保留 2 位小数",
-      "starter_code": "#include <iostream>\n#include <cstdio>\nusing namespace std;\nint main() {\n    double x;\n    cin >> x;\n    // 在这里计算分段函数\n    return 0;\n}",
-      "hints": [
-        "三个区间分别计算",
-        "printf(\"%.2f\")"
-      ],
-      "test_cases": [
-        {
-          "input": "-5",
-          "expected": "5.00",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "7.00",
-          "visible": true
-        },
-        {
-          "input": "10",
-          "expected": "90.00",
-          "visible": true
-        },
-        {
-          "input": "0",
-          "expected": "1.00",
-          "visible": true
-        },
-        {
-          "input": "9.5",
-          "expected": "20.00",
-          "visible": true
-        },
-        {
-          "input": "-0.5",
-          "expected": "0.50",
-          "visible": false
-        },
-        {
-          "input": "4",
-          "expected": "9.00",
-          "visible": false
-        },
-        {
-          "input": "11",
-          "expected": "111.00",
-          "visible": false
-        },
-        {
-          "input": "100",
-          "expected": "9990.00",
-          "visible": false
-        },
-        {
-          "input": "9.9",
-          "expected": "20.80",
-          "visible": false
-        },
-        {
-          "input": "-10",
-          "expected": "10.00",
-          "visible": false
-        },
-        {
-          "input": "2",
-          "expected": "5.00",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 32,
+      "id": 21,
       "title": "星期几",
       "difficulty": "easy",
       "category": "条件判断",
@@ -2362,7 +1547,7 @@
       ]
     },
     {
-      "id": 33,
+      "id": 22,
       "title": "1 到 n 求和",
       "difficulty": "easy",
       "category": "循环",
@@ -2436,7 +1621,7 @@
       ]
     },
     {
-      "id": 34,
+      "id": 23,
       "title": "阶乘和",
       "difficulty": "easy",
       "category": "循环",
@@ -2509,7 +1694,7 @@
       ]
     },
     {
-      "id": 35,
+      "id": 24,
       "title": "水仙花数",
       "difficulty": "easy",
       "category": "循环",
@@ -2583,7 +1768,7 @@
       ]
     },
     {
-      "id": 36,
+      "id": 25,
       "title": "完数",
       "difficulty": "easy",
       "category": "数论",
@@ -2657,7 +1842,7 @@
       ]
     },
     {
-      "id": 37,
+      "id": 26,
       "title": "单位分数求和",
       "difficulty": "easy",
       "category": "循环",
@@ -2731,155 +1916,7 @@
       ]
     },
     {
-      "id": 38,
-      "title": "分数数列求和",
-      "difficulty": "medium",
-      "category": "循环",
-      "description": "## 分数数列求和\n\n数列 2/1, 3/2, 5/3, 8/5, ...（分子分母均为斐波那契数），求前 n 项和，保留 2 位小数。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 30）\n**输出格式：** 和，保留 2 位小数",
-      "starter_code": "#include <iostream>\n#include <cstdio>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里累加分数\n    return 0;\n}",
-      "hints": [
-        "下一项分子=上一项分子+分母",
-        "下一项分母=上一项分子"
-      ],
-      "test_cases": [
-        {
-          "input": "1",
-          "expected": "2.00",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "3.50",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "5.17",
-          "visible": true
-        },
-        {
-          "input": "4",
-          "expected": "6.77",
-          "visible": true
-        },
-        {
-          "input": "5",
-          "expected": "8.39",
-          "visible": true
-        },
-        {
-          "input": "6",
-          "expected": "10.01",
-          "visible": false
-        },
-        {
-          "input": "7",
-          "expected": "11.63",
-          "visible": false
-        },
-        {
-          "input": "8",
-          "expected": "13.24",
-          "visible": false
-        },
-        {
-          "input": "10",
-          "expected": "16.48",
-          "visible": false
-        },
-        {
-          "input": "12",
-          "expected": "19.72",
-          "visible": false
-        },
-        {
-          "input": "15",
-          "expected": "24.57",
-          "visible": false
-        },
-        {
-          "input": "20",
-          "expected": "32.66",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 39,
-      "title": "数字反转",
-      "difficulty": "medium",
-      "category": "循环",
-      "description": "## 数字反转\n\n输入整数（可带负号），输出反转后的整数（去掉前导零，保留负号）。\n\n**输入格式：** 一个整数 n（|n| ≤ 10^9）\n**输出格式：** 反转后的整数",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    long long n;\n    cin >> n;\n    // 在这里反转\n    return 0;\n}",
-      "hints": [
-        "先取绝对值逐位反转",
-        "最后恢复符号"
-      ],
-      "test_cases": [
-        {
-          "input": "123",
-          "expected": "321",
-          "visible": true
-        },
-        {
-          "input": "-123",
-          "expected": "-321",
-          "visible": true
-        },
-        {
-          "input": "120",
-          "expected": "21",
-          "visible": true
-        },
-        {
-          "input": "100",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "0",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "987654321",
-          "expected": "123456789",
-          "visible": false
-        },
-        {
-          "input": "-1000",
-          "expected": "-1",
-          "visible": false
-        },
-        {
-          "input": "1000000000",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "123456789",
-          "expected": "987654321",
-          "visible": false
-        },
-        {
-          "input": "-987654321",
-          "expected": "-123456789",
-          "visible": false
-        },
-        {
-          "input": "101",
-          "expected": "101",
-          "visible": false
-        },
-        {
-          "input": "-10",
-          "expected": "-1",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 40,
+      "id": 27,
       "title": "数位统计",
       "difficulty": "easy",
       "category": "循环",
@@ -2953,7 +1990,7 @@
       ]
     },
     {
-      "id": 41,
+      "id": 28,
       "title": "九九乘法表",
       "difficulty": "easy",
       "category": "循环",
@@ -3022,81 +2059,7 @@
       ]
     },
     {
-      "id": 42,
-      "title": "百钱百鸡",
-      "difficulty": "medium",
-      "category": "循环",
-      "description": "## 百钱百鸡\n\n公鸡 5 文/只、母鸡 3 文/只、小鸡 1 文 3 只。用 100 文买 100 只鸡，输出所有方案。\n\n**输入格式：** 无（程序直接枚举）\n**输出格式：** 每行 `公鸡数 母鸡数 小鸡数`，共 4 行",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    // 在这里枚举 0-20 公鸡, 0-33 母鸡\n    return 0;\n}",
-      "hints": [
-        "枚举 g=0..20, m=0..33, c=100-g-m",
-        "条件 5g+3m+c/3==100 且 c%3==0"
-      ],
-      "test_cases": [
-        {
-          "input": "0",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": true
-        },
-        {
-          "input": "1",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": true
-        },
-        {
-          "input": "4",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": true
-        },
-        {
-          "input": "5",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "6",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "7",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "8",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "9",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "10",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        },
-        {
-          "input": "11",
-          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 43,
+      "id": 29,
       "title": "逆序输出",
       "difficulty": "easy",
       "category": "数组",
@@ -3169,7 +2132,7 @@
       ]
     },
     {
-      "id": 44,
+      "id": 30,
       "title": "最大值及位置",
       "difficulty": "easy",
       "category": "数组",
@@ -3243,7 +2206,7 @@
       ]
     },
     {
-      "id": 45,
+      "id": 31,
       "title": "数组求和",
       "difficulty": "easy",
       "category": "数组",
@@ -3316,7 +2279,7 @@
       ]
     },
     {
-      "id": 46,
+      "id": 32,
       "title": "数组插入",
       "difficulty": "easy",
       "category": "数组",
@@ -3390,81 +2353,7 @@
       ]
     },
     {
-      "id": 47,
-      "title": "数组循环右移",
-      "difficulty": "medium",
-      "category": "数组",
-      "description": "## 数组循环右移\n\n将 n 个整数循环右移 k 位（k ≥ 0，超出部分从左端补入）。\n\n**输入格式：** 第一行 n k；第二行 n 个整数\n**输出格式：** 右移后的数组，空格分隔",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, k, a[1000];\n    cin >> n >> k;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里循环右移\n    return 0;\n}",
-      "hints": [
-        "k 先对 n 取模",
-        "输出 a[(i-k+n)%n]"
-      ],
-      "test_cases": [
-        {
-          "input": "5 2\n1 2 3 4 5",
-          "expected": "4 5 1 2 3",
-          "visible": true
-        },
-        {
-          "input": "5 5\n1 2 3 4 5",
-          "expected": "1 2 3 4 5",
-          "visible": true
-        },
-        {
-          "input": "5 0\n1 2 3 4 5",
-          "expected": "1 2 3 4 5",
-          "visible": true
-        },
-        {
-          "input": "5 7\n1 2 3 4 5",
-          "expected": "4 5 1 2 3",
-          "visible": true
-        },
-        {
-          "input": "3 1\n9 8 7",
-          "expected": "7 9 8",
-          "visible": true
-        },
-        {
-          "input": "6 3\n1 2 3 4 5 6",
-          "expected": "4 5 6 1 2 3",
-          "visible": false
-        },
-        {
-          "input": "4 2\n10 20 30 40",
-          "expected": "30 40 10 20",
-          "visible": false
-        },
-        {
-          "input": "2 1\n1 2",
-          "expected": "2 1",
-          "visible": false
-        },
-        {
-          "input": "1 9\n7",
-          "expected": "7",
-          "visible": false
-        },
-        {
-          "input": "7 4\n1 2 3 4 5 6 7",
-          "expected": "4 5 6 7 1 2 3",
-          "visible": false
-        },
-        {
-          "input": "4 6\n1 2 3 4",
-          "expected": "3 4 1 2",
-          "visible": false
-        },
-        {
-          "input": "5 1\n1 2 3 4 5",
-          "expected": "5 1 2 3 4",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 48,
+      "id": 33,
       "title": "删除指定元素",
       "difficulty": "easy",
       "category": "数组",
@@ -3538,145 +2427,7 @@
       ]
     },
     {
-      "id": 49,
-      "title": "合并有序数组",
-      "difficulty": "medium",
-      "category": "数组",
-      "description": "## 合并有序数组\n\n合并两个升序数组为一个升序数组。\n\n**输入格式：** 第一行 n m；第二行 n 个升序整数；第三行 m 个升序整数\n**输出格式：** 合并后的升序数组，空格分隔",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[1000], b[1000];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    for (int i = 0; i < m; i++) cin >> b[i];\n    // 在这里合并\n    return 0;\n}",
-      "hints": [
-        "双指针 i/j 比较取小者",
-        "剩余部分直接追加"
-      ],
-      "test_cases": [
-        {
-          "input": "3 4\n1 3 5\n2 4 6 8",
-          "expected": "1 2 3 4 5 6 8",
-          "visible": true
-        },
-        {
-          "input": "1 1\n1\n1",
-          "expected": "1 1",
-          "visible": true
-        },
-        {
-          "input": "0 3\n\n7 8 9",
-          "expected": "7 8 9",
-          "visible": true
-        },
-        {
-          "input": "3 0\n1 2 3\n",
-          "expected": "1 2 3",
-          "visible": true
-        },
-        {
-          "input": "2 2\n1 2\n3 4",
-          "expected": "1 2 3 4",
-          "visible": true
-        },
-        {
-          "input": "3 3\n1 2 3\n1 2 3",
-          "expected": "1 1 2 2 3 3",
-          "visible": false
-        },
-        {
-          "input": "4 2\n1 4 7 10\n2 5",
-          "expected": "1 2 4 5 7 10",
-          "visible": false
-        },
-        {
-          "input": "5 1\n-5 -3 -1 1 3\n-4",
-          "expected": "-5 -4 -3 -1 1 3",
-          "visible": false
-        },
-        {
-          "input": "2 2\n1 2\n0 9",
-          "expected": "0 1 2 9",
-          "visible": false
-        },
-        {
-          "input": "1 3\n100\n1 2 3",
-          "expected": "1 2 3 100",
-          "visible": false
-        },
-        {
-          "input": "3 2\n1 1 1\n1 1",
-          "expected": "1 1 1 1 1",
-          "visible": false
-        },
-        {
-          "input": "4 4\n1 3 5 7\n2 4 6 8",
-          "expected": "1 2 3 4 5 6 7 8",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 50,
-      "title": "杨辉三角",
-      "difficulty": "medium",
-      "category": "二维数组",
-      "description": "## 杨辉三角\n\n输出杨辉三角前 n 行（每行数字空格分隔）。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 20）\n**输出格式：** n 行杨辉三角",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里生成杨辉三角\n    return 0;\n}",
-      "hints": [
-        "a[i][0]=a[i][i]=1",
-        "a[i][j]=a[i-1][j-1]+a[i-1][j]"
-      ],
-      "test_cases": [
-        {
-          "input": "1",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "1\n1 1\n1 2 1",
-          "visible": true
-        },
-        {
-          "input": "5",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "1\n1 1",
-          "visible": true
-        },
-        {
-          "input": "4",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1",
-          "visible": true
-        },
-        {
-          "input": "6",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1",
-          "visible": false
-        },
-        {
-          "input": "7",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1",
-          "visible": false
-        },
-        {
-          "input": "8",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1",
-          "visible": false
-        },
-        {
-          "input": "9",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1",
-          "visible": false
-        },
-        {
-          "input": "10",
-          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1\n1 9 36 84 126 126 84 36 9 1",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 51,
+      "id": 34,
       "title": "行列求和",
       "difficulty": "easy",
       "category": "二维数组",
@@ -3749,81 +2500,7 @@
       ]
     },
     {
-      "id": 52,
-      "title": "鞍点",
-      "difficulty": "medium",
-      "category": "二维数组",
-      "description": "## 鞍点\n\n鞍点 = 所在行最大且所在列最小的元素。输出第一个（行优先）鞍点的 `行 列 值`（从 0 开始），不存在输出 `NO`。\n\n**输入格式：** 第一行 n m；接下来 n 行每行 m 个整数\n**输出格式：** `行 列 值` 或 `NO`",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[50][50];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++) cin >> a[i][j];\n    // 在这里找鞍点\n    return 0;\n}",
-      "hints": [
-        "对每个元素检查是否为行最大且列最小",
-        "行优先遍历，找到即输出"
-      ],
-      "test_cases": [
-        {
-          "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
-          "expected": "0 2 3",
-          "visible": true
-        },
-        {
-          "input": "2 2\n1 1\n1 1",
-          "expected": "0 0 1",
-          "visible": true
-        },
-        {
-          "input": "3 3\n1 2 3\n4 5 6\n7 8 1",
-          "expected": "NO",
-          "visible": true
-        },
-        {
-          "input": "3 3\n7 8 9\n6 5 4\n1 2 3",
-          "expected": "2 2 3",
-          "visible": true
-        },
-        {
-          "input": "1 1\n5",
-          "expected": "0 0 5",
-          "visible": true
-        },
-        {
-          "input": "2 3\n1 2 3\n3 2 1",
-          "expected": "NO",
-          "visible": false
-        },
-        {
-          "input": "3 3\n9 1 2\n8 3 4\n7 5 6",
-          "expected": "2 0 7",
-          "visible": false
-        },
-        {
-          "input": "2 2\n1 2\n2 1",
-          "expected": "NO",
-          "visible": false
-        },
-        {
-          "input": "1 3\n5 5 5",
-          "expected": "0 0 5",
-          "visible": false
-        },
-        {
-          "input": "3 1\n5\n5\n5",
-          "expected": "0 0 5",
-          "visible": false
-        },
-        {
-          "input": "4 4\n1 2 3 4\n2 3 4 5\n3 4 5 6\n4 5 6 7",
-          "expected": "0 3 4",
-          "visible": false
-        },
-        {
-          "input": "2 2\n4 3\n2 1",
-          "expected": "1 0 2",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 53,
+      "id": 35,
       "title": "字符串反转",
       "difficulty": "easy",
       "category": "字符串",
@@ -3896,7 +2573,7 @@
       ]
     },
     {
-      "id": 54,
+      "id": 36,
       "title": "大小写转换",
       "difficulty": "easy",
       "category": "字符串",
@@ -3970,7 +2647,1400 @@
       ]
     },
     {
+      "id": 37,
+      "title": "删除指定字符",
+      "difficulty": "easy",
+      "category": "字符串",
+      "description": "## 删除指定字符\n\n删除字符串中所有指定的字符。\n\n**输入格式：** 两行：字符串与要删除的字符\n**输出格式：** 删除后的字符串（可为空）",
+      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    char x;\n    getline(cin, s);\n    cin >> x;\n    // 在这里删除 x\n    return 0;\n}",
+      "hints": [
+        "保留 s[i] != x 的字符"
+      ],
+      "test_cases": [
+        {
+          "input": "hello\nl",
+          "expected": "heo",
+          "visible": true
+        },
+        {
+          "input": "abc\na",
+          "expected": "bc",
+          "visible": true
+        },
+        {
+          "input": "aaaa\na",
+          "expected": "",
+          "visible": true
+        },
+        {
+          "input": "xyz\nz",
+          "expected": "xy",
+          "visible": true
+        },
+        {
+          "input": "Hello\no",
+          "expected": "Hell",
+          "visible": true
+        },
+        {
+          "input": "aabbcc\nb",
+          "expected": "aacc",
+          "visible": false
+        },
+        {
+          "input": "12345\n3",
+          "expected": "1245",
+          "visible": false
+        },
+        {
+          "input": "test\nt",
+          "expected": "es",
+          "visible": false
+        },
+        {
+          "input": "x\nx",
+          "expected": "",
+          "visible": false
+        },
+        {
+          "input": "hello\ne",
+          "expected": "hllo",
+          "visible": false
+        },
+        {
+          "input": "aA\na",
+          "expected": "A",
+          "visible": false
+        },
+        {
+          "input": "abc\nc",
+          "expected": "ab",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "title": "幂运算",
+      "difficulty": "easy",
+      "category": "函数",
+      "description": "## 幂运算\n\n计算 x 的 n 次方（n ≥ 0，结果 ≤ 10^18）。\n\n**输入格式：** 两个整数 x n\n**输出格式：** x^n",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    long long x;\n    int n;\n    cin >> x >> n;\n    // 在这里计算幂\n    return 0;\n}",
+      "hints": [
+        "循环累乘 n 次，注意 n=0 结果为 1"
+      ],
+      "test_cases": [
+        {
+          "input": "2 5",
+          "expected": "32",
+          "visible": true
+        },
+        {
+          "input": "3 0",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "10 3",
+          "expected": "1000",
+          "visible": true
+        },
+        {
+          "input": "2 10",
+          "expected": "1024",
+          "visible": true
+        },
+        {
+          "input": "1 100",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "5 2",
+          "expected": "25",
+          "visible": false
+        },
+        {
+          "input": "0 5",
+          "expected": "0",
+          "visible": false
+        },
+        {
+          "input": "7 3",
+          "expected": "343",
+          "visible": false
+        },
+        {
+          "input": "3 4",
+          "expected": "81",
+          "visible": false
+        },
+        {
+          "input": "6 3",
+          "expected": "216",
+          "visible": false
+        },
+        {
+          "input": "9 2",
+          "expected": "81",
+          "visible": false
+        },
+        {
+          "input": "4 5",
+          "expected": "1024",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "title": "递归斐波那契",
+      "difficulty": "easy",
+      "category": "递归",
+      "description": "## 递归斐波那契\n\n用递归求斐波那契第 n 项：F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)。\n\n**输入格式：** 一个整数 n（0 ≤ n ≤ 30）\n**输出格式：** 第 n 项",
+      "starter_code": "#include <iostream>\nusing namespace std;\nlong long fib(int n) {\n    // 在这里实现递归\n}\nint main() {\n    int n;\n    cin >> n;\n    cout << fib(n) << endl;\n    return 0;\n}",
+      "hints": [
+        "递归出口 n==0 返回 0, n==1 返回 1"
+      ],
+      "test_cases": [
+        {
+          "input": "0",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "1",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "2",
+          "visible": true
+        },
+        {
+          "input": "5",
+          "expected": "5",
+          "visible": true
+        },
+        {
+          "input": "10",
+          "expected": "55",
+          "visible": false
+        },
+        {
+          "input": "20",
+          "expected": "6765",
+          "visible": false
+        },
+        {
+          "input": "30",
+          "expected": "832040",
+          "visible": false
+        },
+        {
+          "input": "7",
+          "expected": "13",
+          "visible": false
+        },
+        {
+          "input": "12",
+          "expected": "144",
+          "visible": false
+        },
+        {
+          "input": "15",
+          "expected": "610",
+          "visible": false
+        },
+        {
+          "input": "25",
+          "expected": "75025",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "title": "斐波那契数列",
+      "difficulty": "medium",
+      "category": "循环",
+      "description": "## 斐波那契数列\n\n输出斐波那契数列的前 n 项（1 1 2 3 5 ...），空格分隔。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 30）\n**输出格式：** 前 n 项，空格分隔\n\n**示例：** 输入 `5` → 输出 `1 1 2 3 5`",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里编写输出前 n 项的逻辑\n    return 0;\n}",
+      "hints": [
+        "f1 = f2 = 1，之后每项为前两项之和",
+        "注意项间用空格分隔"
+      ],
+      "test_cases": [
+        {
+          "input": "5",
+          "expected": "1 1 2 3 5",
+          "visible": true
+        },
+        {
+          "input": "1",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "1 1",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "1 1 2",
+          "visible": true
+        },
+        {
+          "input": "7",
+          "expected": "1 1 2 3 5 8 13",
+          "visible": true
+        },
+        {
+          "input": "10",
+          "expected": "1 1 2 3 5 8 13 21 34 55",
+          "visible": false
+        },
+        {
+          "input": "12",
+          "expected": "1 1 2 3 5 8 13 21 34 55 89 144",
+          "visible": false
+        },
+        {
+          "input": "15",
+          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610",
+          "visible": false
+        },
+        {
+          "input": "20",
+          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765",
+          "visible": false
+        },
+        {
+          "input": "8",
+          "expected": "1 1 2 3 5 8 13 21",
+          "visible": false
+        },
+        {
+          "input": "25",
+          "expected": "1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025",
+          "visible": false
+        },
+        {
+          "input": "4",
+          "expected": "1 1 2 3",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "title": "数组去重排序",
+      "difficulty": "medium",
+      "category": "数组与算法",
+      "description": "## 数组去重排序\n\n给定 n 个整数，去除重复元素后升序输出。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 去重并排序后的整数，空格分隔\n\n**示例：** 输入 `10` / `3 1 4 1 5 9 2 6 5 3` → 输出 `1 2 3 4 5 6 9`",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写去重排序\n    return 0;\n}",
+      "hints": [
+        "先排序，相邻相同元素只输出一次",
+        "或使用 set 容器"
+      ],
+      "test_cases": [
+        {
+          "input": "10\n3 1 4 1 5 9 2 6 5 3",
+          "expected": "1 2 3 4 5 6 9",
+          "visible": true
+        },
+        {
+          "input": "5\n5 5 5 5 5",
+          "expected": "5",
+          "visible": true
+        },
+        {
+          "input": "1\n7",
+          "expected": "7",
+          "visible": true
+        },
+        {
+          "input": "8\n3 3 3 1 1 2 2 2",
+          "expected": "1 2 3",
+          "visible": true
+        },
+        {
+          "input": "6\n9 8 7 6 5 4",
+          "expected": "4 5 6 7 8 9",
+          "visible": true
+        },
+        {
+          "input": "7\n1 2 3 4 5 6 7",
+          "expected": "1 2 3 4 5 6 7",
+          "visible": false
+        },
+        {
+          "input": "9\n10 10 9 9 8 8 7 7 6",
+          "expected": "6 7 8 9 10",
+          "visible": false
+        },
+        {
+          "input": "4\n2 2 2 2",
+          "expected": "2",
+          "visible": false
+        },
+        {
+          "input": "10\n1 3 5 7 9 2 4 6 8 10",
+          "expected": "1 2 3 4 5 6 7 8 9 10",
+          "visible": false
+        },
+        {
+          "input": "3\n-1 -1 0",
+          "expected": "-1 0",
+          "visible": false
+        },
+        {
+          "input": "5\n100 1 100 1 50",
+          "expected": "1 50 100",
+          "visible": false
+        },
+        {
+          "input": "2\n8 8",
+          "expected": "8",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "字符统计",
+      "difficulty": "medium",
+      "category": "字符串",
+      "description": "## 字符统计\n\n统计一行字符串中字母、数字、空格、其他字符的个数（含空格的一行）。\n\n**输入格式：** 一行字符串（含空格，长度 ≤ 1000）\n**输出格式：** 四行，依次为字母/数字/空格/其他字符的个数\n\n**示例：** 输入 `Hello World! 123` →\n```\n字母: 10\n数字: 3\n空格: 2\n其他: 1\n```",
+      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    getline(cin, s);\n    // 在这里编写统计逻辑\n    return 0;\n}",
+      "hints": [
+        "用 getline 读取整行",
+        "用 isalpha/isdigit 或字符范围判断"
+      ],
+      "test_cases": [
+        {
+          "input": "Hello World! 123",
+          "expected": "字母: 10\n数字: 3\n空格: 2\n其他: 1",
+          "visible": true
+        },
+        {
+          "input": "abc",
+          "expected": "字母: 3\n数字: 0\n空格: 0\n其他: 0",
+          "visible": true
+        },
+        {
+          "input": "123 456",
+          "expected": "字母: 0\n数字: 6\n空格: 1\n其他: 0",
+          "visible": true
+        },
+        {
+          "input": "!!! @@#",
+          "expected": "字母: 0\n数字: 0\n空格: 1\n其他: 6",
+          "visible": true
+        },
+        {
+          "input": "AaBb Cc",
+          "expected": "字母: 6\n数字: 0\n空格: 1\n其他: 0",
+          "visible": true
+        },
+        {
+          "input": "a1 b2 c3",
+          "expected": "字母: 3\n数字: 3\n空格: 2\n其他: 0",
+          "visible": false
+        },
+        {
+          "input": "Hello,World!",
+          "expected": "字母: 10\n数字: 0\n空格: 0\n其他: 2",
+          "visible": false
+        },
+        {
+          "input": "  ",
+          "expected": "字母: 0\n数字: 0\n空格: 2\n其他: 0",
+          "visible": false
+        },
+        {
+          "input": "C++ 2026",
+          "expected": "字母: 1\n数字: 4\n空格: 1\n其他: 2",
+          "visible": false
+        },
+        {
+          "input": "1234567890",
+          "expected": "字母: 0\n数字: 10\n空格: 0\n其他: 0",
+          "visible": false
+        },
+        {
+          "input": "!@#$%^&*()",
+          "expected": "字母: 0\n数字: 0\n空格: 0\n其他: 10",
+          "visible": false
+        },
+        {
+          "input": "A",
+          "expected": "字母: 1\n数字: 0\n空格: 0\n其他: 0",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "函数：判断素数",
+      "difficulty": "medium",
+      "category": "函数",
+      "description": "## 函数：判断素数\n\n编写一个函数判断素数，对每个输入的数输出结果。1 不是素数。\n\n**输入格式：** 第一行 m；接下来 m 行每行一个整数（≤ 10^6）\n**输出格式：** 每行输出 `素数` 或 `不是素数`\n\n**示例：** 输入 `3` / `7` / `10` / `2` → 素数 / 不是素数 / 素数",
+      "starter_code": "#include <iostream>\nusing namespace std;\n// 在这里编写 isPrime 函数\nint main() {\n    int m;\n    cin >> m;\n    while (m--) {\n        int x;\n        cin >> x;\n        cout << (isPrime(x) ? \"素数\" : \"不是素数\") << endl;\n    }\n    return 0;\n}",
+      "hints": [
+        "判断到 sqrt(x) 即可",
+        "x < 2 不是素数"
+      ],
+      "test_cases": [
+        {
+          "input": "3\n7\n10\n2",
+          "expected": "素数\n不是素数\n素数",
+          "visible": true
+        },
+        {
+          "input": "3\n1\n4\n9",
+          "expected": "不是素数\n不是素数\n不是素数",
+          "visible": true
+        },
+        {
+          "input": "3\n11\n13\n17",
+          "expected": "素数\n素数\n素数",
+          "visible": true
+        },
+        {
+          "input": "1\n97",
+          "expected": "素数",
+          "visible": true
+        },
+        {
+          "input": "2\n0\n100",
+          "expected": "不是素数\n不是素数",
+          "visible": true
+        },
+        {
+          "input": "3\n2\n3\n5",
+          "expected": "素数\n素数\n素数",
+          "visible": false
+        },
+        {
+          "input": "1\n19",
+          "expected": "素数",
+          "visible": false
+        },
+        {
+          "input": "2\n21\n33",
+          "expected": "不是素数\n不是素数",
+          "visible": false
+        },
+        {
+          "input": "2\n37\n41",
+          "expected": "素数\n素数",
+          "visible": false
+        },
+        {
+          "input": "1\n1",
+          "expected": "不是素数",
+          "visible": false
+        },
+        {
+          "input": "3\n49\n53\n99",
+          "expected": "不是素数\n素数\n不是素数",
+          "visible": false
+        },
+        {
+          "input": "2\n1000000\n999983",
+          "expected": "不是素数\n素数",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "title": "冒泡排序",
+      "difficulty": "medium",
+      "category": "排序",
+      "description": "## 冒泡排序\n\n用冒泡排序对 n 个整数升序排序并输出。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 排序后的整数，空格分隔\n\n**示例：** 输入 `5` / `3 1 4 1 5` → 输出 `1 1 3 4 5`",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写冒泡排序\n    return 0;\n}",
+      "hints": [
+        "两两比较相邻元素，较大者后移",
+        "外层循环 n-1 轮"
+      ],
+      "test_cases": [
+        {
+          "input": "5\n3 1 4 1 5",
+          "expected": "1 1 3 4 5",
+          "visible": true
+        },
+        {
+          "input": "1\n9",
+          "expected": "9",
+          "visible": true
+        },
+        {
+          "input": "6\n6 5 4 3 2 1",
+          "expected": "1 2 3 4 5 6",
+          "visible": true
+        },
+        {
+          "input": "4\n4 4 4 4",
+          "expected": "4 4 4 4",
+          "visible": true
+        },
+        {
+          "input": "7\n1 2 3 4 5 6 7",
+          "expected": "1 2 3 4 5 6 7",
+          "visible": true
+        },
+        {
+          "input": "8\n8 7 6 5 4 3 2 1",
+          "expected": "1 2 3 4 5 6 7 8",
+          "visible": false
+        },
+        {
+          "input": "5\n10 9 8 7 6",
+          "expected": "6 7 8 9 10",
+          "visible": false
+        },
+        {
+          "input": "3\n2 1 3",
+          "expected": "1 2 3",
+          "visible": false
+        },
+        {
+          "input": "9\n5 5 5 1 1 1 9 9 9",
+          "expected": "1 1 1 5 5 5 9 9 9",
+          "visible": false
+        },
+        {
+          "input": "2\n0 -1",
+          "expected": "-1 0",
+          "visible": false
+        },
+        {
+          "input": "10\n10 9 8 7 6 5 4 3 2 1",
+          "expected": "1 2 3 4 5 6 7 8 9 10",
+          "visible": false
+        },
+        {
+          "input": "6\n-3 5 0 -3 2 2",
+          "expected": "-3 -3 0 2 2 5",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "title": "二分查找",
+      "difficulty": "medium",
+      "category": "查找",
+      "description": "## 二分查找\n\n在升序数组中查找目标值，输出其下标（从 0 开始），未找到输出 -1。\n\n**输入格式：** 第一行 n 和 target；第二行 n 个升序整数\n**输出格式：** 目标值的下标或 -1\n\n**示例：** 输入 `5 7` / `1 3 5 7 9` → 输出 `3`",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, t, a[1000];\n    cin >> n >> t;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里编写二分查找\n    return 0;\n}",
+      "hints": [
+        "维护左右边界 lo/hi，取中点比较",
+        "相等即返回，未找到返回 -1"
+      ],
+      "test_cases": [
+        {
+          "input": "5 7\n1 3 5 7 9",
+          "expected": "3",
+          "visible": true
+        },
+        {
+          "input": "5 6\n1 3 5 7 9",
+          "expected": "-1",
+          "visible": true
+        },
+        {
+          "input": "5 1\n1 3 5 7 9",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "5 9\n1 3 5 7 9",
+          "expected": "4",
+          "visible": true
+        },
+        {
+          "input": "1 8\n8",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "5 5\n1 3 5 7 9",
+          "expected": "2",
+          "visible": false
+        },
+        {
+          "input": "1 3\n8",
+          "expected": "-1",
+          "visible": false
+        },
+        {
+          "input": "6 4\n1 2 3 4 5 6",
+          "expected": "3",
+          "visible": false
+        },
+        {
+          "input": "6 1\n1 2 3 4 5 6",
+          "expected": "0",
+          "visible": false
+        },
+        {
+          "input": "6 6\n1 2 3 4 5 6",
+          "expected": "5",
+          "visible": false
+        },
+        {
+          "input": "7 10\n1 3 5 7 9 11 13",
+          "expected": "-1",
+          "visible": false
+        },
+        {
+          "input": "8 15\n1 4 9 12 15 18 21 30",
+          "expected": "4",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "title": "矩阵转置",
+      "difficulty": "medium",
+      "category": "二维数组",
+      "description": "## 矩阵转置\n\n将 n 行 m 列矩阵转置为 m 行 n 列输出。\n\n**输入格式：** 第一行 n m；接下来 n 行每行 m 个整数\n**输出格式：** 转置后的 m 行，每行 n 个整数，空格分隔\n\n**示例：** 输入 `2 3` / `1 2 3` / `4 5 6` →\n```\n1 4\n2 5\n3 6\n```",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[50][50];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++) cin >> a[i][j];\n    // 在这里编写转置输出\n    return 0;\n}",
+      "hints": [
+        "输出第 j 行第 i 列即 a[i][j]",
+        "外层循环列、内层循环行"
+      ],
+      "test_cases": [
+        {
+          "input": "2 3\n1 2 3\n4 5 6",
+          "expected": "1 4\n2 5\n3 6",
+          "visible": true
+        },
+        {
+          "input": "1 1\n7",
+          "expected": "7",
+          "visible": true
+        },
+        {
+          "input": "3 2\n1 2\n3 4\n5 6",
+          "expected": "1 3 5\n2 4 6",
+          "visible": true
+        },
+        {
+          "input": "2 2\n1 2\n3 4",
+          "expected": "1 3\n2 4",
+          "visible": true
+        },
+        {
+          "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
+          "expected": "1 4 7\n2 5 8\n3 6 9",
+          "visible": true
+        },
+        {
+          "input": "1 3\n9 8 7",
+          "expected": "9\n8\n7",
+          "visible": false
+        },
+        {
+          "input": "3 1\n9\n8\n7",
+          "expected": "9 8 7",
+          "visible": false
+        },
+        {
+          "input": "2 4\n1 2 3 4\n5 6 7 8",
+          "expected": "1 5\n2 6\n3 7\n4 8",
+          "visible": false
+        },
+        {
+          "input": "4 2\n1 2\n3 4\n5 6\n7 8",
+          "expected": "1 3 5 7\n2 4 6 8",
+          "visible": false
+        },
+        {
+          "input": "2 3\n-1 -2 -3\n-4 -5 -6",
+          "expected": "-1 -4\n-2 -5\n-3 -6",
+          "visible": false
+        },
+        {
+          "input": "3 3\n0 0 0\n0 0 0\n0 0 0",
+          "expected": "0 0 0\n0 0 0\n0 0 0",
+          "visible": false
+        },
+        {
+          "input": "1 2\n10 20",
+          "expected": "10\n20",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "title": "十进制转二进制",
+      "difficulty": "medium",
+      "category": "进制转换",
+      "description": "## 十进制转二进制\n\n将一个非负十进制整数转换为二进制字符串输出。\n\n**输入格式：** 一个整数 n（0 ≤ n ≤ 10^9）\n**输出格式：** n 的二进制表示\n\n**示例：** 输入 `10` → 输出 `1010`",
+      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里编写转换逻辑\n    return 0;\n}",
+      "hints": [
+        "不断除 2 取余，逆序拼接",
+        "注意 n=0 时输出 0"
+      ],
+      "test_cases": [
+        {
+          "input": "10",
+          "expected": "1010",
+          "visible": true
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "255",
+          "expected": "11111111",
+          "visible": true
+        },
+        {
+          "input": "1",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "10",
+          "visible": true
+        },
+        {
+          "input": "100",
+          "expected": "1100100",
+          "visible": false
+        },
+        {
+          "input": "1024",
+          "expected": "10000000000",
+          "visible": false
+        },
+        {
+          "input": "7",
+          "expected": "111",
+          "visible": false
+        },
+        {
+          "input": "128",
+          "expected": "10000000",
+          "visible": false
+        },
+        {
+          "input": "99",
+          "expected": "1100011",
+          "visible": false
+        },
+        {
+          "input": "256",
+          "expected": "100000000",
+          "visible": false
+        },
+        {
+          "input": "1023",
+          "expected": "1111111111",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "title": "分段函数",
+      "difficulty": "medium",
+      "category": "条件判断",
+      "description": "## 分段函数\n\n计算分段函数 f(x)：\n- x < 0：f(x) = -x\n- 0 ≤ x < 10：f(x) = 2x + 1\n- x ≥ 10：f(x) = x² - 10\n\n**输入格式：** 一个实数 x\n**输出格式：** f(x)，保留 2 位小数",
+      "starter_code": "#include <iostream>\n#include <cstdio>\nusing namespace std;\nint main() {\n    double x;\n    cin >> x;\n    // 在这里计算分段函数\n    return 0;\n}",
+      "hints": [
+        "三个区间分别计算",
+        "printf(\"%.2f\")"
+      ],
+      "test_cases": [
+        {
+          "input": "-5",
+          "expected": "5.00",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "7.00",
+          "visible": true
+        },
+        {
+          "input": "10",
+          "expected": "90.00",
+          "visible": true
+        },
+        {
+          "input": "0",
+          "expected": "1.00",
+          "visible": true
+        },
+        {
+          "input": "9.5",
+          "expected": "20.00",
+          "visible": true
+        },
+        {
+          "input": "-0.5",
+          "expected": "0.50",
+          "visible": false
+        },
+        {
+          "input": "4",
+          "expected": "9.00",
+          "visible": false
+        },
+        {
+          "input": "11",
+          "expected": "111.00",
+          "visible": false
+        },
+        {
+          "input": "100",
+          "expected": "9990.00",
+          "visible": false
+        },
+        {
+          "input": "9.9",
+          "expected": "20.80",
+          "visible": false
+        },
+        {
+          "input": "-10",
+          "expected": "10.00",
+          "visible": false
+        },
+        {
+          "input": "2",
+          "expected": "5.00",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "title": "分数数列求和",
+      "difficulty": "medium",
+      "category": "循环",
+      "description": "## 分数数列求和\n\n数列 2/1, 3/2, 5/3, 8/5, ...（分子分母均为斐波那契数），求前 n 项和，保留 2 位小数。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 30）\n**输出格式：** 和，保留 2 位小数",
+      "starter_code": "#include <iostream>\n#include <cstdio>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里累加分数\n    return 0;\n}",
+      "hints": [
+        "下一项分子=上一项分子+分母",
+        "下一项分母=上一项分子"
+      ],
+      "test_cases": [
+        {
+          "input": "1",
+          "expected": "2.00",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "3.50",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "5.17",
+          "visible": true
+        },
+        {
+          "input": "4",
+          "expected": "6.77",
+          "visible": true
+        },
+        {
+          "input": "5",
+          "expected": "8.39",
+          "visible": true
+        },
+        {
+          "input": "6",
+          "expected": "10.01",
+          "visible": false
+        },
+        {
+          "input": "7",
+          "expected": "11.63",
+          "visible": false
+        },
+        {
+          "input": "8",
+          "expected": "13.24",
+          "visible": false
+        },
+        {
+          "input": "10",
+          "expected": "16.48",
+          "visible": false
+        },
+        {
+          "input": "12",
+          "expected": "19.72",
+          "visible": false
+        },
+        {
+          "input": "15",
+          "expected": "24.57",
+          "visible": false
+        },
+        {
+          "input": "20",
+          "expected": "32.66",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "title": "数字反转",
+      "difficulty": "medium",
+      "category": "循环",
+      "description": "## 数字反转\n\n输入整数（可带负号），输出反转后的整数（去掉前导零，保留负号）。\n\n**输入格式：** 一个整数 n（|n| ≤ 10^9）\n**输出格式：** 反转后的整数",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    long long n;\n    cin >> n;\n    // 在这里反转\n    return 0;\n}",
+      "hints": [
+        "先取绝对值逐位反转",
+        "最后恢复符号"
+      ],
+      "test_cases": [
+        {
+          "input": "123",
+          "expected": "321",
+          "visible": true
+        },
+        {
+          "input": "-123",
+          "expected": "-321",
+          "visible": true
+        },
+        {
+          "input": "120",
+          "expected": "21",
+          "visible": true
+        },
+        {
+          "input": "100",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "0",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "987654321",
+          "expected": "123456789",
+          "visible": false
+        },
+        {
+          "input": "-1000",
+          "expected": "-1",
+          "visible": false
+        },
+        {
+          "input": "1000000000",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "123456789",
+          "expected": "987654321",
+          "visible": false
+        },
+        {
+          "input": "-987654321",
+          "expected": "-123456789",
+          "visible": false
+        },
+        {
+          "input": "101",
+          "expected": "101",
+          "visible": false
+        },
+        {
+          "input": "-10",
+          "expected": "-1",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "title": "百钱百鸡",
+      "difficulty": "medium",
+      "category": "循环",
+      "description": "## 百钱百鸡\n\n公鸡 5 文/只、母鸡 3 文/只、小鸡 1 文 3 只。用 100 文买 100 只鸡，输出所有方案。\n\n**输入格式：** 无（程序直接枚举）\n**输出格式：** 每行 `公鸡数 母鸡数 小鸡数`，共 4 行",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    // 在这里枚举 0-20 公鸡, 0-33 母鸡\n    return 0;\n}",
+      "hints": [
+        "枚举 g=0..20, m=0..33, c=100-g-m",
+        "条件 5g+3m+c/3==100 且 c%3==0"
+      ],
+      "test_cases": [
+        {
+          "input": "0",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": true
+        },
+        {
+          "input": "1",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": true
+        },
+        {
+          "input": "4",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": true
+        },
+        {
+          "input": "5",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "6",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "7",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "8",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "9",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "10",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        },
+        {
+          "input": "11",
+          "expected": "0 25 75\n4 18 78\n8 11 81\n12 4 84",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "title": "数组循环右移",
+      "difficulty": "medium",
+      "category": "数组",
+      "description": "## 数组循环右移\n\n将 n 个整数循环右移 k 位（k ≥ 0，超出部分从左端补入）。\n\n**输入格式：** 第一行 n k；第二行 n 个整数\n**输出格式：** 右移后的数组，空格分隔",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, k, a[1000];\n    cin >> n >> k;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里循环右移\n    return 0;\n}",
+      "hints": [
+        "k 先对 n 取模",
+        "输出 a[(i-k+n)%n]"
+      ],
+      "test_cases": [
+        {
+          "input": "5 2\n1 2 3 4 5",
+          "expected": "4 5 1 2 3",
+          "visible": true
+        },
+        {
+          "input": "5 5\n1 2 3 4 5",
+          "expected": "1 2 3 4 5",
+          "visible": true
+        },
+        {
+          "input": "5 0\n1 2 3 4 5",
+          "expected": "1 2 3 4 5",
+          "visible": true
+        },
+        {
+          "input": "5 7\n1 2 3 4 5",
+          "expected": "4 5 1 2 3",
+          "visible": true
+        },
+        {
+          "input": "3 1\n9 8 7",
+          "expected": "7 9 8",
+          "visible": true
+        },
+        {
+          "input": "6 3\n1 2 3 4 5 6",
+          "expected": "4 5 6 1 2 3",
+          "visible": false
+        },
+        {
+          "input": "4 2\n10 20 30 40",
+          "expected": "30 40 10 20",
+          "visible": false
+        },
+        {
+          "input": "2 1\n1 2",
+          "expected": "2 1",
+          "visible": false
+        },
+        {
+          "input": "1 9\n7",
+          "expected": "7",
+          "visible": false
+        },
+        {
+          "input": "7 4\n1 2 3 4 5 6 7",
+          "expected": "4 5 6 7 1 2 3",
+          "visible": false
+        },
+        {
+          "input": "4 6\n1 2 3 4",
+          "expected": "3 4 1 2",
+          "visible": false
+        },
+        {
+          "input": "5 1\n1 2 3 4 5",
+          "expected": "5 1 2 3 4",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "title": "合并有序数组",
+      "difficulty": "medium",
+      "category": "数组",
+      "description": "## 合并有序数组\n\n合并两个升序数组为一个升序数组。\n\n**输入格式：** 第一行 n m；第二行 n 个升序整数；第三行 m 个升序整数\n**输出格式：** 合并后的升序数组，空格分隔",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[1000], b[1000];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    for (int i = 0; i < m; i++) cin >> b[i];\n    // 在这里合并\n    return 0;\n}",
+      "hints": [
+        "双指针 i/j 比较取小者",
+        "剩余部分直接追加"
+      ],
+      "test_cases": [
+        {
+          "input": "3 4\n1 3 5\n2 4 6 8",
+          "expected": "1 2 3 4 5 6 8",
+          "visible": true
+        },
+        {
+          "input": "1 1\n1\n1",
+          "expected": "1 1",
+          "visible": true
+        },
+        {
+          "input": "0 3\n\n7 8 9",
+          "expected": "7 8 9",
+          "visible": true
+        },
+        {
+          "input": "3 0\n1 2 3\n",
+          "expected": "1 2 3",
+          "visible": true
+        },
+        {
+          "input": "2 2\n1 2\n3 4",
+          "expected": "1 2 3 4",
+          "visible": true
+        },
+        {
+          "input": "3 3\n1 2 3\n1 2 3",
+          "expected": "1 1 2 2 3 3",
+          "visible": false
+        },
+        {
+          "input": "4 2\n1 4 7 10\n2 5",
+          "expected": "1 2 4 5 7 10",
+          "visible": false
+        },
+        {
+          "input": "5 1\n-5 -3 -1 1 3\n-4",
+          "expected": "-5 -4 -3 -1 1 3",
+          "visible": false
+        },
+        {
+          "input": "2 2\n1 2\n0 9",
+          "expected": "0 1 2 9",
+          "visible": false
+        },
+        {
+          "input": "1 3\n100\n1 2 3",
+          "expected": "1 2 3 100",
+          "visible": false
+        },
+        {
+          "input": "3 2\n1 1 1\n1 1",
+          "expected": "1 1 1 1 1",
+          "visible": false
+        },
+        {
+          "input": "4 4\n1 3 5 7\n2 4 6 8",
+          "expected": "1 2 3 4 5 6 7 8",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "title": "杨辉三角",
+      "difficulty": "medium",
+      "category": "二维数组",
+      "description": "## 杨辉三角\n\n输出杨辉三角前 n 行（每行数字空格分隔）。\n\n**输入格式：** 一个整数 n（1 ≤ n ≤ 20）\n**输出格式：** n 行杨辉三角",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里生成杨辉三角\n    return 0;\n}",
+      "hints": [
+        "a[i][0]=a[i][i]=1",
+        "a[i][j]=a[i-1][j-1]+a[i-1][j]"
+      ],
+      "test_cases": [
+        {
+          "input": "1",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "3",
+          "expected": "1\n1 1\n1 2 1",
+          "visible": true
+        },
+        {
+          "input": "5",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1",
+          "visible": true
+        },
+        {
+          "input": "2",
+          "expected": "1\n1 1",
+          "visible": true
+        },
+        {
+          "input": "4",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1",
+          "visible": true
+        },
+        {
+          "input": "6",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1",
+          "visible": false
+        },
+        {
+          "input": "7",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1",
+          "visible": false
+        },
+        {
+          "input": "8",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1",
+          "visible": false
+        },
+        {
+          "input": "9",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1",
+          "visible": false
+        },
+        {
+          "input": "10",
+          "expected": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1\n1 9 36 84 126 126 84 36 9 1",
+          "visible": false
+        }
+      ]
+    },
+    {
       "id": 55,
+      "title": "鞍点",
+      "difficulty": "medium",
+      "category": "二维数组",
+      "description": "## 鞍点\n\n鞍点 = 所在行最大且所在列最小的元素。输出第一个（行优先）鞍点的 `行 列 值`（从 0 开始），不存在输出 `NO`。\n\n**输入格式：** 第一行 n m；接下来 n 行每行 m 个整数\n**输出格式：** `行 列 值` 或 `NO`",
+      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int n, m, a[50][50];\n    cin >> n >> m;\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < m; j++) cin >> a[i][j];\n    // 在这里找鞍点\n    return 0;\n}",
+      "hints": [
+        "对每个元素检查是否为行最大且列最小",
+        "行优先遍历，找到即输出"
+      ],
+      "test_cases": [
+        {
+          "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
+          "expected": "0 2 3",
+          "visible": true
+        },
+        {
+          "input": "2 2\n1 1\n1 1",
+          "expected": "0 0 1",
+          "visible": true
+        },
+        {
+          "input": "3 3\n1 2 3\n4 5 6\n7 8 1",
+          "expected": "NO",
+          "visible": true
+        },
+        {
+          "input": "3 3\n7 8 9\n6 5 4\n1 2 3",
+          "expected": "2 2 3",
+          "visible": true
+        },
+        {
+          "input": "1 1\n5",
+          "expected": "0 0 5",
+          "visible": true
+        },
+        {
+          "input": "2 3\n1 2 3\n3 2 1",
+          "expected": "NO",
+          "visible": false
+        },
+        {
+          "input": "3 3\n9 1 2\n8 3 4\n7 5 6",
+          "expected": "2 0 7",
+          "visible": false
+        },
+        {
+          "input": "2 2\n1 2\n2 1",
+          "expected": "NO",
+          "visible": false
+        },
+        {
+          "input": "1 3\n5 5 5",
+          "expected": "0 0 5",
+          "visible": false
+        },
+        {
+          "input": "3 1\n5\n5\n5",
+          "expected": "0 0 5",
+          "visible": false
+        },
+        {
+          "input": "4 4\n1 2 3 4\n2 3 4 5\n3 4 5 6\n4 5 6 7",
+          "expected": "0 3 4",
+          "visible": false
+        },
+        {
+          "input": "2 2\n4 3\n2 1",
+          "expected": "1 0 2",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 56,
       "title": "统计单词数",
       "difficulty": "medium",
       "category": "字符串",
@@ -4039,79 +4109,6 @@
         {
           "input": "x",
           "expected": "1",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 56,
-      "title": "删除指定字符",
-      "difficulty": "easy",
-      "category": "字符串",
-      "description": "## 删除指定字符\n\n删除字符串中所有指定的字符。\n\n**输入格式：** 两行：字符串与要删除的字符\n**输出格式：** 删除后的字符串（可为空）",
-      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    char x;\n    getline(cin, s);\n    cin >> x;\n    // 在这里删除 x\n    return 0;\n}",
-      "hints": [
-        "保留 s[i] != x 的字符"
-      ],
-      "test_cases": [
-        {
-          "input": "hello\nl",
-          "expected": "heo",
-          "visible": true
-        },
-        {
-          "input": "abc\na",
-          "expected": "bc",
-          "visible": true
-        },
-        {
-          "input": "aaaa\na",
-          "expected": "",
-          "visible": true
-        },
-        {
-          "input": "xyz\nz",
-          "expected": "xy",
-          "visible": true
-        },
-        {
-          "input": "Hello\no",
-          "expected": "Hell",
-          "visible": true
-        },
-        {
-          "input": "aabbcc\nb",
-          "expected": "aacc",
-          "visible": false
-        },
-        {
-          "input": "12345\n3",
-          "expected": "1245",
-          "visible": false
-        },
-        {
-          "input": "test\nt",
-          "expected": "es",
-          "visible": false
-        },
-        {
-          "input": "x\nx",
-          "expected": "",
-          "visible": false
-        },
-        {
-          "input": "hello\ne",
-          "expected": "hllo",
-          "visible": false
-        },
-        {
-          "input": "aA\na",
-          "expected": "A",
-          "visible": false
-        },
-        {
-          "input": "abc\nc",
-          "expected": "ab",
           "visible": false
         }
       ]
@@ -4486,153 +4483,6 @@
     },
     {
       "id": 62,
-      "title": "最长回文子串",
-      "difficulty": "hard",
-      "category": "字符串",
-      "description": "## 最长回文子串\n\n求字符串中最长回文子串的长度（子串须连续）。\n\n**输入格式：** 一行字符串（不含空格，长度 ≤ 500）\n**输出格式：** 最长回文子串长度",
-      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    cin >> s;\n    // 在这里求最长回文子串\n    return 0;\n}",
-      "hints": [
-        "中心扩展：以每个字符（和每对相邻字符）为中心向两边扩展",
-        "或动态规划"
-      ],
-      "test_cases": [
-        {
-          "input": "abcba",
-          "expected": "5",
-          "visible": true
-        },
-        {
-          "input": "ab",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "a",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "abbc",
-          "expected": "2",
-          "visible": true
-        },
-        {
-          "input": "babad",
-          "expected": "3",
-          "visible": true
-        },
-        {
-          "input": "cbbd",
-          "expected": "2",
-          "visible": false
-        },
-        {
-          "input": "aaaa",
-          "expected": "4",
-          "visible": false
-        },
-        {
-          "input": "abca",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "racecar",
-          "expected": "7",
-          "visible": false
-        },
-        {
-          "input": "banana",
-          "expected": "5",
-          "visible": false
-        },
-        {
-          "input": "abcd",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "xabbay",
-          "expected": "4",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 63,
-      "title": "幂运算",
-      "difficulty": "easy",
-      "category": "函数",
-      "description": "## 幂运算\n\n计算 x 的 n 次方（n ≥ 0，结果 ≤ 10^18）。\n\n**输入格式：** 两个整数 x n\n**输出格式：** x^n",
-      "starter_code": "#include <iostream>\nusing namespace std;\nint main() {\n    long long x;\n    int n;\n    cin >> x >> n;\n    // 在这里计算幂\n    return 0;\n}",
-      "hints": [
-        "循环累乘 n 次，注意 n=0 结果为 1"
-      ],
-      "test_cases": [
-        {
-          "input": "2 5",
-          "expected": "32",
-          "visible": true
-        },
-        {
-          "input": "3 0",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "10 3",
-          "expected": "1000",
-          "visible": true
-        },
-        {
-          "input": "2 10",
-          "expected": "1024",
-          "visible": true
-        },
-        {
-          "input": "1 100",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "5 2",
-          "expected": "25",
-          "visible": false
-        },
-        {
-          "input": "0 5",
-          "expected": "0",
-          "visible": false
-        },
-        {
-          "input": "7 3",
-          "expected": "343",
-          "visible": false
-        },
-        {
-          "input": "3 4",
-          "expected": "81",
-          "visible": false
-        },
-        {
-          "input": "6 3",
-          "expected": "216",
-          "visible": false
-        },
-        {
-          "input": "9 2",
-          "expected": "81",
-          "visible": false
-        },
-        {
-          "input": "4 5",
-          "expected": "1024",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 64,
       "title": "组合数",
       "difficulty": "medium",
       "category": "函数",
@@ -4706,7 +4556,7 @@
       ]
     },
     {
-      "id": 65,
+      "id": 63,
       "title": "汉诺塔",
       "difficulty": "medium",
       "category": "递归",
@@ -4780,80 +4630,7 @@
       ]
     },
     {
-      "id": 66,
-      "title": "递归斐波那契",
-      "difficulty": "easy",
-      "category": "递归",
-      "description": "## 递归斐波那契\n\n用递归求斐波那契第 n 项：F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)。\n\n**输入格式：** 一个整数 n（0 ≤ n ≤ 30）\n**输出格式：** 第 n 项",
-      "starter_code": "#include <iostream>\nusing namespace std;\nlong long fib(int n) {\n    // 在这里实现递归\n}\nint main() {\n    int n;\n    cin >> n;\n    cout << fib(n) << endl;\n    return 0;\n}",
-      "hints": [
-        "递归出口 n==0 返回 0, n==1 返回 1"
-      ],
-      "test_cases": [
-        {
-          "input": "0",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "1",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "2",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "3",
-          "expected": "2",
-          "visible": true
-        },
-        {
-          "input": "5",
-          "expected": "5",
-          "visible": true
-        },
-        {
-          "input": "10",
-          "expected": "55",
-          "visible": false
-        },
-        {
-          "input": "20",
-          "expected": "6765",
-          "visible": false
-        },
-        {
-          "input": "30",
-          "expected": "832040",
-          "visible": false
-        },
-        {
-          "input": "7",
-          "expected": "13",
-          "visible": false
-        },
-        {
-          "input": "12",
-          "expected": "144",
-          "visible": false
-        },
-        {
-          "input": "15",
-          "expected": "610",
-          "visible": false
-        },
-        {
-          "input": "25",
-          "expected": "75025",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 67,
+      "id": 64,
       "title": "数根",
       "difficulty": "medium",
       "category": "递归",
@@ -4927,7 +4704,7 @@
       ]
     },
     {
-      "id": 68,
+      "id": 65,
       "title": "递归反转字符串",
       "difficulty": "medium",
       "category": "递归",
@@ -5001,7 +4778,7 @@
       ]
     },
     {
-      "id": 69,
+      "id": 66,
       "title": "多态面积计算",
       "difficulty": "medium",
       "category": "函数",
@@ -5074,7 +4851,7 @@
       ]
     },
     {
-      "id": 70,
+      "id": 67,
       "title": "函数：多数最大公约数",
       "difficulty": "medium",
       "category": "函数",
@@ -5148,7 +4925,7 @@
       ]
     },
     {
-      "id": 71,
+      "id": 68,
       "title": "选择排序",
       "difficulty": "medium",
       "category": "排序",
@@ -5221,7 +4998,7 @@
       ]
     },
     {
-      "id": 72,
+      "id": 69,
       "title": "插入排序",
       "difficulty": "medium",
       "category": "排序",
@@ -5294,7 +5071,7 @@
       ]
     },
     {
-      "id": 73,
+      "id": 70,
       "title": "快速排序",
       "difficulty": "medium",
       "category": "排序",
@@ -5367,81 +5144,7 @@
       ]
     },
     {
-      "id": 74,
-      "title": "第 k 小元素",
-      "difficulty": "hard",
-      "category": "排序",
-      "description": "## 第 k 小元素\n\n输出数组中第 k 小（1 ≤ k ≤ n）的元素（不去重，如 [1,1,2] 的第 2 小是 1）。\n\n**输入格式：** 第一行 n k；第二行 n 个整数\n**输出格式：** 第 k 小元素",
-      "starter_code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\nint main() {\n    int n, k, a[1000];\n    cin >> n >> k;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里求第 k 小\n    return 0;\n}",
-      "hints": [
-        "排序后输出 a[k-1]",
-        "或用快排 partition 思想优化"
-      ],
-      "test_cases": [
-        {
-          "input": "5 3\n5 3 1 4 2",
-          "expected": "3",
-          "visible": true
-        },
-        {
-          "input": "5 1\n5 3 1 4 2",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "5 5\n5 3 1 4 2",
-          "expected": "5",
-          "visible": true
-        },
-        {
-          "input": "3 2\n3 1 2",
-          "expected": "2",
-          "visible": true
-        },
-        {
-          "input": "6 4\n6 5 4 3 2 1",
-          "expected": "4",
-          "visible": true
-        },
-        {
-          "input": "4 1\n4 2 3 1",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "7 5\n7 1 6 2 5 3 4",
-          "expected": "5",
-          "visible": false
-        },
-        {
-          "input": "2 2\n1 2",
-          "expected": "2",
-          "visible": false
-        },
-        {
-          "input": "5 4\n1 1 1 1 1",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "4 3\n10 20 30 40",
-          "expected": "30",
-          "visible": false
-        },
-        {
-          "input": "4 2\n9 7 8 6",
-          "expected": "7",
-          "visible": false
-        },
-        {
-          "input": "5 2\n-5 -1 -3 -2 -4",
-          "expected": "-4",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 75,
+      "id": 71,
       "title": "二分变体：下界",
       "difficulty": "medium",
       "category": "查找",
@@ -5514,7 +5217,7 @@
       ]
     },
     {
-      "id": 76,
+      "id": 72,
       "title": "二维矩阵查找",
       "difficulty": "medium",
       "category": "查找",
@@ -5587,7 +5290,7 @@
       ]
     },
     {
-      "id": 77,
+      "id": 73,
       "title": "计数排序",
       "difficulty": "medium",
       "category": "排序",
@@ -5660,80 +5363,7 @@
       ]
     },
     {
-      "id": 78,
-      "title": "逆序对",
-      "difficulty": "hard",
-      "category": "排序",
-      "description": "## 逆序对\n\n统计数组中的逆序对数量：i < j 且 a[i] > a[j]。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 逆序对数量（结果 ≤ 10^9）",
-      "starter_code": "#include <iostream>\nusing namespace std;\nlong long cnt = 0;\nvoid mergeSort(int a[], int l, int r) {\n    // 归并排序中统计逆序对\n}\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    mergeSort(a, 0, n - 1);\n    cout << cnt << endl;\n    return 0;\n}",
-      "hints": [
-        "归并时右半元素小于左半时累加剩余左半数量"
-      ],
-      "test_cases": [
-        {
-          "input": "5\n5 4 3 2 1",
-          "expected": "10",
-          "visible": true
-        },
-        {
-          "input": "4\n1 2 3 4",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "5\n1 3 2 4 5",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "4\n4 3 2 1",
-          "expected": "6",
-          "visible": true
-        },
-        {
-          "input": "6\n6 5 4 3 2 1",
-          "expected": "15",
-          "visible": true
-        },
-        {
-          "input": "3\n1 1 1",
-          "expected": "0",
-          "visible": false
-        },
-        {
-          "input": "5\n2 1 3 1 2",
-          "expected": "4",
-          "visible": false
-        },
-        {
-          "input": "4\n3 1 2 4",
-          "expected": "2",
-          "visible": false
-        },
-        {
-          "input": "5\n5 1 2 3 4",
-          "expected": "4",
-          "visible": false
-        },
-        {
-          "input": "4\n2 2 2 2",
-          "expected": "0",
-          "visible": false
-        },
-        {
-          "input": "5\n1 2 3 4 5",
-          "expected": "0",
-          "visible": false
-        },
-        {
-          "input": "6\n3 1 4 2 6 5",
-          "expected": "4",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 79,
+      "id": 74,
       "title": "素数筛",
       "difficulty": "medium",
       "category": "数论",
@@ -5806,7 +5436,7 @@
       ]
     },
     {
-      "id": 80,
+      "id": 75,
       "title": "质因数分解",
       "difficulty": "medium",
       "category": "数论",
@@ -5880,7 +5510,7 @@
       ]
     },
     {
-      "id": 81,
+      "id": 76,
       "title": "最小公倍数",
       "difficulty": "medium",
       "category": "数论",
@@ -5953,81 +5583,7 @@
       ]
     },
     {
-      "id": 82,
-      "title": "数字黑洞",
-      "difficulty": "hard",
-      "category": "数论",
-      "description": "## 数字黑洞\n\n任取四位整数（含前导零，至少两位数字不同），各位数字重排为最大数减最小数，重复此过程最终得到 6174。输出到达 6174 的步数（本身是 6174 则 0）。\n\n**输入格式：** 一个四位整数 n（1000-9998，且非全部相同数字）\n**输出格式：** 步数",
-      "starter_code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里模拟黑洞过程\n    return 0;\n}",
-      "hints": [
-        "用数组存四位（含前导零），排序求最大最小",
-        "循环直到 6174，计数"
-      ],
-      "test_cases": [
-        {
-          "input": "6174",
-          "expected": "0",
-          "visible": true
-        },
-        {
-          "input": "1234",
-          "expected": "3",
-          "visible": true
-        },
-        {
-          "input": "1000",
-          "expected": "5",
-          "visible": true
-        },
-        {
-          "input": "8532",
-          "expected": "1",
-          "visible": true
-        },
-        {
-          "input": "8082",
-          "expected": "2",
-          "visible": true
-        },
-        {
-          "input": "2468",
-          "expected": "1",
-          "visible": false
-        },
-        {
-          "input": "4321",
-          "expected": "3",
-          "visible": false
-        },
-        {
-          "input": "1112",
-          "expected": "5",
-          "visible": false
-        },
-        {
-          "input": "9998",
-          "expected": "5",
-          "visible": false
-        },
-        {
-          "input": "1005",
-          "expected": "7",
-          "visible": false
-        },
-        {
-          "input": "1368",
-          "expected": "6",
-          "visible": false
-        },
-        {
-          "input": "2143",
-          "expected": "3",
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": 83,
+      "id": 77,
       "title": "分数化简",
       "difficulty": "medium",
       "category": "数论",
@@ -6100,7 +5656,7 @@
       ]
     },
     {
-      "id": 84,
+      "id": 78,
       "title": "任意进制转换",
       "difficulty": "medium",
       "category": "进制转换",
@@ -6168,6 +5724,450 @@
         {
           "input": "999 16",
           "expected": "3E7",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "title": "词频统计",
+      "difficulty": "hard",
+      "category": "STL map",
+      "description": "## 词频统计\n\n统计一段英文文本中每个单词出现的次数：全部转为小写，忽略标点；按出现次数降序、同频按字典序升序输出。\n\n**输入格式：** 一行英文文本（单词间以空格分隔，可含标点，长度 ≤ 1000）\n**输出格式：** 每行 `单词: 次数`\n\n**示例：** 输入 `Hello world, hello Python! Python is great.` →\n```\nhello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1\n```",
+      "starter_code": "#include <iostream>\n#include <sstream>\n#include <map>\n#include <vector>\n#include <algorithm>\n#include <cctype>\nusing namespace std;\nint main() {\n    string line;\n    getline(cin, line);\n    // 在这里编写词频统计\n    return 0;\n}",
+      "hints": [
+        "逐词清洗：小写化并去掉非字母字符",
+        "用 map 计数，再排序输出"
+      ],
+      "test_cases": [
+        {
+          "input": "Hello world, hello Python! Python is great.",
+          "expected": "hello: 2\npython: 2\ngreat: 1\nis: 1\nworld: 1",
+          "visible": true
+        },
+        {
+          "input": "a a a",
+          "expected": "a: 3",
+          "visible": true
+        },
+        {
+          "input": "b a",
+          "expected": "a: 1\nb: 1",
+          "visible": true
+        },
+        {
+          "input": "one two three",
+          "expected": "one: 1\nthree: 1\ntwo: 1",
+          "visible": true
+        },
+        {
+          "input": "test test TEST Test",
+          "expected": "test: 4",
+          "visible": true
+        },
+        {
+          "input": "a b c d",
+          "expected": "a: 1\nb: 1\nc: 1\nd: 1",
+          "visible": false
+        },
+        {
+          "input": "x x y y z",
+          "expected": "x: 2\ny: 2\nz: 1",
+          "visible": false
+        },
+        {
+          "input": "foo bar foo bar baz",
+          "expected": "bar: 2\nfoo: 2\nbaz: 1",
+          "visible": false
+        },
+        {
+          "input": "one one one two two",
+          "expected": "one: 3\ntwo: 2",
+          "visible": false
+        },
+        {
+          "input": "a bb ccc",
+          "expected": "a: 1\nbb: 1\nccc: 1",
+          "visible": false
+        },
+        {
+          "input": "Apple apple APPLE",
+          "expected": "apple: 3",
+          "visible": false
+        },
+        {
+          "input": "big,big. small!",
+          "expected": "big: 2\nsmall: 1",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "title": "综合：学生成绩管理",
+      "difficulty": "hard",
+      "category": "综合应用",
+      "description": "## 综合：学生成绩管理\n\n维护学生成绩并支持命令：`avg` 平均分（保留 1 位小数）、`max` 最高分学生（`姓名 分数`，并列取最先出现）、`min` 最低分学生、`pass` 及格人数（≥60）、`fail` 不及格人数、`sorted` 按分数降序输出（同分按输入顺序）。\n\n**输入格式：** 第一行 n；接下来 n 行 `姓名 分数`；最后一行命令\n**输出格式：** 按命令输出对应结果\n\n**示例：** 输入 `5` / `张三 85` / `李四 92` / `王五 58` / `赵六 76` / `钱七 90` / `avg` → 输出 `80.2`",
+      "starter_code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\nstruct Student { string name; int score; };\nint main() {\n    int n;\n    cin >> n;\n    vector<Student> v(n);\n    for (int i = 0; i < n; i++) cin >> v[i].name >> v[i].score;\n    string cmd;\n    cin >> cmd;\n    // 在这里编写命令处理\n    return 0;\n}",
+      "hints": [
+        "avg 用 double 求和后 /n 再 printf 保留 1 位",
+        "max/min 记录分数与首次出现顺序",
+        "sorted 用稳定排序（分数降序）"
+      ],
+      "test_cases": [
+        {
+          "input": "5\n张三 85\n李四 92\n王五 58\n赵六 76\n钱七 90\navg",
+          "expected": "80.2",
+          "visible": true
+        },
+        {
+          "input": "3\nA 60\nB 80\nC 90\nmax",
+          "expected": "C 90",
+          "visible": true
+        },
+        {
+          "input": "3\nA 60\nB 80\nC 90\nmin",
+          "expected": "A 60",
+          "visible": true
+        },
+        {
+          "input": "4\nA 59\nB 60\nC 61\nD 100\npass",
+          "expected": "3",
+          "visible": true
+        },
+        {
+          "input": "4\nA 59\nB 60\nC 61\nD 100\nfail",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "3\nA 80\nB 90\nC 70\nsorted",
+          "expected": "B 90\nA 80\nC 70",
+          "visible": false
+        },
+        {
+          "input": "2\nA 50\nB 50\navg",
+          "expected": "50.0",
+          "visible": false
+        },
+        {
+          "input": "3\nA 100\nB 100\nC 90\nmax",
+          "expected": "A 100",
+          "visible": false
+        },
+        {
+          "input": "3\nA 10\nB 10\nC 10\nmin",
+          "expected": "A 10",
+          "visible": false
+        },
+        {
+          "input": "5\nA 90\nB 90\nC 90\nD 90\nE 90\nsorted",
+          "expected": "A 90\nB 90\nC 90\nD 90\nE 90",
+          "visible": false
+        },
+        {
+          "input": "2\nA 33\nB 66\npass",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "2\nA 33\nB 66\nfail",
+          "expected": "1",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "title": "最长回文子串",
+      "difficulty": "hard",
+      "category": "字符串",
+      "description": "## 最长回文子串\n\n求字符串中最长回文子串的长度（子串须连续）。\n\n**输入格式：** 一行字符串（不含空格，长度 ≤ 500）\n**输出格式：** 最长回文子串长度",
+      "starter_code": "#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string s;\n    cin >> s;\n    // 在这里求最长回文子串\n    return 0;\n}",
+      "hints": [
+        "中心扩展：以每个字符（和每对相邻字符）为中心向两边扩展",
+        "或动态规划"
+      ],
+      "test_cases": [
+        {
+          "input": "abcba",
+          "expected": "5",
+          "visible": true
+        },
+        {
+          "input": "ab",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "a",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "abbc",
+          "expected": "2",
+          "visible": true
+        },
+        {
+          "input": "babad",
+          "expected": "3",
+          "visible": true
+        },
+        {
+          "input": "cbbd",
+          "expected": "2",
+          "visible": false
+        },
+        {
+          "input": "aaaa",
+          "expected": "4",
+          "visible": false
+        },
+        {
+          "input": "abca",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "racecar",
+          "expected": "7",
+          "visible": false
+        },
+        {
+          "input": "banana",
+          "expected": "5",
+          "visible": false
+        },
+        {
+          "input": "abcd",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "xabbay",
+          "expected": "4",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "title": "第 k 小元素",
+      "difficulty": "hard",
+      "category": "排序",
+      "description": "## 第 k 小元素\n\n输出数组中第 k 小（1 ≤ k ≤ n）的元素（不去重，如 [1,1,2] 的第 2 小是 1）。\n\n**输入格式：** 第一行 n k；第二行 n 个整数\n**输出格式：** 第 k 小元素",
+      "starter_code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\nint main() {\n    int n, k, a[1000];\n    cin >> n >> k;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    // 在这里求第 k 小\n    return 0;\n}",
+      "hints": [
+        "排序后输出 a[k-1]",
+        "或用快排 partition 思想优化"
+      ],
+      "test_cases": [
+        {
+          "input": "5 3\n5 3 1 4 2",
+          "expected": "3",
+          "visible": true
+        },
+        {
+          "input": "5 1\n5 3 1 4 2",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "5 5\n5 3 1 4 2",
+          "expected": "5",
+          "visible": true
+        },
+        {
+          "input": "3 2\n3 1 2",
+          "expected": "2",
+          "visible": true
+        },
+        {
+          "input": "6 4\n6 5 4 3 2 1",
+          "expected": "4",
+          "visible": true
+        },
+        {
+          "input": "4 1\n4 2 3 1",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "7 5\n7 1 6 2 5 3 4",
+          "expected": "5",
+          "visible": false
+        },
+        {
+          "input": "2 2\n1 2",
+          "expected": "2",
+          "visible": false
+        },
+        {
+          "input": "5 4\n1 1 1 1 1",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "4 3\n10 20 30 40",
+          "expected": "30",
+          "visible": false
+        },
+        {
+          "input": "4 2\n9 7 8 6",
+          "expected": "7",
+          "visible": false
+        },
+        {
+          "input": "5 2\n-5 -1 -3 -2 -4",
+          "expected": "-4",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "title": "逆序对",
+      "difficulty": "hard",
+      "category": "排序",
+      "description": "## 逆序对\n\n统计数组中的逆序对数量：i < j 且 a[i] > a[j]。\n\n**输入格式：** 第一行 n；第二行 n 个整数\n**输出格式：** 逆序对数量（结果 ≤ 10^9）",
+      "starter_code": "#include <iostream>\nusing namespace std;\nlong long cnt = 0;\nvoid mergeSort(int a[], int l, int r) {\n    // 归并排序中统计逆序对\n}\nint main() {\n    int n, a[1000];\n    cin >> n;\n    for (int i = 0; i < n; i++) cin >> a[i];\n    mergeSort(a, 0, n - 1);\n    cout << cnt << endl;\n    return 0;\n}",
+      "hints": [
+        "归并时右半元素小于左半时累加剩余左半数量"
+      ],
+      "test_cases": [
+        {
+          "input": "5\n5 4 3 2 1",
+          "expected": "10",
+          "visible": true
+        },
+        {
+          "input": "4\n1 2 3 4",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "5\n1 3 2 4 5",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "4\n4 3 2 1",
+          "expected": "6",
+          "visible": true
+        },
+        {
+          "input": "6\n6 5 4 3 2 1",
+          "expected": "15",
+          "visible": true
+        },
+        {
+          "input": "3\n1 1 1",
+          "expected": "0",
+          "visible": false
+        },
+        {
+          "input": "5\n2 1 3 1 2",
+          "expected": "4",
+          "visible": false
+        },
+        {
+          "input": "4\n3 1 2 4",
+          "expected": "2",
+          "visible": false
+        },
+        {
+          "input": "5\n5 1 2 3 4",
+          "expected": "4",
+          "visible": false
+        },
+        {
+          "input": "4\n2 2 2 2",
+          "expected": "0",
+          "visible": false
+        },
+        {
+          "input": "5\n1 2 3 4 5",
+          "expected": "0",
+          "visible": false
+        },
+        {
+          "input": "6\n3 1 4 2 6 5",
+          "expected": "4",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "title": "数字黑洞",
+      "difficulty": "hard",
+      "category": "数论",
+      "description": "## 数字黑洞\n\n任取四位整数（含前导零，至少两位数字不同），各位数字重排为最大数减最小数，重复此过程最终得到 6174。输出到达 6174 的步数（本身是 6174 则 0）。\n\n**输入格式：** 一个四位整数 n（1000-9998，且非全部相同数字）\n**输出格式：** 步数",
+      "starter_code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    // 在这里模拟黑洞过程\n    return 0;\n}",
+      "hints": [
+        "用数组存四位（含前导零），排序求最大最小",
+        "循环直到 6174，计数"
+      ],
+      "test_cases": [
+        {
+          "input": "6174",
+          "expected": "0",
+          "visible": true
+        },
+        {
+          "input": "1234",
+          "expected": "3",
+          "visible": true
+        },
+        {
+          "input": "1000",
+          "expected": "5",
+          "visible": true
+        },
+        {
+          "input": "8532",
+          "expected": "1",
+          "visible": true
+        },
+        {
+          "input": "8082",
+          "expected": "2",
+          "visible": true
+        },
+        {
+          "input": "2468",
+          "expected": "1",
+          "visible": false
+        },
+        {
+          "input": "4321",
+          "expected": "3",
+          "visible": false
+        },
+        {
+          "input": "1112",
+          "expected": "5",
+          "visible": false
+        },
+        {
+          "input": "9998",
+          "expected": "5",
+          "visible": false
+        },
+        {
+          "input": "1005",
+          "expected": "7",
+          "visible": false
+        },
+        {
+          "input": "1368",
+          "expected": "6",
+          "visible": false
+        },
+        {
+          "input": "2143",
+          "expected": "3",
           "visible": false
         }
       ]
