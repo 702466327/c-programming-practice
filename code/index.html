@@ -766,6 +766,12 @@ async function handleAuth() {
 
   if (data.success) {
     if (authMode === "register") {
+      // 新注册 = 全新账号: 清除该用户名在本机遗留的旧草稿
+      // (账号被管理员删除后同名重注册时, 避免旧代码被自动恢复)
+      const draftPrefix = "code_" + username + "_";
+      Object.keys(localStorage).forEach(k => {
+        if (k.indexOf(draftPrefix) === 0) localStorage.removeItem(k);
+      });
       msgEl.className = "msg success";
       msgEl.textContent = "注册成功！请登录";
       toggleAuthMode();
