@@ -36,8 +36,13 @@ def get_question_by_id_public(question_id):
 
 
 def _strip_secrets(q):
-    """剥离测试用例，防止前端泄露答案"""
+    """公开视图: 仅保留可见示例用例, 隐藏用例只下发计数（防止泄露答案）"""
+    cases = q.get("test_cases", [])
+    visible_cases = [c for c in cases if c.get("visible", True)]
     clean = {k: v for k, v in q.items() if k != "test_cases"}
+    clean["test_cases"] = visible_cases
+    clean["total_cases"] = len(cases)
+    clean["hidden_cases"] = len(cases) - len(visible_cases)
     return clean
 
 

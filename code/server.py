@@ -337,6 +337,19 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
                 judge_result = judge.run_test_cases(code, q.get("test_cases", []))
             else:
                 judge_result = judge_docker.run_test_cases(code, q.get("test_cases", []))
+            # 隐藏用例脱敏: 只保留对错, 不下发输入/期望/实际输出/错误信息
+            test_cases = q.get("test_cases", [])
+            hidden_count = 0
+            for i, res in enumerate(judge_result.get("results", [])):
+                tc = test_cases[i] if i < len(test_cases) else {}
+                if not tc.get("visible", True):
+                    hidden_count += 1
+                    res["input"] = ""
+                    res["expected"] = ""
+                    res["actual"] = ""
+                    res["stderr"] = ""
+                    res["detail"] = "隐藏用例-" + ("通过" if res.get("passed") else "未通过")
+            judge_result["hidden_cases"] = hidden_count
             exec_summary = judge.format_execution_summary(judge_result)
             auth.record_judge_result(username, question_id,
                                      judge_result.get("passed", 0),

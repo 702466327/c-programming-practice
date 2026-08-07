@@ -5,413 +5,2004 @@ C++ 编程练习 - 参考答案
 ----------------------------------------------------------------
 第1题：A + B 问题
 ----------------------------------------------------------------
+
 #include <iostream>
 using namespace std;
-
 int main() {
-    int a, b;
+    long long a, b;
     cin >> a >> b;
     cout << a + b << endl;
     return 0;
 }
 
-
 ----------------------------------------------------------------
 第2题：判断闰年
 ----------------------------------------------------------------
+
 #include <iostream>
 using namespace std;
-
 int main() {
-    int year;
-    cin >> year;
-
-    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+    int y;
+    cin >> y;
+    if ((y % 400 == 0) || (y % 4 == 0 && y % 100 != 0))
         cout << "是闰年" << endl;
-    } else {
+    else
         cout << "不是闰年" << endl;
-    }
     return 0;
 }
 
+----------------------------------------------------------------
+第3题：递归求阶乘
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第3题：斐波那契数列
-----------------------------------------------------------------
 #include <iostream>
 using namespace std;
-
-int main() {
-    int n;
-    cin >> n;
-
-    int a = 1, b = 1;
-    for (int i = 1; i <= n; i++) {
-        if (i == 1) {
-            cout << a;
-        } else if (i == 2) {
-            cout << " " << b;
-        } else {
-            int c = a + b;
-            cout << " " << c;
-            a = b;
-            b = c;
-        }
-    }
-    cout << endl;
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第4题：数组去重排序
-----------------------------------------------------------------
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-int main() {
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
-
-    sort(arr.begin(), arr.end());
-    auto last = unique(arr.begin(), arr.end());
-    arr.erase(last, arr.end());
-
-    for (int i = 0; i < arr.size(); i++) {
-        if (i > 0) cout << " ";
-        cout << arr[i];
-    }
-    cout << endl;
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第5题：字符统计
-----------------------------------------------------------------
-#include <iostream>
-#include <string>
-#include <cctype>
-using namespace std;
-
-int main() {
-    string s;
-    getline(cin, s);
-
-    int letters = 0, digits = 0, spaces = 0, others = 0;
-    for (char c : s) {
-        if (isalpha(c)) {
-            letters++;
-        } else if (isdigit(c)) {
-            digits++;
-        } else if (isspace(c)) {
-            spaces++;
-        } else {
-            others++;
-        }
-    }
-
-    cout << "字母: " << letters << endl;
-    cout << "数字: " << digits << endl;
-    cout << "空格: " << spaces << endl;
-    cout << "其他: " << others << endl;
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第6题：函数：判断素数
-----------------------------------------------------------------
-#include <iostream>
-#include <cmath>
-using namespace std;
-
-bool isPrime(int n) {
-    if (n <= 1) return false;
-    for (int i = 2; i * i <= n; i++) {
-        if (n % i == 0) return false;
-    }
-    return true;
-}
-
-int main() {
-    int n, num;
-    cin >> n;
-    for (int i = 0; i < n; i++) {
-        cin >> num;
-        if (isPrime(num)) {
-            cout << "素数" << endl;
-        } else {
-            cout << "不是素数" << endl;
-        }
-    }
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第7题：词频统计
-----------------------------------------------------------------
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-#include <algorithm>
-#include <cctype>
-using namespace std;
-
-int main() {
-    string text;
-    getline(cin, text);
-
-    // 转小写并过滤非字母字符
-    string word;
-    map<string, int> freq;
-    for (char c : text) {
-        if (isalpha(c)) {
-            word += tolower(c);
-        } else if (!word.empty()) {
-            freq[word]++;
-            word.clear();
-        }
-    }
-    if (!word.empty()) {
-        freq[word]++;
-    }
-
-    // 将 map 转为 vector 并排序
-    vector<pair<string, int>> items(freq.begin(), freq.end());
-    sort(items.begin(), items.end(), [](const pair<string, int>& a, const pair<string, int>& b) {
-        if (a.second != b.second) return a.second > b.second;
-        return a.first < b.first;
-    });
-
-    for (auto& p : items) {
-        cout << p.first << ": " << p.second << endl;
-    }
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第8题：综合：学生成绩管理
-----------------------------------------------------------------
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <iomanip>
-using namespace std;
-
-struct Student {
-    string name;
-    int score;
-};
-
-int main() {
-    int n;
-    cin >> n;
-    vector<Student> students(n);
-    for (int i = 0; i < n; i++) {
-        cin >> students[i].name >> students[i].score;
-    }
-    string op;
-    cin >> op;
-
-    if (op == "avg") {
-        double sum = 0;
-        for (auto& s : students) sum += s.score;
-        cout << fixed << setprecision(1) << sum / n << endl;
-    } else if (op == "max") {
-        auto it = max_element(students.begin(), students.end(),
-            [](const Student& a, const Student& b) { return a.score < b.score; });
-        cout << it->name << " " << it->score << endl;
-    } else if (op == "min") {
-        auto it = min_element(students.begin(), students.end(),
-            [](const Student& a, const Student& b) { return a.score < b.score; });
-        cout << it->name << " " << it->score << endl;
-    } else if (op == "pass") {
-        int passCnt = 0;
-        for (auto& s : students) {
-            if (s.score >= 60) passCnt++;
-        }
-        cout << passCnt << " " << n - passCnt << endl;
-    } else if (op == "all") {
-        sort(students.begin(), students.end(),
-            [](const Student& a, const Student& b) { return a.score > b.score; });
-        for (auto& s : students) {
-            cout << s.name << ": " << s.score << endl;
-        }
-    }
-    return 0;
-}
-
-
-----------------------------------------------------------------
-第9题：递归求阶乘
-----------------------------------------------------------------
-#include <iostream>
-using namespace std;
-
-long long factorial(int n) {
+long long fact(int n) {
     if (n == 0) return 1;
-    return n * factorial(n - 1);
+    return n * fact(n - 1);
 }
-
 int main() {
     int n;
     cin >> n;
-    cout << factorial(n) << endl;
+    cout << fact(n) << endl;
     return 0;
 }
 
+----------------------------------------------------------------
+第4题：最大公约数
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第10题：最大公约数
-----------------------------------------------------------------
 #include <iostream>
 using namespace std;
-
+int gcd(int a, int b) {
+    while (b) { int t = a % b; a = b; b = t; }
+    return a;
+}
 int main() {
     int a, b;
     cin >> a >> b;
-    while (b != 0) {
-        int t = b;
-        b = a % b;
-        a = t;
-    }
-    cout << a << endl;
+    cout << gcd(a, b) << endl;
     return 0;
 }
 
+----------------------------------------------------------------
+第5题：回文判断
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第11题：回文判断
-----------------------------------------------------------------
 #include <iostream>
 #include <string>
-#include <cctype>
 using namespace std;
-
 int main() {
     string s;
     cin >> s;
-    int i = 0, j = s.length() - 1;
+    int i = 0, j = (int)s.size() - 1;
     bool ok = true;
     while (i < j) {
-        if (tolower(s[i]) != tolower(s[j])) {
-            ok = false;
-            break;
-        }
+        if (s[i] != s[j]) { ok = false; break; }
         i++; j--;
     }
     cout << (ok ? "是回文" : "不是回文") << endl;
     return 0;
 }
 
+----------------------------------------------------------------
+第6题：斐波那契数列
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第12题：冒泡排序
-----------------------------------------------------------------
 #include <iostream>
-#include <vector>
 using namespace std;
-
 int main() {
     int n;
     cin >> n;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) cin >> arr[i];
-
-    for (int i = 0; i < n - 1; i++)
-        for (int j = 0; j < n - 1 - i; j++)
-            if (arr[j] > arr[j + 1])
-                swap(arr[j], arr[j + 1]);
-
-    for (int i = 0; i < n; i++) {
-        if (i > 0) cout << " ";
-        cout << arr[i];
+    long long a = 1, b = 1;
+    for (int i = 1; i <= n; i++) {
+        if (i > 1) cout << " ";
+        cout << a;
+        long long t = a + b; a = b; b = t;
     }
     cout << endl;
     return 0;
 }
 
+----------------------------------------------------------------
+第7题：数组去重排序
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第13题：二分查找
-----------------------------------------------------------------
 #include <iostream>
-#include <vector>
+#include <algorithm>
 using namespace std;
-
 int main() {
-    int n, target;
-    cin >> n >> target;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) cin >> arr[i];
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    sort(a, a + n);
+    bool first = true;
+    for (int i = 0; i < n; i++) {
+        if (i > 0 && a[i] == a[i-1]) continue;
+        if (!first) cout << " ";
+        first = false;
+        cout << a[i];
+    }
+    cout << endl;
+    return 0;
+}
 
-    int left = 0, right = n - 1, ans = -1;
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        if (arr[mid] == target) { ans = mid; break; }
-        else if (arr[mid] < target) left = mid + 1;
-        else right = mid - 1;
+----------------------------------------------------------------
+第8题：字符统计
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s;
+    getline(cin, s);
+    int letter = 0, digit = 0, space = 0, other = 0;
+    for (char c : s) {
+        if (isalpha((unsigned char)c)) letter++;
+        else if (isdigit((unsigned char)c)) digit++;
+        else if (c == ' ') space++;
+        else other++;
+    }
+    cout << "字母: " << letter << endl;
+    cout << "数字: " << digit << endl;
+    cout << "空格: " << space << endl;
+    cout << "其他: " << other << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第9题：函数：判断素数
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+bool isPrime(int x) {
+    if (x < 2) return false;
+    for (int i = 2; (long long)i * i <= x; i++)
+        if (x % i == 0) return false;
+    return true;
+}
+int main() {
+    int m;
+    cin >> m;
+    while (m--) {
+        int x;
+        cin >> x;
+        cout << (isPrime(x) ? "素数" : "不是素数") << endl;
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第10题：冒泡排序
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n - 1; i++)
+        for (int j = 0; j < n - 1 - i; j++)
+            if (a[j] > a[j+1]) swap(a[j], a[j+1]);
+    for (int i = 0; i < n; i++) {
+        if (i) cout << " ";
+        cout << a[i];
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第11题：二分查找
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, t, a[1000];
+    cin >> n >> t;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    int lo = 0, hi = n - 1, ans = -1;
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+        if (a[mid] == t) { ans = mid; break; }
+        if (a[mid] < t) lo = mid + 1; else hi = mid - 1;
     }
     cout << ans << endl;
     return 0;
 }
 
+----------------------------------------------------------------
+第12题：矩阵转置
+----------------------------------------------------------------
 
-----------------------------------------------------------------
-第14题：矩阵转置
-----------------------------------------------------------------
 #include <iostream>
-#include <vector>
 using namespace std;
-
 int main() {
-    int n, m;
+    int n, m, a[50][50];
     cin >> n >> m;
-    vector<vector<int>> mat(n, vector<int>(m));
     for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            cin >> mat[i][j];
-
+        for (int j = 0; j < m; j++) cin >> a[i][j];
     for (int j = 0; j < m; j++) {
         for (int i = 0; i < n; i++) {
-            if (i > 0) cout << " ";
-            cout << mat[i][j];
+            if (i) cout << " ";
+            cout << a[i][j];
         }
         cout << endl;
     }
     return 0;
 }
 
+----------------------------------------------------------------
+第13题：十进制转二进制
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    unsigned n;
+    cin >> n;
+    if (n == 0) { cout << 0 << endl; return 0; }
+    string s;
+    while (n) { s = char('0' + n % 2) + s; n /= 2; }
+    cout << s << endl;
+    return 0;
+}
 
 ----------------------------------------------------------------
-第15题：十进制转二进制
+第14题：词频统计
 ----------------------------------------------------------------
+
+#include <iostream>
+#include <sstream>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+using namespace std;
+int main() {
+    string line, w;
+    getline(cin, line);
+    map<string, int> cnt;
+    string cur;
+    for (char c : line + " ") {
+        if (isalpha((unsigned char)c)) cur += tolower((unsigned char)c);
+        else if (!cur.empty()) { cnt[cur]++; cur.clear(); }
+    }
+    vector<pair<string, int>> v(cnt.begin(), cnt.end());
+    sort(v.begin(), v.end(), [](auto& a, auto& b) {
+        return a.second != b.second ? a.second > b.second : a.first < b.first;
+    });
+    for (auto& p : v) cout << p.first << ": " << p.second << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第15题：综合：学生成绩管理
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+struct Student { string name; int score; int idx; };
+int main() {
+    int n;
+    cin >> n;
+    vector<Student> v(n);
+    for (int i = 0; i < n; i++) { cin >> v[i].name >> v[i].score; v[i].idx = i; }
+    string cmd;
+    cin >> cmd;
+    if (cmd == "avg") {
+        double s = 0;
+        for (auto& x : v) s += x.score;
+        printf("%.1f\n", s / n);
+    } else if (cmd == "max") {
+        auto best = *max_element(v.begin(), v.end(), [](auto& a, auto& b) {
+            return a.score != b.score ? a.score < b.score : a.idx > b.idx; });
+        cout << best.name << " " << best.score << endl;
+    } else if (cmd == "min") {
+        auto best = *min_element(v.begin(), v.end(), [](auto& a, auto& b) {
+            return a.score != b.score ? a.score < b.score : a.idx < b.idx; });
+        cout << best.name << " " << best.score << endl;
+    } else if (cmd == "pass") {
+        int c = 0;
+        for (auto& x : v) if (x.score >= 60) c++;
+        cout << c << endl;
+    } else if (cmd == "fail") {
+        int c = 0;
+        for (auto& x : v) if (x.score < 60) c++;
+        cout << c << endl;
+    } else if (cmd == "sorted") {
+        stable_sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.score > b.score; });
+        for (auto& x : v) cout << x.name << " " << x.score << endl;
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第16题：多行求和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long a, b;
+    while (cin >> a >> b) cout << a + b << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第17题：差与商
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << a - b << endl;
+    printf("%.2f\n", (double)a / b);
+    return 0;
+}
+
+----------------------------------------------------------------
+第18题：温度转换
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    double c;
+    cin >> c;
+    printf("%.1f\n", c * 9.0 / 5.0 + 32.0);
+    return 0;
+}
+
+----------------------------------------------------------------
+第19题：时间差
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int h1, m1, s1, h2, m2, s2;
+    cin >> h1 >> m1 >> s1 >> h2 >> m2 >> s2;
+    int t1 = h1 * 3600 + m1 * 60 + s1;
+    int t2 = h2 * 3600 + m2 * 60 + s2;
+    cout << t2 - t1 << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第20题：圆的面积
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    const double PI = 3.14159265358979;
+    double r;
+    cin >> r;
+    printf("%.3f\n", PI * r * r);
+    return 0;
+}
+
+----------------------------------------------------------------
+第21题：数字各位和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long n;
+    cin >> n;
+    int s = 0;
+    while (n) { s += n % 10; n /= 10; }
+    cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第22题：四舍五入
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+int main() {
+    double x;
+    cin >> x;
+    cout << (long long)round(x) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第23题：交换两个变量
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int a, b;
+    cin >> a >> b;
+    swap(a, b);
+    cout << a << " " << b << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第24题：平均成绩
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    double a, b, c;
+    cin >> a >> b >> c;
+    printf("%.2f\n", (a + b + c) / 3.0);
+    return 0;
+}
+
+----------------------------------------------------------------
+第25题：逆序三位数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    int g = n % 10, s = n / 10 % 10, b = n / 100;
+    cout << g * 100 + s * 10 + b << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第26题：成绩等级
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int s;
+    cin >> s;
+    char g;
+    if (s >= 90) g = 'A';
+    else if (s >= 80) g = 'B';
+    else if (s >= 70) g = 'C';
+    else if (s >= 60) g = 'D';
+    else g = 'E';
+    cout << g << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第27题：三数最大值
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int a, b, c;
+    cin >> a >> b >> c;
+    cout << max(a, max(b, c)) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第28题：奇偶判断
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    cout << (n % 2 == 0 ? "even" : "odd") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第29题：绝对值
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+int main() {
+    long long n;
+    cin >> n;
+    cout << llabs(n) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第30题：三角形判定
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long a, b, c;
+    cin >> a >> b >> c;
+    bool ok = (a + b > c) && (a + c > b) && (b + c > a);
+    cout << (ok ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第31题：分段函数
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    double x, y;
+    cin >> x;
+    if (x < 0) y = -x;
+    else if (x < 10) y = 2 * x + 1;
+    else y = x * x - 10;
+    printf("%.2f\n", y);
+    return 0;
+}
+
+----------------------------------------------------------------
+第32题：星期几
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    int d;
+    cin >> d;
+    string w[7] = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+    cout << w[(d + 2) % 7] << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第33题：1 到 n 求和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long n;
+    cin >> n;
+    cout << n * (n + 1) / 2 << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第34题：阶乘和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    long long fac = 1, sum = 0;
+    for (int i = 1; i <= n; i++) { fac *= i; sum += fac; }
+    cout << sum << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第35题：水仙花数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    int g = n % 10, s = n / 10 % 10, b = n / 100;
+    bool ok = (g*g*g + s*s*s + b*b*b == n);
+    cout << (ok ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第36题：完数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    long long s = 0;
+    for (int i = 1; i <= n / 2; i++) if (n % i == 0) s += i;
+    cout << (s == n ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第37题：单位分数求和
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    double s = 0;
+    for (int i = 1; i <= n; i++) s += 1.0 / i;
+    printf("%.2f\n", s);
+    return 0;
+}
+
+----------------------------------------------------------------
+第38题：分数数列求和
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    double a = 2, b = 1, s = 0;
+    for (int i = 0; i < n; i++) {
+        s += a / b;
+        double t = a + b;
+        b = a;
+        a = t;
+    }
+    printf("%.2f\n", s);
+    return 0;
+}
+
+----------------------------------------------------------------
+第39题：数字反转
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long n, r = 0;
+    cin >> n;
+    bool neg = n < 0;
+    if (neg) n = -n;
+    while (n) { r = r * 10 + n % 10; n /= 10; }
+    cout << (neg ? -r : r) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第40题：数位统计
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long n;
+    int d, c = 0;
+    cin >> n >> d;
+    if (n == 0) { cout << (d == 0 ? 1 : 0) << endl; return 0; }
+    while (n) { if (n % 10 == d) c++; n /= 10; }
+    cout << c << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第41题：九九乘法表
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            if (j > 1) cout << " ";
+            cout << i << "*" << j << "=" << i * j;
+        }
+        cout << endl;
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第42题：百钱百鸡
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    for (int g = 0; g <= 20; g++)
+        for (int m = 0; m <= 33; m++) {
+            int c = 100 - g - m;
+            if (c % 3 == 0 && 5 * g + 3 * m + c / 3 == 100)
+                cout << g << " " << m << " " << c << endl;
+        }
+    return 0;
+}
+
+----------------------------------------------------------------
+第43题：逆序输出
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = n - 1; i >= 0; i--) {
+        cout << a[i];
+        if (i) cout << " ";
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第44题：最大值及位置
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    int mx = a[0], pos = 0;
+    for (int i = 1; i < n; i++) if (a[i] > mx) { mx = a[i]; pos = i; }
+    cout << mx << " " << pos << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第45题：数组求和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    long long s = 0, x;
+    while (n--) { cin >> x; s += x; }
+    cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第46题：数组插入
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, x, a[1001];
+    cin >> n >> x;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    int pos = n;
+    for (int i = 0; i < n; i++) if (a[i] >= x) { pos = i; break; }
+    for (int i = n; i > pos; i--) a[i] = a[i-1];
+    a[pos] = x;
+    for (int i = 0; i <= n; i++) { if (i) cout << " "; cout << a[i]; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第47题：数组循环右移
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, k, a[1000];
+    cin >> n >> k;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    k %= n;
+    for (int i = 0; i < n; i++) {
+        if (i) cout << " ";
+        cout << a[(i - k + n) % n];
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第48题：删除指定元素
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, x, a[1000];
+    cin >> n >> x;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    int j = 0;
+    for (int i = 0; i < n; i++) if (a[i] != x) a[j++] = a[i];
+    for (int i = 0; i < j; i++) { if (i) cout << " "; cout << a[i]; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第49题：合并有序数组
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m, a[1000], b[1000];
+    cin >> n >> m;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < m; i++) cin >> b[i];
+    int i = 0, j = 0, first = 1;
+    while (i < n || j < m) {
+        int v;
+        if (j >= m || (i < n && a[i] <= b[j])) v = a[i++];
+        else v = b[j++];
+        if (!first) cout << " ";
+        first = 0;
+        cout << v;
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第50题：杨辉三角
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    long long a[21][21] = {0};
+    for (int i = 0; i < n; i++) {
+        a[i][0] = a[i][i] = 1;
+        for (int j = 1; j < i; j++) a[i][j] = a[i-1][j-1] + a[i-1][j];
+        for (int j = 0; j <= i; j++) { if (j) cout << " "; cout << a[i][j]; }
+        cout << endl;
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第51题：行列求和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m, a[50][50];
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++) cin >> a[i][j];
+    for (int i = 0; i < n; i++) {
+        int s = 0;
+        for (int j = 0; j < m; j++) s += a[i][j];
+        if (i) cout << " ";
+        cout << s;
+    }
+    cout << endl;
+    for (int j = 0; j < m; j++) {
+        int s = 0;
+        for (int i = 0; i < n; i++) s += a[i][j];
+        if (j) cout << " ";
+        cout << s;
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第52题：鞍点
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m, a[50][50];
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++) cin >> a[i][j];
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++) {
+            bool rowMax = true, colMin = true;
+            for (int k = 0; k < m; k++) if (a[i][k] > a[i][j]) rowMax = false;
+            for (int k = 0; k < n; k++) if (a[k][j] < a[i][j]) colMin = false;
+            if (rowMax && colMin) { cout << i << " " << j << " " << a[i][j] << endl; return 0; }
+        }
+    cout << "NO" << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第53题：字符串反转
+----------------------------------------------------------------
+
 #include <iostream>
 #include <string>
 #include <algorithm>
 using namespace std;
+int main() {
+    string s;
+    cin >> s;
+    reverse(s.begin(), s.end());
+    cout << s << endl;
+    return 0;
+}
 
+----------------------------------------------------------------
+第54题：大小写转换
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s;
+    cin >> s;
+    for (char& c : s) {
+        if (c >= 'A' && c <= 'Z') c += 32;
+        else if (c >= 'a' && c <= 'z') c -= 32;
+    }
+    cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第55题：统计单词数
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string line;
+    getline(cin, line);
+    int cnt = 0;
+    bool in = false;
+    for (char c : line) {
+        if (isalpha((unsigned char)c)) {
+            if (!in) { cnt++; in = true; }
+        } else in = false;
+    }
+    cout << cnt << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第56题：删除指定字符
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s, r;
+    char x;
+    getline(cin, s);
+    cin >> x;
+    for (char c : s) if (c != x) r += c;
+    cout << r << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第57题：子串首次出现
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string a, b;
+    cin >> a >> b;
+    size_t p = a.find(b);
+    cout << (p == string::npos ? -1 : (int)p) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第58题：最长公共前缀
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+int main() {
+    int m;
+    cin >> m;
+    vector<string> v(m);
+    for (int i = 0; i < m; i++) cin >> v[i];
+    string p = v[0];
+    for (int i = 1; i < m; i++) {
+        int j = 0;
+        while (j < (int)p.size() && j < (int)v[i].size() && p[j] == v[i][j]) j++;
+        p = p.substr(0, j);
+    }
+    cout << p << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第59题：字符串排序
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+int main() {
+    int m;
+    cin >> m;
+    vector<string> v(m);
+    for (int i = 0; i < m; i++) cin >> v[i];
+    sort(v.begin(), v.end());
+    for (auto& s : v) cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第60题：凯撒密码
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s;
+    int k;
+    cin >> s >> k;
+    k = (k % 26 + 26) % 26;
+    for (char& c : s) {
+        if (c >= 'a' && c <= 'z') c = 'a' + (c - 'a' + k) % 26;
+        else if (c >= 'A' && c <= 'Z') c = 'A' + (c - 'A' + k) % 26;
+    }
+    cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第61题：括号匹配
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s;
+    cin >> s;
+    int cnt = 0;
+    bool ok = true;
+    for (char c : s) {
+        if (c == '(') cnt++;
+        else { cnt--; if (cnt < 0) { ok = false; break; } }
+    }
+    ok = ok && cnt == 0;
+    cout << (ok ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第62题：最长回文子串
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s;
+    cin >> s;
+    int n = s.size(), best = 0;
+    for (int c = 0; c < n; c++) {
+        for (int l = c, r = c; l >= 0 && r < n && s[l] == s[r]; l--, r++)
+            best = max(best, r - l + 1);
+        for (int l = c, r = c + 1; l >= 0 && r < n && s[l] == s[r]; l--, r++)
+            best = max(best, r - l + 1);
+    }
+    cout << best << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第63题：幂运算
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long x, r = 1;
+    int n;
+    cin >> x >> n;
+    for (int i = 0; i < n; i++) r *= x;
+    cout << r << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第64题：组合数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+long long C(int n, int k) {
+    if (k == 0 || k == n) return 1;
+    return C(n - 1, k - 1) + C(n - 1, k);
+}
+int main() {
+    int n, k;
+    cin >> n >> k;
+    cout << C(n, k) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第65题：汉诺塔
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
 int main() {
     int n;
     cin >> n;
-    if (n == 0) { cout << "0" << endl; return 0; }
-    string bin = "";
-    while (n > 0) {
-        bin += (n % 2 ? "1" : "0");
-        n /= 2;
-    }
-    reverse(bin.begin(), bin.end());
-    cout << bin << endl;
+    cout << ((1LL << n) - 1) << endl;
     return 0;
 }
+
+----------------------------------------------------------------
+第66题：递归斐波那契
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+long long fib(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    return fib(n - 1) + fib(n - 2);
+}
+int main() {
+    int n;
+    cin >> n;
+    cout << fib(n) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第67题：数根
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+long long ds(long long n) {
+    long long s = 0;
+    while (n) { s += n % 10; n /= 10; }
+    return s;
+}
+int main() {
+    long long n;
+    cin >> n;
+    while (n >= 10) n = ds(n);
+    cout << n << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第68题：递归反转字符串
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+string rev(string s) {
+    if (s.empty()) return s;
+    return rev(s.substr(1)) + s[0];
+}
+int main() {
+    string s;
+    cin >> s;
+    cout << rev(s) << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第69题：多态面积计算
+----------------------------------------------------------------
+
+#include <iostream>
+#include <cstdio>
+using namespace std;
+double area(int t, double a, double b) {
+    if (t == 1) return a * b;
+    if (t == 2) return 3.14 * a * a;
+    return 0.5 * a * b;
+}
+int main() {
+    int t;
+    double a, b;
+    cin >> t;
+    cin >> a;
+    if (t != 2) cin >> b;
+    printf("%.2f\n", area(t, a, b));
+    return 0;
+}
+
+----------------------------------------------------------------
+第70题：函数：多数最大公约数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int gcd(int a, int b) {
+    while (b) { int t = a % b; a = b; b = t; }
+    return a;
+}
+int main() {
+    int n;
+    cin >> n;
+    int g = 0, x;
+    while (n--) { cin >> x; g = gcd(g, x); }
+    cout << g << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第71题：选择排序
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 0; i < n - 1; i++) {
+        int m = i;
+        for (int j = i + 1; j < n; j++) if (a[j] < a[m]) m = j;
+        swap(a[i], a[m]);
+    }
+    for (int i = 0; i < n; i++) { if (i) cout << " "; cout << a[i]; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第72题：插入排序
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    for (int i = 1; i < n; i++) {
+        int x = a[i], j = i - 1;
+        while (j >= 0 && a[j] > x) { a[j+1] = a[j]; j--; }
+        a[j+1] = x;
+    }
+    for (int i = 0; i < n; i++) { if (i) cout << " "; cout << a[i]; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第73题：快速排序
+----------------------------------------------------------------
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+void quickSort(int a[], int l, int r) {
+    if (l >= r) return;
+    int i = l, j = r, x = a[(l + r) / 2];
+    while (i <= j) {
+        while (a[i] < x) i++;
+        while (a[j] > x) j--;
+        if (i <= j) { swap(a[i], a[j]); i++; j--; }
+    }
+    quickSort(a, l, j);
+    quickSort(a, i, r);
+}
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    quickSort(a, 0, n - 1);
+    for (int i = 0; i < n; i++) { if (i) cout << " "; cout << a[i]; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第74题：第 k 小元素
+----------------------------------------------------------------
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main() {
+    int n, k, a[1000];
+    cin >> n >> k;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    sort(a, a + n);
+    cout << a[k - 1] << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第75题：二分变体：下界
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, t, a[1000];
+    cin >> n >> t;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    int lo = 0, hi = n;
+    while (lo < hi) {
+        int mid = (lo + hi) / 2;
+        if (a[mid] >= t) hi = mid; else lo = mid + 1;
+    }
+    cout << lo << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第76题：二维矩阵查找
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m, t, a[50][50];
+    cin >> n >> m >> t;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++) cin >> a[i][j];
+    int i = 0, j = m - 1;
+    bool ok = false;
+    while (i < n && j >= 0) {
+        if (a[i][j] == t) { ok = true; break; }
+        if (a[i][j] > t) j--; else i++;
+    }
+    cout << (ok ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第77题：计数排序
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, cnt[101] = {0}, x;
+    cin >> n;
+    for (int i = 0; i < n; i++) { cin >> x; cnt[x]++; }
+    bool first = true;
+    for (int v = 0; v <= 100; v++)
+        for (int k = 0; k < cnt[v]; k++) {
+            if (!first) cout << " ";
+            first = false;
+            cout << v;
+        }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第78题：逆序对
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+long long cnt = 0;
+int t[1000];
+void ms(int a[], int l, int r) {
+    if (l >= r) return;
+    int m = (l + r) / 2;
+    ms(a, l, m); ms(a, m + 1, r);
+    int i = l, j = m + 1, k = l;
+    while (i <= m && j <= r) {
+        if (a[i] <= a[j]) t[k++] = a[i++];
+        else { cnt += m - i + 1; t[k++] = a[j++]; }
+    }
+    while (i <= m) t[k++] = a[i++];
+    while (j <= r) t[k++] = a[j++];
+    for (i = l; i <= r; i++) a[i] = t[i];
+}
+int main() {
+    int n, a[1000];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    ms(a, 0, n - 1);
+    cout << cnt << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第79题：素数筛
+----------------------------------------------------------------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    vector<bool> isp(n + 1, true);
+    for (int i = 2; (long long)i * i <= n; i++)
+        if (isp[i]) for (long long j = 1LL * i * i; j <= n; j += i) isp[j] = false;
+    bool first = true;
+    for (int i = 2; i <= n; i++) if (isp[i]) {
+        if (!first) cout << " ";
+        first = false;
+        cout << i;
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第80题：质因数分解
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    long long n;
+    cin >> n;
+    bool first = true;
+    for (long long i = 2; i * i <= n; i++)
+        while (n % i == 0) {
+            if (!first) cout << " ";
+            first = false;
+            cout << i;
+            n /= i;
+        }
+    if (n > 1) { if (!first) cout << " "; cout << n; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第81题：最小公倍数
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+long long gcd(long long a, long long b) {
+    while (b) { long long t = a % b; a = b; b = t; }
+    return a;
+}
+int main() {
+    long long a, b;
+    cin >> a >> b;
+    cout << a / gcd(a, b) * b << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第82题：数字黑洞
+----------------------------------------------------------------
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    int steps = 0;
+    while (n != 6174) {
+        int d[4];
+        for (int i = 0; i < 4; i++) { d[i] = n % 10; n /= 10; }
+        sort(d, d + 4);
+        int big = 0, small = 0;
+        for (int i = 0; i < 4; i++) small = small * 10 + d[i];
+        for (int i = 3; i >= 0; i--) big = big * 10 + d[i];
+        n = big - small;
+        steps++;
+    }
+    cout << steps << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第83题：分数化简
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int gcd(int a, int b) {
+    while (b) { int t = a % b; a = b; b = t; }
+    return a;
+}
+int main() {
+    int a, b;
+    cin >> a >> b;
+    int g = gcd(a, b);
+    cout << a / g << " " << b / g << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第84题：任意进制转换
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    unsigned n;
+    int base;
+    cin >> n >> base;
+    if (n == 0) { cout << 0 << endl; return 0; }
+    string s;
+    while (n) {
+        int r = n % base;
+        s = char(r < 10 ? '0' + r : 'A' + r - 10) + s;
+        n /= base;
+    }
+    cout << s << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第85题：约瑟夫环
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, k;
+    cin >> n >> k;
+    int f = 0;
+    for (int i = 2; i <= n; i++) f = (f + k) % i;
+    cout << f + 1 << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第86题：高精度加法
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+int main() {
+    string a, b, r;
+    cin >> a >> b;
+    reverse(a.begin(), a.end());
+    reverse(b.begin(), b.end());
+    int carry = 0;
+    for (size_t i = 0; i < max(a.size(), b.size()); i++) {
+        int x = carry;
+        if (i < a.size()) x += a[i] - '0';
+        if (i < b.size()) x += b[i] - '0';
+        r += char('0' + x % 10);
+        carry = x / 10;
+    }
+    if (carry) r += char('0' + carry);
+    reverse(r.begin(), r.end());
+    cout << r << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第87题：大数阶乘
+----------------------------------------------------------------
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    vector<int> d(1, 1);
+    for (int i = 2; i <= n; i++) {
+        int carry = 0;
+        for (size_t j = 0; j < d.size(); j++) {
+            int x = d[j] * i + carry;
+            d[j] = x % 10;
+            carry = x / 10;
+        }
+        while (carry) { d.push_back(carry % 10); carry /= 10; }
+    }
+    for (int i = (int)d.size() - 1; i >= 0; i--) cout << d[i];
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第88题：单链表反转
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+struct Node { int val; Node* next; };
+Node* reverseList(Node* head) {
+    Node* prev = nullptr;
+    while (head) {
+        Node* nxt = head->next;
+        head->next = prev;
+        prev = head;
+        head = nxt;
+    }
+    return prev;
+}
+int main() {
+    int n, x;
+    cin >> n;
+    Node* head = nullptr, *tail = nullptr;
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        Node* p = new Node{x, nullptr};
+        if (!head) head = tail = p; else { tail->next = p; tail = p; }
+    }
+    head = reverseList(head);
+    while (head) { cout << head->val << " "; head = head->next; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第89题：合并有序链表
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+struct Node { int val; Node* next; };
+Node* build(int n) {
+    Node* h = nullptr, *t = nullptr;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        Node* p = new Node{x, nullptr};
+        if (!h) h = t = p; else { t->next = p; t = p; }
+    }
+    return h;
+}
+Node* mergeLists(Node* a, Node* b) {
+    Node dummy{0, nullptr}, *cur = &dummy;
+    while (a && b) {
+        if (a->val <= b->val) { cur->next = a; a = a->next; }
+        else { cur->next = b; b = b->next; }
+        cur = cur->next;
+    }
+    cur->next = a ? a : b;
+    return dummy.next;
+}
+int main() {
+    int n, m;
+    cin >> n >> m;
+    Node* a = build(n);
+    Node* b = build(m);
+    Node* h = mergeLists(a, b);
+    while (h) { cout << h->val << " "; h = h->next; }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第90题：多类型括号匹配
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <stack>
+using namespace std;
+int main() {
+    string s;
+    cin >> s;
+    stack<char> st;
+    bool ok = true;
+    for (char c : s) {
+        if (c == '(' || c == '[' || c == '{') st.push(c);
+        else {
+            if (st.empty()) { ok = false; break; }
+            char t = st.top(); st.pop();
+            if (!((t == '(' && c == ')') || (t == '[' && c == ']') || (t == '{' && c == '}'))) {
+                ok = false;
+                break;
+            }
+        }
+    }
+    ok = ok && st.empty();
+    cout << (ok ? "YES" : "NO") << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第91题：用栈实现队列
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <stack>
+using namespace std;
+int main() {
+    int m;
+    cin >> m;
+    stack<int> in, out;
+    while (m--) {
+        string cmd;
+        cin >> cmd;
+        if (cmd == "PUSH") {
+            int x;
+            cin >> x;
+            in.push(x);
+        } else {
+            if (out.empty())
+                while (!in.empty()) { out.push(in.top()); in.pop(); }
+            if (out.empty()) cout << "EMPTY" << endl;
+            else if (cmd == "POP") { cout << out.top() << endl; out.pop(); }
+            else cout << out.top() << endl;
+        }
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第92题：队列报数
+----------------------------------------------------------------
+
+#include <iostream>
+#include <queue>
+using namespace std;
+int main() {
+    int n, k;
+    cin >> n >> k;
+    queue<int> q;
+    for (int i = 1; i <= n; i++) q.push(i);
+    bool first = true;
+    while (!q.empty()) {
+        for (int i = 1; i < k; i++) { q.push(q.front()); q.pop(); }
+        if (!first) cout << " ";
+        first = false;
+        cout << q.front();
+        q.pop();
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第93题：众数查找
+----------------------------------------------------------------
+
+#include <iostream>
+#include <map>
+using namespace std;
+int main() {
+    int n, x;
+    cin >> n;
+    map<int, int> cnt;
+    for (int i = 0; i < n; i++) { cin >> x; cnt[x]++; }
+    int best, bestC = -1;
+    for (auto& p : cnt)
+        if (p.second > bestC) { bestC = p.second; best = p.first; }
+    cout << best << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第94题：前缀和
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m;
+    cin >> n >> m;
+    long long pre[100001] = {0};
+    for (int i = 1; i <= n; i++) {
+        int x;
+        cin >> x;
+        pre[i] = pre[i - 1] + x;
+    }
+    while (m--) {
+        int l, r;
+        cin >> l >> r;
+        cout << pre[r] - pre[l - 1] << endl;
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第95题：差分数组
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, m;
+    cin >> n >> m;
+    long long a[100001] = {0}, diff[100002] = {0};
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    while (m--) {
+        int l, r, x;
+        cin >> l >> r >> x;
+        diff[l] += x;
+        diff[r + 1] -= x;
+    }
+    long long cur = 0;
+    for (int i = 1; i <= n; i++) {
+        cur += diff[i];
+        if (i > 1) cout << " ";
+        cout << a[i] + cur;
+    }
+    cout << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第96题：图书管理系统
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+int main() {
+    int m;
+    cin >> m;
+    vector<string> books;
+    while (m--) {
+        string cmd, name;
+        cin >> cmd;
+        if (cmd == "ADD") {
+            cin >> name;
+            books.push_back(name);
+        } else if (cmd == "DEL") {
+            cin >> name;
+            vector<string> v;
+            for (auto& s : books) if (s != name) v.push_back(s);
+            books = v;
+        } else if (cmd == "FIND") {
+            cin >> name;
+            bool f = false;
+            for (auto& s : books) if (s == name) { f = true; break; }
+            cout << (f ? "YES" : "NO") << endl;
+        } else if (cmd == "LIST") {
+            if (books.empty()) cout << "EMPTY" << endl;
+            else for (auto& s : books) cout << s << endl;
+        }
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第97题：成绩统计进阶
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+using namespace std;
+struct St { string name; vector<int> score; int sum; int idx; };
+int main() {
+    int n, m;
+    cin >> n >> m;
+    vector<St> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i].name;
+        v[i].score.resize(m);
+        v[i].sum = 0;
+        for (int j = 0; j < m; j++) { cin >> v[i].score[j]; v[i].sum += v[i].score[j]; }
+        v[i].idx = i;
+    }
+    string cmd;
+    cin >> cmd;
+    if (cmd == "total") {
+        stable_sort(v.begin(), v.end(), [](auto& a, auto& b) { return a.sum > b.sum; });
+        for (auto& x : v) cout << x.name << " " << x.sum << endl;
+    } else {
+        int k;
+        cin >> k;
+        double s = 0;
+        for (auto& x : v) s += x.score[k - 1];
+        printf("%.1f\n", s / n);
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第98题：简单文本行编辑器
+----------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+int main() {
+    int m;
+    cin >> m;
+    vector<string> lines;
+    while (m--) {
+        string cmd, txt;
+        cin >> cmd;
+        if (cmd == "ADD") {
+            cin >> txt;
+            lines.push_back(txt);
+        } else if (cmd == "INSERT") {
+            int pos;
+            cin >> pos >> txt;
+            if (pos >= 1 && pos <= (int)lines.size() + 1)
+                lines.insert(lines.begin() + pos - 1, txt);
+        } else if (cmd == "DEL") {
+            int pos;
+            cin >> pos;
+            if (pos >= 1 && pos <= (int)lines.size())
+                lines.erase(lines.begin() + pos - 1);
+        } else if (cmd == "PRINT") {
+            if (lines.empty()) cout << "EMPTY" << endl;
+            else for (auto& s : lines) cout << s << endl;
+        }
+    }
+    return 0;
+}
+
+----------------------------------------------------------------
+第99题：日历计算
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+bool isLeap(int y) {
+    return (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0);
+}
+int main() {
+    int y, m;
+    cin >> y >> m;
+    int days[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int total = 0;
+    for (int i = 1900; i < y; i++) total += isLeap(i) ? 366 : 365;
+    for (int i = 1; i < m; i++) total += days[i] + (i == 2 && isLeap(y) ? 1 : 0);
+    int dm = days[m] + (m == 2 && isLeap(y) ? 1 : 0);
+    int wd = (total + 1) % 7;  // 1900-01-01 是星期一(1)
+    cout << dm << " " << wd << endl;
+    return 0;
+}
+
+----------------------------------------------------------------
+第100题：股票最大利润
+----------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+int main() {
+    int n, x;
+    cin >> n;
+    int minP = 1e9, ans = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        ans = max(ans, x - minP);
+        minP = min(minP, x);
+    }
+    cout << ans << endl;
+    return 0;
+}
+

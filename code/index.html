@@ -1093,20 +1093,24 @@ function renderResult(data) {
     html += `<div class="result-card fail"><h3>🔧 编译失败</h3><pre style="background:#fff3f3;color:#c00;padding:10px;border-radius:4px;white-space:pre-wrap;font-size:0.85rem;">${escapeHtml(result.compile_stderr || '未知编译错误')}</pre></div>`;
   } else {
     const allPassed = result.passed === result.total;
+    const hiddenInfo = result.hidden_cases ? `（含 ${result.hidden_cases} 组隐藏用例）` : "";
     html += allPassed
-      ? `<div class="result-card success"><h3>🎉 全部通过！</h3><p>${result.passed}/${result.total} 个测试用例通过</p></div>`
-      : `<div class="result-card fail"><h3>📝 需要改进</h3><p>通过了 ${result.passed}/${result.total} 个测试用例</p></div>`;
+      ? `<div class="result-card success"><h3>🎉 全部通过！</h3><p>${result.passed}/${result.total} 个测试用例通过 ${hiddenInfo}</p></div>`
+      : `<div class="result-card fail"><h3>📝 需要改进</h3><p>通过了 ${result.passed}/${result.total} 个测试用例 ${hiddenInfo}</p></div>`;
 
     html += '<div class="test-cases">';
     result.results.forEach((r) => {
       const cls = r.passed ? "pass" : "fail";
       const icon = r.passed ? "✅" : "❌";
+      const isHidden = String(r.detail || "").indexOf("隐藏用例") === 0;
       html += `<div class="test-case ${cls}"><span class="tc-status">${icon} 用例 ${r.case_index}</span>`;
       if (r.input) html += ` &nbsp; 输入: <code>${escapeHtml(r.input)}</code>`;
       if (!r.passed) {
-        html += `<div class="tc-detail">期望输出:\n${r.expected}\n\n实际输出:\n${r.actual || "(无输出)"}</div>`;
+        html += isHidden
+          ? `<div class="tc-detail">${escapeHtml(r.detail)}</div>`
+          : `<div class="tc-detail">期望输出:\n${r.expected}\n\n实际输出:\n${r.actual || "(无输出)"}</div>`;
         if (r.stderr) html += `<div style="color:#ea4335;font-size:0.82rem;">错误: ${escapeHtml(r.stderr.substring(0,200))}</div>`;
-      } else {
+      } else if (!isHidden) {
         html += `<div style="color:#34a853;">输出: <code>${escapeHtml(r.actual)}</code></div>`;
       }
       html += `</div>`;
