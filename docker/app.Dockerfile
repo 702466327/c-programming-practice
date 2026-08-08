@@ -20,4 +20,5 @@ COPY app/ ./app/
 # data/ 与 certs/ 通过卷挂载 (见 docker-compose.yml)
 EXPOSE 443
 
-CMD ["python", "app/server.py"]
+# -u: 关闭 Python 输出缓冲, 保证 docker logs 实时可见
+CMD ["python", "-u", "app/server.py"]

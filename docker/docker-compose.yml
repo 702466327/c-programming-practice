@@ -23,4 +23,5 @@ services:
       PORT: "443"
       TLS_ENABLED: "1"
       JUDGE_IMAGE: "aijudge-judge:latest"
+      PYTHONUNBUFFERED: "1"
     restart: unless-stopped
