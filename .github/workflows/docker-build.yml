@@ -62,3 +62,15 @@ jobs:
           push: true
           tags: ${{ steps.meta-judge.outputs.tags }}
           labels: ${{ steps.meta-judge.outputs.labels }}
+
+      - name: Set package visibility public
+        if: github.ref_type == 'tag'
+        run: |
+          for pkg in aijudge-app aijudge-judge; do
+            curl -s -X POST \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/user/packages/container/$pkg/visibility \
+              -d '{"visibility":"public"}'
+            echo " -> $pkg visibility set"
+          done
