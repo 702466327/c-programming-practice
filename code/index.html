@@ -429,7 +429,7 @@ details.hints-box { border-radius: 8px; }
     <div id="recoveryField" style="display:none;">
       <label for="loginRecovery">找回密钥（选填）</label>
       <input type="text" id="loginRecovery" placeholder="用于忘记密码时找回账号" autocomplete="off" oninput="validateForm()">
-      <span class="hint" id="hintRecovery">可选，建议填写学号或手机号</span>
+      <span class="hint" id="hintRecovery">必填，至少 4 个字符（忘记密码时找回用）</span>
     </div>
     <button class="btn-login" id="loginBtn" onclick="handleAuth()">登 录</button>
     <p class="switch-link">
@@ -957,7 +957,7 @@ function renderMarkdown(md) {
 }
 
 function escapeHtml(text) {
-  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
 
 // ===== 渲染主区域 =====
@@ -1108,7 +1108,7 @@ function renderResult(data) {
   let html = '<div class="result-section">';
 
   if (!result.safety_check) {
-    html += `<div class="result-card fail"><h3>⚠️ 安全检查未通过</h3><p>${result.warning}</p></div>`;
+    html += `<div class="result-card fail"><h3>⚠️ 安全检查未通过</h3><p>${escapeHtml(result.warning)}</p></div>`;
   } else if (result.compile_error) {
     html += `<div class="result-card fail"><h3>🔧 编译失败</h3><pre style="background:#fff3f3;color:#c00;padding:10px;border-radius:4px;white-space:pre-wrap;font-size:0.85rem;">${escapeHtml(result.compile_stderr || '未知编译错误')}</pre></div>`;
   } else {

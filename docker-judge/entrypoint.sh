@@ -23,7 +23,7 @@ fi
 
 # 运行 (超时由 timeout 强杀; 外部还有 docker stop-timeout 与 Python 侧兜底)
 TIMEOUT_SEC="${JUDGE_TIMEOUT:-5}"
-timeout "$TIMEOUT_SEC" ./main
+timeout -k 2 --foreground "$TIMEOUT_SEC" ./main
 rc=$?
 if [ $rc -eq 124 ]; then
     echo "TIMEOUT" >&2

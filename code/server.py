@@ -78,11 +78,14 @@ from ratelimit import (
     REGISTER_LIMIT,
     RECOVER_LIMIT,
     ADMIN_LOGIN_LIMIT,
+    FEEDBACK_LIMIT,
+    SUBMIT_LIMIT,
 )
 
 PORT = int(os.environ.get("PORT", "8081"))
 HOST = os.environ.get("BIND_HOST", "0.0.0.0").strip()
 MAX_BODY_SIZE = 100 * 1024
+FEEDBACK_DAILY_LIMIT = int(os.environ.get("FEEDBACK_DAILY_LIMIT", "20"))
 AUTO_OPEN_BROWSER = os.environ.get("OPEN_BROWSER", "").strip().lower() in {"1", "true", "yes", "y"}
 
 # 可选 HTTPS 支持：TLS_ENABLED=1 时启用；证书默认放在项目 certs/ 目录
@@ -106,6 +109,7 @@ SECURITY_HEADERS = {
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "no-referrer",
     "Cache-Control": "no-store",
+    "Strict-Transport-Security": "max-age=31536000",
 }
 
 
@@ -277,6 +281,9 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             ip = _client_ip(self)
             username = data.get("username", "").strip()
             password = data.get("password", "")
+            if username and auth.is_login_locked(username):
+                self._send_error(429, "尝试过于频繁，账号已临时锁定，请稍后再试")
+                return
             limit_key = f"{ip}|{username}"
             if not LOGIN_LIMIT.allow(f"ip:{ip}") or not LOGIN_LIMIT.allow(limit_key):
                 self._send_error(429, "尝试过于频繁，请稍后再试")
@@ -284,6 +291,9 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             token, msg = auth.login_user(username, password)
             if token:
                 LOGIN_LIMIT.reset(limit_key)
+                auth.record_login_success(username)
+            else:
+                auth.record_login_failure(username)
             self._send_json({"success": token is not None, "message": msg, "token": token, "username": username if token else None})
             return
         if path == "/api/logout":
@@ -297,8 +307,15 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             if not ADMIN_LOGIN_LIMIT.allow(ip):
                 self._send_error(429, "尝试过于频繁，请稍后再试")
                 return
+            if auth.is_admin_locked(ip):
+                self._send_error(429, "尝试过于频繁，管理入口已临时锁定，请稍后再试")
+                return
             admin_key = data.get("admin_key", "")
             token, msg = auth.admin_login(admin_key)
+            if token:
+                auth.record_admin_success(ip)
+            else:
+                auth.record_admin_failure(ip)
             self._send_json({"success": token is not None, "message": msg, "token": token})
             return
         if path == "/api/admin/users":
@@ -321,6 +338,9 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
         if path == "/api/submit":
             username = _require_auth(self)
             if not username: return
+            if not SUBMIT_LIMIT.allow(username):
+                self._send_error(429, "提交过于频繁，请稍后再试")
+                return
             code = data.get("code", "")
             question_id = data.get("question_id")
             if not code.strip():
@@ -353,19 +373,31 @@ class APIHandler(http.server.BaseHTTPRequestHandler):
             exec_summary = judge.format_execution_summary(judge_result)
             auth.record_judge_result(username, question_id,
                                      judge_result.get("passed", 0),
-                                     judge_result.get("total", 0))
+                                     judge_result.get("total", 0),
+                                     exec_summary)
             self._send_json({"judge_result": judge_result, "execution_summary": exec_summary})
             return
         if path == "/api/feedback":
             username = _require_auth(self)
             if not username: return
-            code = data.get("code", "")
+            if not FEEDBACK_LIMIT.allow(username):
+                self._send_error(429, "AI 点评调用过于频繁，请稍后再试")
+                return
+            if not auth.consume_feedback_quota(username, FEEDBACK_DAILY_LIMIT):
+                self._send_error(429, "今日 AI 点评次数已达上限，请明天再试")
+                return
             question_id = data.get("question_id")
-            execution_result = data.get("execution_result", "")
             q = question_bank.get_question_by_id(question_id)
             if not q:
                 self._send_error(400, "题目未找到")
                 return
+            # 服务端只使用该用户最近一次真实提交的代码与判题摘要, 不信任客户端内容
+            entry = auth.get_submission_entry(username, question_id)
+            if not entry or not entry.get("code"):
+                self._send_error(400, "请先提交该题代码，再获取 AI 点评")
+                return
+            code = entry["code"]
+            execution_result = entry.get("last_summary", "")
             feedback = ai_client.get_feedback(question_title=q["title"], question_description=q["description"], user_code=code, execution_result=execution_result)
             self._send_json({"feedback": feedback})
             return

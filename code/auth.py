@@ -19,7 +19,14 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 USERS_FILE = os.path.join(DATA_DIR, "users.json")
 SUBMISSIONS_FILE = os.path.join(DATA_DIR, "submissions.json")
 SESSIONS_FILE = os.path.join(DATA_DIR, "sessions.json")
+FEEDBACK_USAGE_FILE = os.path.join(DATA_DIR, "feedback_usage.json")
 DATA_LOCK = threading.RLock()
+
+# 登录/管理密钥失败锁定 (内存态, 重启清零)
+LOGIN_FAIL_LIMIT = 5
+LOCK_SECONDS = 900
+_login_fails = {}      # username -> [时间戳]
+_admin_fails = {}      # ip -> [时间戳]
 
 # 管理员密钥必须通过环境变量显式提供
 ADMIN_KEY = os.environ.get("ADMIN_KEY", "").strip()
@@ -120,6 +127,8 @@ def register_user(username, password, recovery_key=""):
         return False, "用户名需 2-10 个字符"
     if len(password) < 8 or len(password) > 15:
         return False, "密码需 8-15 个字符"
+    if len(recovery_key) < 4:
+        return False, "找回密钥至少 4 个字符（用于自助找回密码）"
     if not _valid_username(username):
         return False, "用户名不合法或为保留用户名"
 
@@ -129,10 +138,9 @@ def register_user(username, password, recovery_key=""):
         if username in users:
             return False, "用户名已存在"
 
-        hashed_recovery = _hash_password(recovery_key) if recovery_key else ""
         users[username] = {
             "password": _hash_password(password),
-            "recovery_key": hashed_recovery,
+            "recovery_key": _hash_password(recovery_key),
             "created_at": time.strftime("%Y-%m-%d %H:%M:%S")
         }
         _save_json(USERS_FILE, users)
@@ -230,6 +238,14 @@ def get_submission(username, question_id):
         return sub["code"] if sub else None
 
 
+def get_submission_entry(username, question_id):
+    """获取用户某道题的提交记录条目（含 last_summary 等元数据），无则 None"""
+    with DATA_LOCK:
+        submissions = _load_json(SUBMISSIONS_FILE, {})
+        user_subs = submissions.get(username, {})
+        return user_subs.get(str(question_id))
+
+
 def get_all_submissions(username):
     """获取用户所有提交"""
     with DATA_LOCK:
@@ -239,8 +255,8 @@ def get_all_submissions(username):
 
 # ===== 判题统计与排行榜 =====
 
-def record_judge_result(username, question_id, passed, total):
-    """记录判题结果: 尝试次数 / 是否已解出（全部用例通过即视为解出）"""
+def record_judge_result(username, question_id, passed, total, summary=None):
+    """记录判题结果: 尝试次数 / 是否已解出（全部用例通过即视为解出）/ 最近一次执行摘要"""
     with DATA_LOCK:
         submissions = _load_json(SUBMISSIONS_FILE, {})
         user_subs = submissions.setdefault(username, {})
@@ -250,7 +266,66 @@ def record_judge_result(username, question_id, passed, total):
             if not entry.get("solved"):
                 entry["solved_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
             entry["solved"] = True
+        if summary is not None:
+            entry["last_summary"] = summary
         _save_json(SUBMISSIONS_FILE, submissions)
+
+
+def consume_feedback_quota(username, daily_limit):
+    """消耗一次 AI 点评每日配额; 超限返回 False"""
+    with DATA_LOCK:
+        usage = _load_json(FEEDBACK_USAGE_FILE, {})
+        today = time.strftime("%Y-%m-%d")
+        rec = usage.get(username, {})
+        if rec.get("date") != today:
+            rec = {"date": today, "count": 0}
+        if rec["count"] >= daily_limit:
+            return False
+        rec["count"] += 1
+        usage[username] = rec
+        _save_json(FEEDBACK_USAGE_FILE, usage)
+        return True
+
+
+# ===== 登录失败锁定 =====
+
+def _prune_fails(store, key):
+    now = time.time()
+    store[key] = [t for t in store.get(key, []) if t > now - LOCK_SECONDS]
+
+
+def is_login_locked(username):
+    with DATA_LOCK:
+        _prune_fails(_login_fails, username)
+        return len(_login_fails.get(username, [])) >= LOGIN_FAIL_LIMIT
+
+
+def record_login_failure(username):
+    with DATA_LOCK:
+        _prune_fails(_login_fails, username)
+        _login_fails.setdefault(username, []).append(time.time())
+
+
+def record_login_success(username):
+    with DATA_LOCK:
+        _login_fails.pop(username, None)
+
+
+def is_admin_locked(ip):
+    with DATA_LOCK:
+        _prune_fails(_admin_fails, ip)
+        return len(_admin_fails.get(ip, [])) >= LOGIN_FAIL_LIMIT
+
+
+def record_admin_failure(ip):
+    with DATA_LOCK:
+        _prune_fails(_admin_fails, ip)
+        _admin_fails.setdefault(ip, []).append(time.time())
+
+
+def record_admin_success(ip):
+    with DATA_LOCK:
+        _admin_fails.pop(ip, None)
 
 
 def get_leaderboard(weights, limit=50):
@@ -399,15 +474,10 @@ def recover_password(username, recovery_key, new_password):
 
     with DATA_LOCK:
         users = _load_json(USERS_FILE, {})
-        if username not in users:
-            return False, "用户不存在"
-
-        stored_key = users[username].get("recovery_key", "")
-        if not stored_key:
-            return False, "该账号未设置找回密钥，请联系管理员"
-
-        if not _verify_password(recovery_key, stored_key):
-            return False, "找回密钥错误"
+        # 统一错误文案, 不区分 用户不存在 / 未设置密钥 / 密钥错误, 防用户枚举
+        stored_key = users.get(username, {}).get("recovery_key", "")
+        if not stored_key or not _verify_password(recovery_key, stored_key):
+            return False, "用户名或密钥错误"
 
         users[username]["password"] = _hash_password(new_password)
         # 旧版无盐恢复密钥校验成功后原地升级
