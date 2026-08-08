@@ -61,8 +61,8 @@ RECOVER_LIMIT = RateLimiter(5, 300)
 # 管理员登录：同一 IP 5 次 / 5 分钟
 ADMIN_LOGIN_LIMIT = RateLimiter(5, 300)
 
-# AI 点评：同一用户 10 次 / 1 小时 (另有每日配额见 auth.py)
-FEEDBACK_LIMIT = RateLimiter(10, 3600)
+# AI 点评：同一用户 60 次 / 1 小时 (另有每日配额见 auth.py)
+FEEDBACK_LIMIT = RateLimiter(60, 3600)
 
-# 判题提交：同一用户 30 次 / 10 分钟 (防止滥用判题资源)
-SUBMIT_LIMIT = RateLimiter(30, 600)
+# 判题提交：同一用户 6 次 / 1 分钟 (防止滥用判题资源)
+SUBMIT_LIMIT = RateLimiter(6, 60)

@@ -85,7 +85,7 @@ from ratelimit import (
 PORT = int(os.environ.get("PORT", "8081"))
 HOST = os.environ.get("BIND_HOST", "0.0.0.0").strip()
 MAX_BODY_SIZE = 100 * 1024
-FEEDBACK_DAILY_LIMIT = int(os.environ.get("FEEDBACK_DAILY_LIMIT", "20"))
+FEEDBACK_DAILY_LIMIT = int(os.environ.get("FEEDBACK_DAILY_LIMIT", "300"))
 AUTO_OPEN_BROWSER = os.environ.get("OPEN_BROWSER", "").strip().lower() in {"1", "true", "yes", "y"}
 
 # 可选 HTTPS 支持：TLS_ENABLED=1 时启用；证书默认放在项目 certs/ 目录

@@ -24,7 +24,7 @@ DATA_LOCK = threading.RLock()
 
 # 登录/管理密钥失败锁定 (内存态, 重启清零)
 LOGIN_FAIL_LIMIT = 5
-LOCK_SECONDS = 900
+LOCK_SECONDS = 300
 _login_fails = {}      # username -> [时间戳]
 _admin_fails = {}      # ip -> [时间戳]
 

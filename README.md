@@ -223,7 +223,7 @@ project/
 | GET | `/api/question/{id}` | - | 题目详情 |
 | GET | `/api/submissions` | Bearer | 用户提交记录 |
 | POST | `/api/submit` | Bearer | 提交代码判题 |
-| POST | `/api/feedback` | Bearer | 获取 AI 点评（基于最近一次真实提交；每小时 10 次 + 每日 20 次） |
+| POST | `/api/feedback` | Bearer | 获取 AI 点评（基于最近一次真实提交；每小时 60 次 + 每日 300 次） |
 | GET | `/api/leaderboard` | Bearer | 排行榜（积分 / 已解 / 尝试，前 50 名） |
 | GET | `/api/ai-status` | - | AI 配置状态（平台 / 模型 / 是否可用） |
 
@@ -284,8 +284,8 @@ project/
 - **统一登录报错**：用户名不存在与密码错误返回相同文案，避免用户枚举
 - **接口限流**：登录 / 注册 / 找回密码 / 管理员登录均为滑动窗口限流
 - **找回密码防枚举**：用户不存在 / 未设置密钥 / 密钥错误返回统一文案
-- **登录失败锁定**：连续 5 次失败临时锁定 15 分钟（登录与管理入口均生效）
-- **AI 点评配额**：每用户每小时 10 次 + 每日 20 次上限；点评仅基于该用户最近一次真实提交（服务端取数，不信任客户端传入的执行结果）
+- **登录失败锁定**：连续 5 次失败临时锁定 5 分钟（登录与管理入口均生效）
+- **AI 点评配额**：每用户每小时 60 次 + 每日 300 次上限；点评仅基于该用户最近一次真实提交（服务端取数，不信任客户端传入的执行结果）
 - **安全响应头**：CSP、`X-Frame-Options: DENY`、`X-Content-Type-Options`、`Referrer-Policy`、`Cache-Control: no-store`
 - **密钥注入**：管理员密钥与 AI 密钥通过环境变量传入主服务器，不写入代码
 - **判题沙箱（Docker，推荐）**：判题默认放入一次性 Linux 容器（code/judge_docker.py + docker-judge/），
