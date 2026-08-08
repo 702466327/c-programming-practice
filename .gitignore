@@ -20,8 +20,8 @@ runtime/
 runtime.zip
 ngrok.exe
 
-# 判题沙箱测试替身（编译产物，源码见 docker-judge/tests/docker.c）
-docker-judge/tests/docker.exe
+# 判题沙箱本地测试（假 docker 替身与回归脚本，仅本地使用，不入库）
+docker-judge/tests/
 
 # 工具自动生成的变更追踪文件（before/diff/rollback 快照，不提交）
 .ui-update/
