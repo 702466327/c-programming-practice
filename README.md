@@ -44,9 +44,8 @@ project/
 │       └── deploy.ps1        # Windows 一键部署脚本
 │
 └── runtime/                  # 便携运行环境（随仓库分发）
-    ├── python/               # 便携 Python 3.13
-    ├── mingw/                # MinGW g++ 编译器
-    └── ngrok/                # ngrok 内网穿透客户端
+    ├── python/               # 便携 Python 3.13（PSF License）
+    └── mingw/                # MinGW g++ 编译器（GPL-3.0 + GCC Runtime Exception）
 ```
 
 ## 架构：全部 Docker 隔离
@@ -86,7 +85,7 @@ powershell -ExecutionPolicy Bypass -File deploy\windows\deploy.ps1
 
 ## 便携运行环境（runtime/）
 
-仓库直接携带解压后的便携环境（Python / MinGW g++ / ngrok），克隆或下载后**无需安装任何依赖**即可使用：
+仓库直接携带解压后的便携环境（Python / MinGW g++），克隆或下载后**无需安装任何依赖**即可使用：
 
 ```bash
 ./runtime/python/python.exe --version        # 便携 Python
