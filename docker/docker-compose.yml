@@ -1,0 +1,26 @@
+# AIJudge 应用编排 (Linux / Windows Docker Desktop 通用)
+# 用法:
+#   docker build -f docker/judge.Dockerfile.cn -t aijudge-judge:latest .   # 先构建判题镜像
+#   docker compose -f docker/docker-compose.yml up -d --build
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app.Dockerfile
+    image: aijudge-app:latest
+    container_name: aijudge-app
+    ports:
+      - "443:443"
+    volumes:
+      - ../data:/app/data
+      - ../certs:/app/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      PORT: "443"
+      TLS_ENABLED: "1"
+      TLS_CERT: /app/certs/server.crt
+      TLS_KEY: /app/certs/server.key
+      ADMIN_KEY: "${ADMIN_KEY:-}"
+      AI_API_KEY: "${AI_API_KEY:-}"
+      JUDGE_IMAGE: "aijudge-judge:latest"
+    restart: unless-stopped
