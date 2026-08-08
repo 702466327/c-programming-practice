@@ -17,13 +17,11 @@ __pycache__/
 
 # 便携运行环境（体积大，按需传输）
 runtime/
+runtime.zip
 ngrok.exe
 
 # 判题沙箱测试替身（编译产物，源码见 docker-judge/tests/docker.c）
 docker-judge/tests/docker.exe
-
-# UI 升级前备份（回滚用，不提交）
-code/index.html.orig
 
 # 工具自动生成的变更追踪文件（before/diff/rollback 快照，不提交）
 .ui-update/
