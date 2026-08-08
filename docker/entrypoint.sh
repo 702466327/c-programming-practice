@@ -9,7 +9,9 @@
 
 set -u
 
-cp /src/main.cpp /work/main.cpp || exit 9
+# 源码经环境变量 MAIN_SRC 传入 (兼容判题器运行在宿主机或应用容器内的场景)
+printf '%s\n' "${MAIN_SRC:-}" > /work/main.cpp || exit 9
+[ -s /work/main.cpp ] || exit 9
 cd /work || exit 9
 
 # 编译 (O2, 与旧 MinGW 参数对齐)

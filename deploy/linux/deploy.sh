@@ -27,7 +27,7 @@ echo "[OK] Docker 就绪"
 JUDGE_DF="docker/judge.Dockerfile"
 [ -f "$JUDGE_DF.cn" ] && JUDGE_DF="docker/judge.Dockerfile.cn"
 echo "[i] 构建判题镜像 (使用 $JUDGE_DF)..."
-docker build -f "$JUDGE_DF" -t aijudge-judge:latest .
+docker build -f "$JUDGE_DF" -t aijudge-judge:latest docker/
 
 # 3. 环境变量 (.env 供 compose 使用)
 if [ ! -f .env ]; then

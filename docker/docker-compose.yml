@@ -15,12 +15,12 @@ services:
       - ../data:/app/data
       - ../certs:/app/certs
       - /var/run/docker.sock:/var/run/docker.sock
+      # Let's Encrypt 证书目录 (可选: 未配置 certbot 的机器上为空目录, 无影响)
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    env_file:
+      - ../.env
     environment:
       PORT: "443"
       TLS_ENABLED: "1"
-      TLS_CERT: /app/certs/server.crt
-      TLS_KEY: /app/certs/server.key
-      ADMIN_KEY: "${ADMIN_KEY:-}"
-      AI_API_KEY: "${AI_API_KEY:-}"
       JUDGE_IMAGE: "aijudge-judge:latest"
     restart: unless-stopped

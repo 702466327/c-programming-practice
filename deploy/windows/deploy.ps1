@@ -31,7 +31,7 @@ Push-Location $ProjectDir
 $judgeDf = 'docker\judge.Dockerfile'
 if (Test-Path "$judgeDf.cn") { $judgeDf = "$judgeDf.cn" }
 Write-Host "[i] 构建判题镜像 ($judgeDf)..."
-docker build -f $judgeDf -t aijudge-judge:latest .
+docker build -f $judgeDf -t aijudge-judge:latest docker
 
 # 4. 环境配置
 if (-not (Test-Path '.env')) {

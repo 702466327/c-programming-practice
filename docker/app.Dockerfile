@@ -3,11 +3,16 @@
 FROM python:3.12-slim
 
 # docker CLI: 用于调度"兄弟判题容器" (judge_docker.py)
+# Debian trixie 的 docker.io 包不含客户端, 这里安装官方静态 CLI
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-        docker.io \
         ca-certificates \
- && rm -rf /var/lib/apt/lists/*
+        curl \
+ && curl -fsSL -o /tmp/docker.tgz \
+        https://download.docker.com/linux/static/stable/x86_64/docker-27.5.1.tgz \
+ && tar -xzf /tmp/docker.tgz -C /tmp \
+ && install -m 0755 /tmp/docker/docker /usr/local/bin/docker \
+ && rm -rf /tmp/docker* /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY app/ ./app/

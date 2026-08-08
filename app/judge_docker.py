@@ -11,7 +11,6 @@
 import os
 import shutil
 import subprocess
-import tempfile
 import threading
 import uuid
 
@@ -56,16 +55,9 @@ def is_docker_available(env=None):
 
 def _run_one(code, test_input, name, env):
     """启动一个一次性容器编译并运行, 返回原始结果 dict"""
-    src_dir = tempfile.mkdtemp(prefix="judge_src_")
     try:
-        with open(os.path.join(src_dir, "main.cpp"), "w", encoding="utf-8") as f:
-            f.write(code)
-        # mkdtemp 默认 0700 且属主为服务账户; 容器内 uid=10001 需要可读
-        os.chmod(src_dir, 0o755)
-        os.chmod(os.path.join(src_dir, "main.cpp"), 0o644)
-
         cmd = ["docker", "run", *DOCKER_RUN_FLAGS, "--name", name,
-               "-v", f"{src_dir}:/src:ro", JUDGE_IMAGE]
+               "--env", "MAIN_SRC=" + code, JUDGE_IMAGE]
         try:
             proc = subprocess.run(
                 cmd,
@@ -107,7 +99,7 @@ def _run_one(code, test_input, name, env):
             return {"timed_out": True, "stdout": stdout, "stderr": stderr}
         return {"exit_code": rc, "stdout": stdout, "stderr": stderr}
     finally:
-        shutil.rmtree(src_dir, ignore_errors=True)
+        pass
 
 
 def run_test_cases(code, test_cases, _env=None):
