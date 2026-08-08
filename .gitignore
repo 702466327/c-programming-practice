@@ -15,6 +15,9 @@ server_*.log
 __pycache__/
 *.py[cod]
 
+# 便携运行环境（Docker 镜像自带运行环境, 此目录仅本地开发调试用, 不入库）
+runtime/
+
 # 工具自动生成的变更追踪文件（before/diff/rollback 快照，不提交）
 .ui-update/
 

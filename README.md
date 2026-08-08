@@ -43,9 +43,6 @@ project/
 │       ├── README.md         # Windows Docker 部署文档
 │       └── deploy.ps1        # Windows 一键部署脚本
 │
-└── runtime/                  # 便携运行环境（随仓库分发）
-    ├── python/               # 便携 Python 3.13（PSF License）
-    └── mingw/                # MinGW g++ 编译器（GPL-3.0 + GCC Runtime Exception）
 ```
 
 ## 架构：全部 Docker 隔离
@@ -83,16 +80,10 @@ powershell -ExecutionPolicy Bypass -File deploy\windows\deploy.ps1
 
 详细步骤与注意事项见 [deploy/windows/README.md](deploy/windows/README.md)。
 
-## 便携运行环境（runtime/）
+## 便携运行环境（runtime/，仅本地）
 
-仓库直接携带解压后的便携环境（Python / MinGW g++），克隆或下载后**无需安装任何依赖**即可使用：
-
-```bash
-./runtime/python/python.exe --version        # 便携 Python
-./runtime/mingw/bin/g++.exe --version        # 便携 g++
-```
-
-用途：本地开发调试、离线判题器复现、无系统级环境的快速体验。Docker 部署本身不依赖它（镜像内自带运行环境）。
+**不入库**。Docker 镜像已自带完整运行环境（应用镜像含 Python、判题镜像含 g++），部署无需任何本机依赖。
+本地 `runtime/`（便携 Python / MinGW g++）仅供开发调试使用，克隆仓库不会包含它。
 
 ## 管理员
 
