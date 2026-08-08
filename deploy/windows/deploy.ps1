@@ -1,6 +1,6 @@
 # AIJudge Windows Docker 一键部署 (Docker Desktop + WSL2 后端)
-# 用法: powershell -ExecutionPolicy Bypass -File deploy.ps1 [-PublicIP 1.2.3.4]
-param([string]$PublicIP = "", [string]$ProjectDir = (Split-Path -Parent $PSScriptRoot))
+# 用法: powershell -ExecutionPolicy Bypass -File deploy.ps1 [-PublicIP 1.2.3.4] [-Pull]
+param([string]$PublicIP = "", [switch]$Pull, [string]$ProjectDir = (Split-Path -Parent $PSScriptRoot))
 $ErrorActionPreference = 'Stop'
 
 Write-Host '========================================'
@@ -26,12 +26,22 @@ if (-not $ossl) {
     exit 1
 }
 
-# 3. 构建判题镜像
+# 3. 镜像 (构建或从 GitHub Packages 拉取)
 Push-Location $ProjectDir
-$judgeDf = 'docker\judge.Dockerfile'
-if (Test-Path "$judgeDf.cn") { $judgeDf = "$judgeDf.cn" }
-Write-Host "[i] 构建判题镜像 ($judgeDf)..."
-docker build -f $judgeDf -t aijudge-judge:latest docker
+if ($Pull) {
+    Write-Host '[i] 从 GitHub Packages 拉取官方镜像...'
+    docker pull ghcr.io/702466327/c-programming-practice/aijudge-judge:latest
+    docker tag ghcr.io/702466327/c-programming-practice/aijudge-judge:latest aijudge-judge:latest
+    docker pull ghcr.io/702466327/c-programming-practice/aijudge-app:latest
+    docker tag ghcr.io/702466327/c-programming-practice/aijudge-app:latest aijudge-app:latest
+    $composeArgs = @('compose', '-f', 'docker\docker-compose.yml', 'up', '-d', '--no-build')
+} else {
+    $judgeDf = 'docker\judge.Dockerfile'
+    if (Test-Path "$judgeDf.cn") { $judgeDf = "$judgeDf.cn" }
+    Write-Host "[i] 构建判题镜像 ($judgeDf)..."
+    docker build -f $judgeDf -t aijudge-judge:latest docker
+    $composeArgs = @('compose', '-f', 'docker\docker-compose.yml', 'up', '-d', '--build')
+}
 
 # 4. 环境配置
 if (-not (Test-Path '.env')) {
@@ -55,7 +65,7 @@ if (-not (Test-Path 'certs\server.crt') -or -not (Test-Path 'certs\server.key'))
 
 # 6. 启动应用容器
 Write-Host '[i] 启动应用容器...'
-docker compose -f docker\docker-compose.yml up -d --build
+docker @composeArgs
 
 # 7. 健康检查
 Write-Host '[i] 健康检查...'

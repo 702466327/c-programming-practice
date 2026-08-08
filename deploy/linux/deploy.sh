@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # AIJudge Linux Docker 一键部署
-# 用法: bash deploy.sh [公网IP] [域名(可选, 用于Let's Encrypt提示)]
+# 用法: bash deploy.sh [公网IP] [域名] [pull]
+#   第三个参数为 pull 时, 从 GitHub Packages (ghcr.io) 拉取官方镜像, 不本地构建
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJ="$(cd "$SCRIPT_DIR/../.." && pwd)"
 PUBLIC_IP="${1:-}"
 DOMAIN="${2:-}"
+MODE="${3:-build}"
 cd "$PROJ"
 
 echo "========================================"
@@ -23,11 +25,20 @@ docker info >/dev/null 2>&1 || { echo "[!] Docker 守护进程未运行"; exit 1
 docker compose version >/dev/null 2>&1 || { echo "[!] 需要 docker compose v2 插件"; exit 1; }
 echo "[OK] Docker 就绪"
 
-# 2. 构建判题镜像 (国内用腾讯云源版)
-JUDGE_DF="docker/judge.Dockerfile"
-[ -f "$JUDGE_DF.cn" ] && JUDGE_DF="docker/judge.Dockerfile.cn"
-echo "[i] 构建判题镜像 (使用 $JUDGE_DF)..."
-docker build -f "$JUDGE_DF" -t aijudge-judge:latest docker/
+if [ "$MODE" = "pull" ]; then
+    echo "[i] 从 GitHub Packages 拉取官方镜像..."
+    docker pull ghcr.io/702466327/c-programming-practice/aijudge-judge:latest
+    docker tag ghcr.io/702466327/c-programming-practice/aijudge-judge:latest aijudge-judge:latest
+    docker pull ghcr.io/702466327/c-programming-practice/aijudge-app:latest
+    docker tag ghcr.io/702466327/c-programming-practice/aijudge-app:latest aijudge-app:latest
+    PULL_FLAG="--no-build"
+else
+    echo "[i] 本地构建判题镜像..."
+    JUDGE_DF="docker/judge.Dockerfile"
+    [ -f "$JUDGE_DF.cn" ] && JUDGE_DF="docker/judge.Dockerfile.cn"
+    docker build -f "$JUDGE_DF" -t aijudge-judge:latest docker/
+    PULL_FLAG="--build"
+fi
 
 # 3. 环境变量 (.env 供 compose 使用)
 if [ ! -f .env ]; then
@@ -59,7 +70,7 @@ fi
 
 # 5. 启动应用容器
 echo "[i] 启动应用容器..."
-docker compose -f docker/docker-compose.yml up -d --build
+docker compose -f docker/docker-compose.yml up -d $PULL_FLAG
 
 # 6. 健康检查
 echo "[i] 健康检查..."
